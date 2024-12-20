@@ -12,14 +12,14 @@ public class MenuMouseListener implements MouseListener {
     private ImageIcon originalIcon;
     private JLabel label;
     private String key;
-    private JLayeredPane currentLayer;
+    private JLayeredPane[] layers;
     private JLayeredPane nextLayer;
 
-    public MenuMouseListener(JLabel label, String key, JLayeredPane currentLayer, JLayeredPane nextLayer) {
+    public MenuMouseListener(JLabel label, String key, JLayeredPane[] layers , JLayeredPane nextLayer) {
 
         this.label = label;
         this.key = key;
-        this.currentLayer = currentLayer;
+        this.layers = layers;
         this.nextLayer = nextLayer;
         this.originalIcon = (ImageIcon) label.getIcon();
 
@@ -37,9 +37,22 @@ public class MenuMouseListener implements MouseListener {
         }
     }
 
+    private JLayeredPane getCurrentLayer() {
+        JLayeredPane currentLayer = null;
+
+        for (int i = 0; i < layers.length; i++) {
+            if (layers[i].isVisible()) {
+                currentLayer = layers[i];
+                break;
+            }
+        }
+
+        return currentLayer;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
-        currentLayer.setVisible(false);
+        getCurrentLayer().setVisible(false);
         nextLayer.setVisible(true);
     }
 
