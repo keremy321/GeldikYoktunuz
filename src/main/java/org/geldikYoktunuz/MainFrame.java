@@ -1,5 +1,7 @@
 package org.geldikYoktunuz;
 
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -49,6 +51,7 @@ public class MainFrame extends JFrame implements ActionListener {
         labelEffectAddUser.setVisible(false);
 
         JLabel labelAddUser = new JLabel();
+        labelAddUser.setName("addUser");
         labelAddUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addUser.png")));
         labelAddUser.setBounds(193, 90, 150, 120);
         labelAddUser.addMouseListener(new ManagementMouseListener(labelAddUser, labelEffectAddUser, "/managementButtons/pressed.png", this));
@@ -58,8 +61,8 @@ public class MainFrame extends JFrame implements ActionListener {
         labelEffectEditUser.setBounds(347, 22, 286, 256);
         labelEffectEditUser.setVisible(false);
 
-
         JLabel labelEditUser = new JLabel();
+        labelEditUser.setName("editUser");
         labelEditUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editUser.png")));
         labelEditUser.setBounds(415, 90, 150, 120);
         labelEditUser.addMouseListener(new ManagementMouseListener(labelEditUser, labelEffectEditUser, "/managementButtons/pressed.png", this));
@@ -70,6 +73,7 @@ public class MainFrame extends JFrame implements ActionListener {
         labelEffectAddPackage.setVisible(false);
 
         JLabel labelAddPackage = new JLabel();
+        labelAddPackage.setName("addPackage");
         labelAddPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addPackage.png")));
         labelAddPackage.setBounds(637, 90, 150, 120);
         labelAddPackage.addMouseListener(new ManagementMouseListener(labelAddPackage, labelEffectAddPackage, "/managementButtons/pressed.png", this));
@@ -80,6 +84,7 @@ public class MainFrame extends JFrame implements ActionListener {
         labelEffectEditPackage.setVisible(false);
 
         JLabel labelEditPackage = new JLabel();
+        labelEditPackage.setName("editPackage");
         labelEditPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editPackage.png")));
         labelEditPackage.setBounds(859, 90, 150, 120);
         labelEditPackage.addMouseListener(new ManagementMouseListener(labelEditPackage, labelEffectEditPackage, "/managementButtons/pressed.png", this));
@@ -154,7 +159,6 @@ public class MainFrame extends JFrame implements ActionListener {
                 labelSkipDay.setIcon(new ImageIcon(getClass().getResource("/menuButtons/skipDay.png")));
             }
         });
-
 
         this.add(frameLayer);
 
