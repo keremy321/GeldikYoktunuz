@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 public class SignInFrame extends JFrame implements ActionListener {
 
     public SignInFrame () {
+
         JLayeredPane frameLayer = new JLayeredPane();
         frameLayer.setBounds(0,0,1116,739);
 

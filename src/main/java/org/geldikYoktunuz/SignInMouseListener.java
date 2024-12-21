@@ -1,6 +1,12 @@
 package org.geldikYoktunuz;
 
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
@@ -71,6 +77,8 @@ import java.time.LocalDate;
     }
 
     public void chooseAccount() {
+        FlatMacDarkLaf.setup();
+
         JDialog dialogChooseAccount = new JDialog(currentFrame, "Choose Account", true);
 
         JLayeredPane chooseUserLayer = new JLayeredPane();
@@ -115,14 +123,64 @@ import java.time.LocalDate;
             }
         });
 
+        UIManager.put("ComboBox.arc", 15); // Set the corner radius to 15
+
+
+        UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
+        UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+
+
+        JComboBox<Customer> comboBox = new JComboBox<>();
+        comboBox.setBounds(117, 108, 567, 54);
+        comboBox.setBackground(new Color(0x159a80));
+
+
+        comboBox.setForeground(Color.WHITE);
+
+        // Customize Border: Focused and Non-Focused
+        Border defaultBorder = new CompoundBorder(
+                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new EmptyBorder(5, 5, 5, 5)
+        );
+        Border focusedBorder = new CompoundBorder(
+                new LineBorder(Color.WHITE, 2), // White border when focused
+                new EmptyBorder(5, 5, 5, 5)
+        );
+
+        comboBox.setBorder(defaultBorder);
+
+        // Add focus listener to change border dynamically
+        comboBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                comboBox.setBorder(focusedBorder);
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                comboBox.setBorder(defaultBorder);
+            }
+        });
+
+
+        comboBox.addItem(new Customer("Ali", "Veli", "/pp/pp1.png"));
+        comboBox.addItem(new Customer("Ayşe", "Fatma", "/pp/pp2.png"));
+        comboBox.addItem(new Customer("Mehmet", "Ahmet", "/pp/pp3.png"));
+        comboBox.addItem(new Customer("Zeynep", "Selin", "/pp/pp4.png"));
 
         dialogChooseAccount.setSize(816, 289);
         dialogChooseAccount.setLocationRelativeTo(null);
         dialogChooseAccount.setResizable(false);
         dialogChooseAccount.setLayout(null);
 
+
+
         chooseUserLayer.add(byChooseAccount, JLayeredPane.DEFAULT_LAYER);
         chooseUserLayer.add(labelChoose, JLayeredPane.PALETTE_LAYER);
+        chooseUserLayer.add(comboBox, JLayeredPane.PALETTE_LAYER);
 
         dialogChooseAccount.add(chooseUserLayer);
         dialogChooseAccount.setVisible(true);

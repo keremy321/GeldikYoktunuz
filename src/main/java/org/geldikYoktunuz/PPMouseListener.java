@@ -11,7 +11,7 @@ public class PPMouseListener implements MouseListener {
     private ImageIcon enteredIcon;
     private ImageIcon pressedIcon;
     private ImageIcon selectedIcon;
-    private String ppPath;
+    private static String ppPath;
 
     private static JLabel lastSelectedEffect;
 
@@ -61,19 +61,13 @@ public class PPMouseListener implements MouseListener {
         }
 
         switch (label.getName()) {
-            case "labelMan":
-                ppPath = "/dialogButtons/man.png";
-                break;
-            case "labelWoman":
-                ppPath = "/dialogButtons/woman.png";
-                break;
-            case "labelPlus":
+            case "labelMan" -> ppPath = "/dialogButtons/man.png";
+            case "labelWoman" -> ppPath = "/dialogButtons/woman.png";
+            case "labelPlus" -> {
                 if (selectedFileAbsolutePath != null) {
                     ppPath = selectedFileAbsolutePath;
                 }
-                break;
-            default:
-                ppPath = "/dialogButtons/plus.png";
+            }
         }
 
         System.out.println("Selected Path: " + ppPath);
@@ -112,5 +106,9 @@ public class PPMouseListener implements MouseListener {
         if (effect != lastSelectedEffect) {
             effect.setVisible(false);
         }
+    }
+
+    public static String getPpPath() {
+        return ppPath;
     }
 }

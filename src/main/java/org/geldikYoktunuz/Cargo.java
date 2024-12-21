@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 public class Cargo implements Comparable<Cargo> {
-    private static int idCounter = 1;
+    public static int idCounter = 1;
 
     private int postId;
     private String postDate;

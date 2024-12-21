@@ -24,6 +24,10 @@ public class ManagementMouseListener implements MouseListener {
     private static boolean dontRing = false;
     private LocalDate[] selectedDates = new LocalDate[2];
 
+    private JTextField textFieldName;
+    private JTextField textFieldSurname;
+    private JLabel labelID;
+
     public ManagementMouseListener(JLabel label, JLabel effect, String path, JFrame currentFrame) {
         this.currentFrame = currentFrame;
         this.label = label;
@@ -108,6 +112,8 @@ public class ManagementMouseListener implements MouseListener {
         labelAddUser.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                Customer customer = new Customer(textFieldName.getText(), textFieldSurname.getText(), PPMouseListener.getPpPath());
+                System.out.println("Customer: " + customer);
                 dialogAddUser.dispose();
             }
 
@@ -440,7 +446,7 @@ public class ManagementMouseListener implements MouseListener {
     }
 
     private void userAdditions(JLayeredPane layeredPane){
-        JTextField textFieldName = new JTextField();
+        textFieldName = new JTextField();
         textFieldName.setBounds(325, 303, 347, 38);
         textFieldName.setBorder(null);
         textFieldName.setOpaque(false);
@@ -448,7 +454,7 @@ public class ManagementMouseListener implements MouseListener {
         textFieldName.setSelectionColor(new Color(0xe2c3e50));
         textFieldName.setSelectedTextColor(new Color(0xbdc3c7));
 
-        JTextField textFieldSurname = new JTextField();
+        textFieldSurname = new JTextField();
         textFieldSurname.setBounds(325, 383, 347, 38);
         textFieldSurname.setBorder(null);
         textFieldSurname.setOpaque(false);
@@ -456,7 +462,7 @@ public class ManagementMouseListener implements MouseListener {
         textFieldSurname.setSelectionColor(new Color(0xe2c3e50));
         textFieldSurname.setSelectedTextColor(new Color(0xbdc3c7));
 
-        JLabel labelID = new JLabel("#ID");
+        labelID = new JLabel("#" + Customer.idCounter);
         labelID.setBounds(318, 449, 252, 38);
         labelID.setForeground(new Color(0xbdc3c7));
         labelID.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -566,8 +572,6 @@ public class ManagementMouseListener implements MouseListener {
                 }
             }
         });
-
-
 
         DatePicker datePicker = new DatePicker();
         datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);

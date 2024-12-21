@@ -4,10 +4,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Customer {
-    private static int idCounter = 1;
+    public static int idCounter = 1;
 
     private int customerId;
     private String customerName;
+    private String customerSurname;
     private String customerPhoto;
     private LinkedList<Cargo> cargos; // Tüm gönderim geçmişi
     private Stack<Cargo> recentCargosStack; // Son 5 gönderiyi tutar
@@ -18,8 +19,9 @@ public class Customer {
         this.recentCargosStack = new Stack<>();
     }
 
-    public Customer(String customerName, String customerPhoto) {
+    public Customer(String customerName, String customerSurname, String customerPhoto) {
         this.customerId = idCounter++;
+        this.customerSurname = customerSurname;
         this.customerName = customerName;
         this.customerPhoto = customerPhoto;
         this.cargos = new LinkedList<>();
@@ -40,6 +42,14 @@ public class Customer {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public String getCustomerSurname() {
+        return customerSurname;
+    }
+
+    public void setCustomerSurname(String customerSurname) {
+        this.customerSurname = customerSurname;
     }
 
     public String getCustomerPhoto() {
@@ -155,7 +165,7 @@ public class Customer {
     public String toString() {
         return "Customer{" +
                 "customerId=" + customerId +
-                ", customerName='" + customerName + '\'' +
+                ", customerName='" + customerName + '\'' + ", customerSurname='" + customerSurname + '\'' +
                 ", customerPhoto='" + customerPhoto + '\'' +
                 ", cargos=" + cargos +
                 '}';
