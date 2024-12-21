@@ -1,22 +1,28 @@
 package org.geldikYoktunuz;
 
-public class Cargo {
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
+
+public class Cargo implements Comparable<Cargo> {
     private int postId;
     private String postDate;
     private String deliveryDate;
     private int deliveryTime;
-    private String cargoStatus;
+    private CargoStatus cargoStatus;
     private boolean dontRing;
     private boolean isCancelled;
+    private String courierName;
 
-    public Cargo(int postId, String postDate, String deliveryDate, int deliveryTime, String cargoStatus, boolean dontRing) {
+    public Cargo(int postId, String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName) {
         this.postId = postId;
         this.postDate = postDate;
         this.deliveryDate = deliveryDate;
         this.deliveryTime = deliveryTime;
-        this.cargoStatus = cargoStatus;
+        this.cargoStatus = CargoStatus.PENDING_APPROVAL;
         this.dontRing = dontRing;
         this.isCancelled = false;
+        this.courierName = courierName;
     }
 
     public int getPostId() {
@@ -43,10 +49,10 @@ public class Cargo {
     public void setDeliveryTime(int deliveryTime) {
         this.deliveryTime = deliveryTime;
     }
-    public String getCargoStatus() {
+    public CargoStatus getCargoStatus() {
         return cargoStatus;
     }
-    public void setCargoStatus(String cargoStatus) {
+    public void setCargoStatus(CargoStatus cargoStatus) {
         this.cargoStatus = cargoStatus;
     }
     public boolean isDontRing() {
@@ -62,6 +68,11 @@ public class Cargo {
         isCancelled = cancelled;
     }
 
+    @Override
+    public int compareTo(@NotNull Cargo other) {
+        return Integer.compare(this.deliveryTime, other.deliveryTime);
+
+    }
 
     @Override
     public String toString() {
