@@ -13,12 +13,12 @@ public class Main {
         Customer customer3 = new Customer("Er", "photoAdress");
 
         // 6 adet kargo nesnesi oluşturuyoruz
-        Cargo cargo1 = new Cargo( "20 Mayıs 2025", "23 Mayıs 2025", 3, false, "Mehmet Aydın");
-        Cargo cargo2 = new Cargo("1 Haziran 2025", "6 Temmuz 2025", 35, true, "Mehmet Aydın");
-        Cargo cargo3 = new Cargo( "1 Haziran 2025", "20 Haziran 2025", 19, true, "Semih Bekdaş");
-        Cargo cargo4 = new Cargo( "10 Temmuz 2025", "15 Temmuz 2025", 25, false, "Ahmet Yılmaz");
-        Cargo cargo5 = new Cargo( "15 Temmuz 2025", "25 Temmuz 2025", 30, true, "Mehmet Aydın");
-        Cargo cargo6 = new Cargo( "20 Temmuz 2025", "30 Temmuz 2025", 40, false, "Semih Bekdaş");
+        Cargo cargo1 = new Cargo( "20 Mayıs 2025", "23 Mayıs 2025", 3, false, "Mehmet Aydın","Ankara");
+        Cargo cargo2 = new Cargo("1 Haziran 2025", "6 Temmuz 2025", 35, true, "Mehmet Aydın","Izmir");
+        Cargo cargo3 = new Cargo( "1 Haziran 2025", "20 Haziran 2025", 19, true, "Semih Bekdaş","Bursa");
+        Cargo cargo4 = new Cargo( "10 Temmuz 2025", "15 Temmuz 2025", 25, false, "Ahmet Yılmaz","Antalya");
+        Cargo cargo5 = new Cargo( "15 Temmuz 2025", "25 Temmuz 2025", 30, true, "Mehmet Aydın","Antalya");
+        Cargo cargo6 = new Cargo( "20 Temmuz 2025", "30 Temmuz 2025", 40, false, "Semih Bekdaş","Antalya");
         cargo5.setCargoStatus(CargoStatus.DELIVERED);
 
         // Kargoları müşteriye ekliyoruz
@@ -69,7 +69,11 @@ public class Main {
         System.out.println("\nKargo Öncelik Sırası:");
         System.out.println(CargoPrioritization.prioritization(customer1));
 
-        SignInFrame signInFrame = new SignInFrame();
+        CargoRouting cr = new CargoRouting();
+        cr.routing(cargo6);
+
+
+//        SignInFrame signInFrame = new SignInFrame();
 
     }
 }
