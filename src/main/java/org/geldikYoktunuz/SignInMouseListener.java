@@ -1,88 +1,74 @@
 package org.geldikYoktunuz;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
+import java.time.LocalDate;
 
-public class MenuMouseListener implements MouseListener {
+    public class SignInMouseListener implements MouseListener {
+        private String path;
+        private JLabel label;
+        private JLabel effect;
+        private ImageIcon enteredIcon;
+        private ImageIcon pressedIcon;
+        private JFrame currentFrame;
+        private static boolean dontRing = false;
+        private LocalDate[] selectedDates = new LocalDate[2];
 
-    private ImageIcon enteredIcon;
-    private ImageIcon pressedIcon;
-    private ImageIcon originalIcon;
-    private JLabel label;
-    private String key;
-    private JLayeredPane[] layers;
-    private JLayeredPane nextLayer;
-    private JFrame currentFrame;
+        public SignInMouseListener(JLabel label, JLabel effect, String path, JFrame currentFrame) {
+            this.currentFrame = currentFrame;
+            this.label = label;
+            this.effect = effect;
+            this.path = path;
 
-    public MenuMouseListener(JLabel label, String key, JLayeredPane[] layers , JLayeredPane nextLayer, JFrame currentFrame) {
-        this.currentFrame = currentFrame;
-        this.label = label;
-        this.key = key;
-        this.layers = layers;
-        this.nextLayer = nextLayer;
-        this.originalIcon = (ImageIcon) label.getIcon();
+            this.enteredIcon = (ImageIcon) effect.getIcon();
 
-        this.enteredIcon = loadImageIcon("/menuButtons/" + key + "Entered.png");
-        this.pressedIcon = loadImageIcon("/menuButtons/" + key + "Pressed.png");
-    }
-
-    private ImageIcon loadImageIcon(String path) {
-        URL imgURL = getClass().getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    }
-
-    private JLayeredPane getCurrentLayer() {
-        JLayeredPane currentLayer = null;
-
-        for (int i = 0; i < layers.length; i++) {
-            if (layers[i].isVisible()) {
-                currentLayer = layers[i];
-                break;
+            try {
+                URL effectURL = getClass().getResource(path);
+                if (effectURL != null) {
+                    pressedIcon = new ImageIcon(effectURL);
+                } else {
+                    System.err.println("Pressed icon not found: " + path);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
-        return currentLayer;
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
-        if ((currentFrame.getName() == "adminFrame") && (nextLayer.getName() == "account")) {
+        effect.setVisible(false);
+
+        if (label.getName().equals("asAdmin")) {
+            currentFrame.dispose();
+            new AdminMainFrame();
+        } else if (label.getName().equals("asCustomer")) {
             chooseAccount();
-        }
-        else{
-            getCurrentLayer().setVisible(false);
-            nextLayer.setVisible(true);
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        label.setIcon(pressedIcon);
+        effect.setVisible(true);
+        effect.setIcon(pressedIcon);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        label.setIcon(originalIcon);
+        effect.setVisible(false);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        label.setIcon(enteredIcon);
+        effect.setVisible(true);
+        effect.setIcon(enteredIcon);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        label.setIcon(originalIcon);
+        effect.setVisible(false);
     }
-
 
     public void chooseAccount() {
         JDialog dialogChooseAccount = new JDialog(currentFrame, "Choose Account", true);
@@ -104,8 +90,8 @@ public class MenuMouseListener implements MouseListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 dialogChooseAccount.dispose();
-                getCurrentLayer().setVisible(false);
-                nextLayer.setVisible(true);
+                currentFrame.dispose();
+                new CustomerMainFrame();
             }
 
             @Override
@@ -128,6 +114,7 @@ public class MenuMouseListener implements MouseListener {
                 labelChoose.setIcon(defaultIconChoose);
             }
         });
+
 
         dialogChooseAccount.setSize(816, 289);
         dialogChooseAccount.setLocationRelativeTo(null);

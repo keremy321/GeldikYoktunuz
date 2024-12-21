@@ -61,6 +61,8 @@ public class Main {
         System.out.println("\nKargo Öncelik Sırası:");
         System.out.println(CargoPrioritization.prioritization(customer1));
 
+        SignInFrame signInFrame = new SignInFrame();
+
     }
 }
 

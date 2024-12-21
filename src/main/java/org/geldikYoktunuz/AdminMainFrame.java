@@ -1,7 +1,5 @@
 package org.geldikYoktunuz;
 
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,28 +7,30 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-public class MainFrame extends JFrame implements ActionListener {
+public class AdminMainFrame extends JFrame implements ActionListener {
 
-    public static LocalDate currentDate = LocalDate.now();
+    public AdminMainFrame() {
+        this.setName("adminFrame");
 
-    public MainFrame() {
         JLayeredPane frameLayer = new JLayeredPane();
         frameLayer.setBounds(0,0,1116,739);
 
         JLayeredPane homeLayer = new JLayeredPane();
+        homeLayer.setName("home");
         homeLayer.setBounds(0,0,1116,739);
 
         JLayeredPane deliveryLayer = new JLayeredPane();
+        deliveryLayer.setName("delivery");
         deliveryLayer.setBounds(0,0,1116,739);
 
 
         JLayeredPane managementLayer = new JLayeredPane();
+        managementLayer.setName("management");
         managementLayer.setBounds(0,0,1116,739);
 
         JLayeredPane accountLayer = new JLayeredPane();
+        accountLayer.setName("account");
         accountLayer.setBounds(0,0,1116,739);
 
         JLayeredPane[] layers = {homeLayer, deliveryLayer, managementLayer, accountLayer};
@@ -99,25 +99,25 @@ public class MainFrame extends JFrame implements ActionListener {
         JLabel labelDelivery = new JLabel();
         labelDelivery.setIcon(new ImageIcon(getClass().getResource("/menuButtons/delivery.png")));
         labelDelivery.setBounds(25, 135, 50, 30);
-        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, homeLayer));
+        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, homeLayer, this));
 
         JLabel labelManagement = new JLabel();
         labelManagement.setIcon(new ImageIcon(getClass().getResource("/menuButtons/management.png")));
         labelManagement.setBounds(28, 218, 46, 46);
-        labelManagement.addMouseListener(new MenuMouseListener(labelManagement, "management", layers, managementLayer));
+        labelManagement.addMouseListener(new MenuMouseListener(labelManagement, "management", layers, managementLayer, this));
 
         JLabel labelHelp = new JLabel();
         labelHelp.setIcon(new ImageIcon(getClass().getResource("/menuButtons/help.png")));
         labelHelp.setBounds(25, 525, 50, 50);
-        labelHelp.addMouseListener(new MenuMouseListener(labelHelp, "help", layers, homeLayer));
+        labelHelp.addMouseListener(new MenuMouseListener(labelHelp, "help", layers, homeLayer, this));
 
         JLabel labelAccount = new JLabel();
         labelAccount.setIcon(new ImageIcon(getClass().getResource("/menuButtons/account.png")));
         labelAccount.setBounds(25, 615, 50, 50);
-        labelAccount.addMouseListener(new MenuMouseListener(labelAccount, "account", layers, accountLayer));
+        labelAccount.addMouseListener(new MenuMouseListener(labelAccount, "account", layers, accountLayer, this));
 
         JLabel labelCurrentDate = new JLabel();
-        labelCurrentDate.setText(getCurrentDate());
+        labelCurrentDate.setText(CurrentDate.getCurrentDate());
         labelCurrentDate.setBounds(0,430, 100, 26);
         labelCurrentDate.setForeground(new Color(0xf7f7f7));
         labelCurrentDate.setHorizontalAlignment(SwingConstants.CENTER);
@@ -135,8 +135,9 @@ public class MainFrame extends JFrame implements ActionListener {
         labelSkipDay.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                currentDate = currentDate.plusDays(1);
-                labelCurrentDate.setText(getCurrentDate());
+                CurrentDate.passDay();
+                labelCurrentDate.setText(CurrentDate.getCurrentDate());
+                System.out.println("Current date: " + CurrentDate.getCurrentDate());
             }
 
             @Override
@@ -200,11 +201,6 @@ public class MainFrame extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setResizable(false);
-    }
-
-    public static String getCurrentDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return currentDate.format(formatter);
     }
 
     @Override
