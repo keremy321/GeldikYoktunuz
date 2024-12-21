@@ -8,15 +8,17 @@ public class Main {
     public static void main(String[] args) {
 
         // Test için bir müşteri nesnesi oluşturuyoruz
-        Customer customer1 = new Customer(1221, "Ahmed Er", "photoAdress");
+        Customer customer1 = new Customer("Ahmed Er", "photoAdress");
+        Customer customer2 = new Customer("Ahmed", "photoAdress");
+        Customer customer3 = new Customer("Er", "photoAdress");
 
         // 6 adet kargo nesnesi oluşturuyoruz
-        Cargo cargo1 = new Cargo(12, "20 Mayıs 2025", "23 Mayıs 2025", 3, false, "Mehmet Aydın");
-        Cargo cargo2 = new Cargo(13, "1 Haziran 2025", "6 Temmuz 2025", 35, true, "Mehmet Aydın");
-        Cargo cargo3 = new Cargo(14, "1 Haziran 2025", "20 Haziran 2025", 19, true, "Semih Bekdaş");
-        Cargo cargo4 = new Cargo(15, "10 Temmuz 2025", "15 Temmuz 2025", 25, false, "Ahmet Yılmaz");
-        Cargo cargo5 = new Cargo(16, "15 Temmuz 2025", "25 Temmuz 2025", 30, true, "Mehmet Aydın");
-        Cargo cargo6 = new Cargo(17, "20 Temmuz 2025", "30 Temmuz 2025", 40, false, "Semih Bekdaş");
+        Cargo cargo1 = new Cargo( "20 Mayıs 2025", "23 Mayıs 2025", 3, false, "Mehmet Aydın");
+        Cargo cargo2 = new Cargo("1 Haziran 2025", "6 Temmuz 2025", 35, true, "Mehmet Aydın");
+        Cargo cargo3 = new Cargo( "1 Haziran 2025", "20 Haziran 2025", 19, true, "Semih Bekdaş");
+        Cargo cargo4 = new Cargo( "10 Temmuz 2025", "15 Temmuz 2025", 25, false, "Ahmet Yılmaz");
+        Cargo cargo5 = new Cargo( "15 Temmuz 2025", "25 Temmuz 2025", 30, true, "Mehmet Aydın");
+        Cargo cargo6 = new Cargo( "20 Temmuz 2025", "30 Temmuz 2025", 40, false, "Semih Bekdaş");
         cargo5.setCargoStatus(CargoStatus.DELIVERED);
 
         // Kargoları müşteriye ekliyoruz
@@ -56,6 +58,12 @@ public class Main {
         for (Cargo cargo : sortedUndeliveredCargos) {
             System.out.println(cargo);
         }
+
+        System.out.println("\nMüşteri Bilgileri:");
+        System.out.println(customer1);
+        System.out.println(customer2);
+        System.out.println(customer3);
+
 
         // Kargo önceliği sıralaması
         System.out.println("\nKargo Öncelik Sırası:");

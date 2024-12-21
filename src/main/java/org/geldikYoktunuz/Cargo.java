@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 public class Cargo implements Comparable<Cargo> {
+    private static int idCounter = 1;
+
     private int postId;
     private String postDate;
     private String deliveryDate;
@@ -14,8 +16,8 @@ public class Cargo implements Comparable<Cargo> {
     private boolean isCancelled;
     private String courierName;
 
-    public Cargo(int postId, String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName) {
-        this.postId = postId;
+    public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName) {
+        this.postId = idCounter++;
         this.postDate = postDate;
         this.deliveryDate = deliveryDate;
         this.deliveryTime = deliveryTime;

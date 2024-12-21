@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Customer {
+    private static int idCounter = 1;
+
     private int customerId;
     private String customerName;
     private String customerPhoto;
@@ -11,12 +13,13 @@ public class Customer {
     private Stack<Cargo> recentCargosStack; // Son 5 gönderiyi tutar
 
     public Customer() {
+        this.customerId = idCounter++;
         this.cargos = new LinkedList<>();
         this.recentCargosStack = new Stack<>();
     }
 
-    public Customer(int customerId, String customerName, String customerPhoto) {
-        this.customerId = customerId;
+    public Customer(String customerName, String customerPhoto) {
+        this.customerId = idCounter++;
         this.customerName = customerName;
         this.customerPhoto = customerPhoto;
         this.cargos = new LinkedList<>();
