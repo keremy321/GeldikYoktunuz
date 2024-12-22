@@ -1,5 +1,6 @@
 package org.geldikYoktunuz;
 
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -17,33 +18,43 @@ public class CargoRouting {
 //            for (Cargo c : allCargos) {
 //                System.out.println(c.getCity().getCityName()+"\n"+c.getCargoDistance()+"\n");
 //            }
-            a=false;
+            a = false;
             for (Cargo cargo : allCargos) {
-                if (cargo.getCargoStatus()==CargoStatus.PENDING_APPROVAL) {
+                if (cargo.getCargoStatus() == CargoStatus.PENDING_APPROVAL && CurrentDate.currentDate.equals(cargo.getPostDate().plusDays(1))) {
                     cargo.setCargoDistance(routWithDijkstra(cargo, cargoStart, cargo.getCity()));
                 }
             }
-            LinkedList<Cargo> sortedCargos=CargoPrioritization.prioritizationForCargos(allCargos);
+            LinkedList<Cargo> sortedCargos = CargoPrioritization.prioritizationForCargos(allCargos);
 //            for (Cargo c : sortedCargos) {
 //                System.out.println(c.getCity().getCityName()+"\n"+c.getCargoDistance()+"\n");
 //            }
-            a=true;
-            cargoDistance=cargoDistance+routWithDijkstra(sortedCargos.get(0),cargoStart,sortedCargos.get(0).getCity());
-            sortedCargos.get(0).setCargoDistance(cargoDistance);
-            System.out.println(sortedCargos.get(0).getCargoRoute());
-            System.out.println("Mesafe:"+sortedCargos.get(0).getCargoDistance());
-//            System.out.println(sortedCargos.get(0).getCity().getCityName());
-            cargoStart=sortedCargos.get(0).getCity();
-            sortedCargos.get(0).setCargoStatus(CargoStatus.IN_PROCESS);
-            DayCalculator.dayCalcute(sortedCargos.get(0));
-            System.out.println("Sipariş tarihi:"+sortedCargos.get(0).getPostDate()+"\nTeslim tarihi:"+sortedCargos.get(0).getDeliveryDate());
-            for (Cargo c : sortedCargos) {
-                if (c.getCargoStatus()==CargoStatus.PENDING_APPROVAL) {
-                    c.setCargoDistance(sortedCargos.get(0).getCargoDistance());
+            if (!sortedCargos.isEmpty()) {
+                if (sortedCargos.get(0).getCargoStatus() == CargoStatus.PENDING_APPROVAL && CurrentDate.currentDate.equals(sortedCargos.get(0).getPostDate().plusDays(1))) {
+                    a = true;
+                    cargoDistance = cargoDistance + routWithDijkstra(sortedCargos.get(0), cargoStart, sortedCargos.get(0).getCity());
+                    sortedCargos.get(0).setCargoDistance(cargoDistance);
+                    System.out.println(sortedCargos.get(0).getCargoRoute());
+                    System.out.println("Mesafe:" + sortedCargos.get(0).getCargoDistance());
+                    cargoStart = sortedCargos.get(0).getCity();
+//                if (sortedCargos.get(0).getCargoStatus() == CargoStatus.PENDING_APPROVAL && sortedCargos.get(0).getPostDate().plusDays(1) == CurrentDate.currentDate) {
+                    sortedCargos.get(0).setCargoStatus(CargoStatus.IN_PROCESS);
+//                }
+//            sortedCargos.get(0).setCargoStatus(CargoStatus.IN_PROCESS);
+                    DayCalculator.dayCalcute(sortedCargos.get(0));
+                    System.out.println("Sipariş tarihi:" + sortedCargos.get(0).getPostDate() + "\nTeslim tarihi:" + sortedCargos.get(0).getDeliveryDate());
+                    for (Cargo c : sortedCargos) {
+                        if (c.getCity().getCityName() == sortedCargos.get(0).getCity().getCityName()) {
+                            c.setCargoDistance(sortedCargos.get(0).getCargoDistance());
+                        }
+                    }
                 }
+                if (sortedCargos.size() == 1)
+                    break;
             }
-            if (sortedCargos.size()==1)
+            else{
+                System.out.println("boş");
                 break;
+            }
         }
     }
     private int routWithDijkstra(Cargo c,City start,City target) {
@@ -181,7 +192,7 @@ public class CargoRouting {
         cg.addEdge("Manisa", "Izmir", 40);
         cg.addEdge("Manisa", "Aydin", 110);
         cg.addEdge("Manisa", "Kutahya", 240);
-        cg.addEdge("Manisa", "Usak", 320);
+        cg.addEdge("Manisa", "Usak", 215);
         cg.addEdge("Manisa", "Denizli", 160);
         cg.addEdge("Manisa", "Balikesir", 130);
 
@@ -191,7 +202,7 @@ public class CargoRouting {
         cg.addEdge("Kutahya", "Balikesir", 180);
         cg.addEdge("Kutahya","Bursa",155);
 
-        cg.addEdge("Usak", "Manisa", 320);
+        cg.addEdge("Usak", "Manisa", 215);
         cg.addEdge("Usak", "Kutahya", 120);
         cg.addEdge("Usak", "Denizli", 220);
         cg.addEdge("Usak", "Afyonkarahisar", 120);

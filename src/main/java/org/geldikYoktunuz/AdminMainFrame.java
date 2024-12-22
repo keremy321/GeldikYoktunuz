@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -269,6 +270,13 @@ public class AdminMainFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 CurrentDate.passDay();
+                CargoRouting cr = new CargoRouting();
+                List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos().values());
+                CargoStatusManager.statusChanger(allCargos);
+                cr.routing(allCargos);
+                for (Cargo c : allCargos){
+                    System.out.println(c.getCargoName()+"--"+c.getCargoStatus().getDescription());
+                }
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
             }
