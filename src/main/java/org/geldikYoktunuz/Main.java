@@ -6,19 +6,22 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        // 6 adet kargo nesnesi oluşturuyoruz
-        Cargo cargo1 = new Cargo( CurrentDate.currentDate, false, "Mehmet Aydın", "Photo","Cargo1", CityStorage.getCityById(35));
-        Cargo cargo2 = new Cargo( CurrentDate.currentDate, false, "Mehmet Aydın", "Photo","Cargo2",CityStorage.getCityById(10));
-        Cargo cargo3 = new Cargo( CurrentDate.currentDate, false, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41));
-        Cargo cargo4 = new Cargo( CurrentDate.currentDate, false, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45));
-        Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11));
-        Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(64));
-//        cargo5.setCargoStatus(CargoStatus.DELIVERED);
 
         Customer customer1 = new Customer("Ahmed Er", "Faruk", "/dialogButtons/man.png");
         Customer customer2 = new Customer("Emre", "KarateKid", "/dialogButtons/woman.png");
         Customer customer3 = new Customer("Mahmut", "Mahmutoğlu", "/dialogButtons/man.png");
         Customer customer4 = new Customer("İbrahim", "Çetin", "/dialogButtons/woman.png");
+
+
+        // 6 adet kargo nesnesi oluşturuyoruz
+        Cargo cargo1 = new Cargo( CurrentDate.currentDate, false, "Mehmet Aydın", "Photo","Cargo1", CityStorage.getCityById(35), customer1);
+        Cargo cargo2 = new Cargo( CurrentDate.currentDate, false, "Mehmet Aydın", "Photo","Cargo2",CityStorage.getCityById(10), customer1);
+        Cargo cargo3 = new Cargo( CurrentDate.currentDate, false, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41), customer2);
+        Cargo cargo4 = new Cargo( CurrentDate.currentDate, false, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45), customer4);
+        Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11), customer3);
+        Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(64), customer1);
+//        cargo5.setCargoStatus(CargoStatus.DELIVERED);
+
 
 
 ////         Kargoları müşteriye ekliyoruz

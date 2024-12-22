@@ -1,6 +1,7 @@
 package org.geldikYoktunuz;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -9,11 +10,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminMainFrame extends JFrame {
 
     public AdminMainFrame() {
         this.setName("adminFrame");
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
 
         JLayeredPane frameLayer = new JLayeredPane();
         frameLayer.setBounds(0,0,1116,739);
@@ -50,58 +57,48 @@ public class AdminMainFrame extends JFrame {
         RoundedSearchBar searchBarAll = new RoundedSearchBar();
         searchBarAll.setBounds(740, 8, 300, 50);
 
+        List<Object[]> data1List = new ArrayList<>();
 
-        Object[][] data1 = {
-                {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
-                {2, "Package B", "2024-12-02", "2024-12-05", "In Transit"},
-                {3, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {4, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {5, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {6, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {7, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {8, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {9, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {10, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {11, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {12, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {13, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {14, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {15, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {16, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-        };
+        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+            data1List.add(new Object[]{
+                    customer.getCustomerId(),
+                    customer.getCustomerName() + " " + customer.getCustomerSurname(),
+                    customer.getCustomerPhoto()
+            });
+        }
+
+        Object[][] data1 = data1List.toArray(new Object[0][]);
 
         // Column names
-        String[] columnNames1 = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
+        String[] columnNames1 = {"ID", "Customer", "Photo Path"};
 
         // Create the custom table
         CustomTable customTable1 = new CustomTable(data1, columnNames1);
         customTable1.setBounds(201, 296, 800, 155);
 
+        List<Object[]> data2List = new ArrayList<>();
 
-        Object[][] data2 = {
-                {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
-                {2, "Package B", "2024-12-02", "2024-12-05", "In Transit"},
-                {3, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {4, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {5, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {6, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {7, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {8, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {9, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {10, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {11, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {12, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {13, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {14, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {15, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {16, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-        };
+// Populate the list with cargo details
+        for (Cargo cargo : CargoStorage.getAllCargos().values()) {
+            data2List.add(new Object[]{
+                    cargo.getPostId(),
+                    cargo.getCargoName(),
+                    cargo.getCustomer().getCustomerName() + " " + cargo.getCustomer().getCustomerSurname(),
+                    cargo.getPostDate().format(df),
+                    cargo.getDeliveryDate(),
+                    cargo.getCity().getCityName(),
+                    cargo.getCargoStatus().toString()
+            });
+        }
 
-        // Column names
-        String[] columnNames2 = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
+// Convert the list to a two-dimensional array
+        Object[][] data2 = data2List.toArray(new Object[0][]);
 
-        // Create the custom table
-        CustomTable customTable2 = new CustomTable(data1, columnNames2);
+// Column names
+        String[] columnNames2 = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
+
+// Create the custom table using data2 and columnNames2
+        CustomTable customTable2 = new CustomTable(data2, columnNames2);
         customTable2.setBounds(201, 510, 800, 155);
 
 
@@ -175,17 +172,17 @@ public class AdminMainFrame extends JFrame {
         };
 
         // Column names
-        String[] columnNames = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
+        String[] columnNames = {"ID", "Customer", "Photo"};
 
         // Create the custom table
         CustomTable customTable = new CustomTable(data, columnNames);
         customTable.setBounds(201, 274, 800, 380);
 
-        JTable table = customTable.getTable();
+        JTable tableCargos = customTable.getTable();
 
 
 
-        RoundedSearchBar searchBar = new RoundedSearchBar(filterText -> filterTable(table, filterText));
+        RoundedSearchBar searchBar = new RoundedSearchBar(filterText -> filterTable(tableCargos, filterText));
         searchBar.setBounds(700, 218, 300, 50); // Position the search bar
 
 

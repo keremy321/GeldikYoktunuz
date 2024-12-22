@@ -54,7 +54,7 @@ public class CustomTable extends JPanel {
                 if (component instanceof JLabel) {
                     JLabel label = (JLabel) component;
                     label.setHorizontalAlignment(SwingConstants.CENTER);
-                    label.setFont(getMontserratFont(16)); // Set Montserrat font for cells
+                    label.setFont(getMontserratFont(14)); // Set Montserrat font for cells
                 }
                 return component;
             }
@@ -94,7 +94,7 @@ public class CustomTable extends JPanel {
         // Set header properties
         JTableHeader header = table.getTableHeader();
         header.setPreferredSize(new Dimension(100, 40));
-        header.setFont(getMontserratSemiBoldFont(18)); // Set Montserrat SemiBold font for header
+        header.setFont(getMontserratSemiBoldFont(14)); // Set Montserrat SemiBold font for header
         header.setBackground(new Color(0x34495e)); // Header background color
         header.setForeground(new Color(0xe74c3c)); // Header text color
         header.setReorderingAllowed(false);
@@ -105,7 +105,7 @@ public class CustomTable extends JPanel {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 label.setHorizontalAlignment(SwingConstants.CENTER);
-                label.setFont(getMontserratSemiBoldFont(18));
+                label.setFont(getMontserratSemiBoldFont(14));
                 label.setForeground(new Color(0xe74c3c));
                 label.setBackground(new Color(0x34495e));
                 label.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(0x16a085))); // Top, bottom, and vertical lines
@@ -192,7 +192,7 @@ public class CustomTable extends JPanel {
 
         for (int i = 0; i < rowData.length; i++) {
             JLabel label = new JLabel("Column " + (i + 1) + ": " + rowData[i]);
-            label.setFont(getMontserratFont(16));
+            label.setFont(getMontserratFont(14));
             label.setForeground(new Color(0x34495e));
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             panel.add(label);

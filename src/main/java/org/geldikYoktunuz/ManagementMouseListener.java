@@ -342,7 +342,7 @@ public class ManagementMouseListener implements MouseListener {
         labelAddPackage.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Cargo cargo = new Cargo(selectedDate, dontRing, textFieldCourierName.getText(), PPMouseListener.getPpPath(),textFieldDeliveryName.getText(), (City) comboBoxCity.getSelectedItem());
+                Cargo cargo = new Cargo(selectedDate, dontRing, textFieldCourierName.getText(), PPMouseListener.getPpPath(),textFieldDeliveryName.getText(), (City) comboBoxCity.getSelectedItem(), CustomerStorage.getCurrentCustomer());
 
                 System.out.println(cargo);
                 dialogAddPackage.dispose();
