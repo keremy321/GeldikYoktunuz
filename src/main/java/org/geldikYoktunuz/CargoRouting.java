@@ -24,18 +24,19 @@ public class CargoRouting {
                 }
             }
             LinkedList<Cargo> sortedCargos=CargoPrioritization.prioritizationForCargos(allCargos);
-            System.out.println("\n\n\n");
-            for (Cargo c : sortedCargos) {
-                System.out.println(c.getCity().getCityName()+"\n"+c.getCargoDistance()+"\n");
-            }
+//            for (Cargo c : sortedCargos) {
+//                System.out.println(c.getCity().getCityName()+"\n"+c.getCargoDistance()+"\n");
+//            }
             a=true;
             cargoDistance=cargoDistance+routWithDijkstra(sortedCargos.get(0),cargoStart,sortedCargos.get(0).getCity());
             sortedCargos.get(0).setCargoDistance(cargoDistance);
-            System.out.println("Mesafe:"+sortedCargos.get(0).getCargoDistance());
             System.out.println(sortedCargos.get(0).getCargoRoute());
+            System.out.println("Mesafe:"+sortedCargos.get(0).getCargoDistance());
 //            System.out.println(sortedCargos.get(0).getCity().getCityName());
             cargoStart=sortedCargos.get(0).getCity();
             sortedCargos.get(0).setCargoStatus(CargoStatus.IN_PROCESS);
+            DayCalculator.dayCalcute(sortedCargos.get(0));
+            System.out.println("Sipariş tarihi:"+sortedCargos.get(0).getPostDate()+"\nTeslim tarihi:"+sortedCargos.get(0).getDeliveryDate());
             for (Cargo c : sortedCargos) {
                 if (c.getCargoStatus()==CargoStatus.PENDING_APPROVAL) {
                     c.setCargoDistance(sortedCargos.get(0).getCargoDistance());

@@ -10,7 +10,7 @@ public class Cargo implements Comparable<Cargo> {
 
     private int postId;
     private LocalDate postDate;
-    private String deliveryDate;
+    private LocalDate deliveryDate;
     private int deliveryTime;
     private CargoStatus cargoStatus;
     private boolean dontRing;
@@ -48,10 +48,10 @@ public class Cargo implements Comparable<Cargo> {
     public void setPostDate(LocalDate postDate) {
         this.postDate = postDate;
     }
-    public String getDeliveryDate() {
+    public LocalDate getDeliveryDate() {
         return deliveryDate;
     }
-    public void setDeliveryDate(String deliveryDate) {
+    public void setDeliveryDate(LocalDate deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
     public int getDeliveryTime() {

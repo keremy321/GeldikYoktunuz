@@ -1,5 +1,6 @@
 package org.geldikYoktunuz;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class Main {
@@ -72,6 +73,7 @@ public class Main {
 //
         List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos().values());
         cr.routing(allCargos);
+
 //
 
         SignInFrame signInFrame = new SignInFrame();
