@@ -1,21 +1,18 @@
 package org.geldikYoktunuz;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
-
         // 6 adet kargo nesnesi oluşturuyoruz
-//        Cargo cargo1 = new Cargo( "20 Mayıs 2025", "23 Mayıs 2025", 3, false, "Mehmet Aydın");
-//        Cargo cargo2 = new Cargo("1 Haziran 2025", "6 Temmuz 2025", 35, true, "Mehmet Aydın");
-//        Cargo cargo3 = new Cargo( "1 Haziran 2025", "20 Haziran 2025", 19, true, "Semih Bekdaş");
-//        Cargo cargo4 = new Cargo( "10 Temmuz 2025", "15 Temmuz 2025", 25, false, "Ahmet Yılmaz");
-//        Cargo cargo5 = new Cargo( "15 Temmuz 2025", "25 Temmuz 2025", 30, true, "Mehmet Aydın");
-//        Cargo cargo6 = new Cargo( "20 Temmuz 2025", "30 Temmuz 2025", 40, false, "Semih Bekdaş");
-//        cargo5.setCargoStatus(CargoStatus.DELIVERED);
+        Cargo cargo1 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo1", CityStorage.getCityById(35));
+        Cargo cargo2 = new Cargo(CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo2",CityStorage.getCityById(10));
+        Cargo cargo3 = new Cargo( CurrentDate.currentDate, true, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41));
+        Cargo cargo4 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45));
+        Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11));
+        Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(64));
+        cargo5.setCargoStatus(CargoStatus.DELIVERED);
 
         Customer customer1 = new Customer("Ahmed Er", "Faruk", "/dialogButtons/man.png");
         Customer customer2 = new Customer("Emre", "KarateKid", "/dialogButtons/woman.png");
@@ -73,7 +70,8 @@ public class Main {
 //
         CargoRouting cr = new CargoRouting();
 
-//        cr.routing(cargo6);
+        List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos().values());
+        cr.routing(allCargos);
 
 
         SignInFrame signInFrame = new SignInFrame();

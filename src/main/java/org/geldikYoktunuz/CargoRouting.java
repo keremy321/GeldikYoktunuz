@@ -5,11 +5,34 @@ import java.util.*;
 
 public class CargoRouting {
     CityGraph cg = new CityGraph();
-    public void routing(Cargo cargo) {
+    String cargoRouteHandler="";
+    City cargoStart=CityStorage.getCityById(34);
+    int cargoDistance=0;
+    int a=1;
+
+    public void routing(List<Cargo> allCargos) {
         cities();
-        System.out.println("En kısa mesafe:"+routWithDijkstra(cargo.getCity()));
+        while(allCargos.size()>0) {
+            for (Cargo cargo : allCargos) {
+                int a=1;
+                cargoStart=CityStorage.getCityById(34);
+                cargo.setCargoDistance(routWithDijkstra(cargo,cargoStart,cargo.getCity()));
+            }
+            int a=0;
+            LinkedList<Cargo> sortedCargos=CargoPrioritization.prioritizationForCargos(allCargos);
+            for (Cargo cargo : allCargos) {
+                cargo.setCargoDistance(0);
+            }
+            cargoDistance=cargoDistance+sortedCargos.get(0).getCargoDistance()+routWithDijkstra(sortedCargos.get(0),cargoStart,sortedCargos.get(0).getCity());
+            sortedCargos.get(0).setCargoDistance(cargoDistance);
+            System.out.println("En kısa mesafe:"+sortedCargos.get(0).getCargoDistance());
+            System.out.println(sortedCargos.get(0).getCargoRoute());
+            System.out.println(sortedCargos.get(0).getCity().getCityName());
+            cargoStart=sortedCargos.get(0).getCity();
+            allCargos.remove(0);
+        }
     }
-    private int routWithDijkstra(City target) {
+    private int routWithDijkstra(Cargo c,City start,City target) {
         Map<String, Integer> distances = new HashMap<>();
         Map<String, String> previous = new HashMap<>(); // Hangi şehirden geldiğimizi takip etmek için
         PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(Comparator.comparingInt(Map.Entry::getValue));
@@ -18,20 +41,22 @@ public class CargoRouting {
         for (String vertex : cg.getAdjacencyList().keySet()) {
             distances.put(vertex, Integer.MAX_VALUE);
         }
-        distances.put("Istanbul", 0);
+        distances.put(start.getCityName(), 0);
 
-        pq.add(new AbstractMap.SimpleEntry<>("Istanbul", 0));
+        pq.add(new AbstractMap.SimpleEntry<>(start.getCityName(), 0));
 
         while (!pq.isEmpty()) {
             Map.Entry<String, Integer> current = pq.poll();
             String currentVertex = current.getKey();
             int currentDistance = current.getValue();
 
-            // Eğer hedefe ulaşıldıysa, işlem tamamlanır
-//            if (currentVertex.equals(target)) {
-//                printPath(previous, "Istanbul", target);
-//                return currentDistance;
-//            }
+//             Eğer hedefe ulaşıldıysa, işlem tamamlanır
+            if (currentVertex.equals(target.getCityName())) {
+                if (a==0) {
+                    printPath(c, previous, start.getCityName(), target.getCityName());
+                }
+                return currentDistance;
+            }
 
             // Explore neighbors
             for (Map.Entry<String, Integer> neighbor : cg.getAdjacencyList().get(currentVertex).entrySet()) {
@@ -47,54 +72,39 @@ public class CargoRouting {
             }
         }
 
-        System.out.println("Hedef şehir '" + target + "' ulaşılmaz.");
+        System.out.println("Hedef şehir '" + target.getCityName() + "' ulaşılmaz.");
         return 0;
     }
-    private void printPath(Map<String, String> previous, String start, String target) {
+    private void printPath(Cargo c,Map<String, String> previous, String start, String target) {
         List<String> path = new ArrayList<>();
         String current = target;
 
-        while (current != null) {
+        while (current != null ) {
             path.add(current);
             current = previous.get(current);
         }
         Collections.reverse(path);
 
         if (path.get(0).equals(start)) {
-            System.out.println("En kısa yol: " + String.join(" -> ", path));
+//            System.out.println("En kısa yol: " + String.join(" -> ", path));
+            if (start=="Istanbul") {
+                c.setCargoRoute("En kısa yol: " + cargoRouteHandler + String.join(" -> ", path));
+                cargoRouteHandler = String.join(" -> ", path);
+            }
+            else {
+                c.setCargoRoute("En kısa yol: " + cargoRouteHandler + " -----> "  + String.join(" -> ", path));
+                cargoRouteHandler = cargoRouteHandler + " -----> " + String.join(" -> ", path);
+            }
+
         } else {
             System.out.println("Hedefe ulaşmak mümkün değil.");
         }
     }
     private void cities(){
 
-        String[] cities = {
-                "Istanbul", "Kocaeli", "Bursa", "Tekirdag", "Yalova", "Sakarya", "Bilecik", "Edirne",
-                "Canakkale", "Kirklareli", "Balikesir", "Izmir", "Aydin", "Manisa", "Kutahya", "Usak", "Denizli",
-                "Afyonkarahisar", "Mugla"
-        };
-
-
-
-        cg.addVertex("Istanbul");
-        cg.addVertex("Kocaeli");
-        cg.addVertex("Bursa");
-        cg.addVertex("Tekirdag");
-        cg.addVertex("Yalova");
-        cg.addVertex("Sakarya");
-        cg.addVertex("Bilecik");
-        cg.addVertex("Edirne");
-        cg.addVertex("Canakkale");
-        cg.addVertex("Kirklareli");
-        cg.addVertex("Balikesir");
-        cg.addVertex("Izmir");
-        cg.addVertex("Aydin");
-        cg.addVertex("Manisa");
-        cg.addVertex("Kutahya");
-        cg.addVertex("Usak");
-        cg.addVertex("Denizli");
-        cg.addVertex("Afyonkarahisar");
-        cg.addVertex("Mugla");
+        for (String city : CityStorage.getAllCityNames()){
+            cg.addVertex(city);
+        }
 
         cg.addEdge("Istanbul", "Kocaeli", 100);
         cg.addEdge("Istanbul", "Tekirdag", 135);

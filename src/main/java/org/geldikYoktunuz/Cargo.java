@@ -19,6 +19,8 @@ public class Cargo implements Comparable<Cargo> {
     private String courierName;
     private String courierPhoto;
     private String cargoName;
+    private String cargoRoute;
+    private int cargoDistance;
 
     public Cargo(LocalDate postDate, boolean dontRing, String courierName, String courierPhoto, String cargoName , City city) {
         this.postId = idCounter++;
@@ -106,10 +108,22 @@ public class Cargo implements Comparable<Cargo> {
     public void setCargoName(String cargoName) {
         this.cargoName = cargoName;
     }
+    public String getCargoRoute() {
+        return cargoRoute;
+    }
+    public void setCargoRoute(String cargoRoute) {
+        this.cargoRoute = cargoRoute;
+    }
+    public int getCargoDistance() {
+        return cargoDistance;
+    }
+    public void setCargoDistance(int cargoDistance) {
+        this.cargoDistance = cargoDistance;
+    }
 
     @Override
     public int compareTo(@NotNull Cargo other) {
-        return Integer.compare(this.deliveryTime, other.deliveryTime);
+        return Integer.compare(this.cargoDistance, other.cargoDistance);
 
     }
 

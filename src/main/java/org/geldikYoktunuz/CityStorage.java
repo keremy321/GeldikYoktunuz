@@ -34,7 +34,7 @@ public class CityStorage {
         cityMap.put(city.getCityId(), city);
     }
 
-    public static City getCityById(String cityId) {
+    public static City getCityById(int cityId) {
         return cityMap.get(cityId);
     }
 
