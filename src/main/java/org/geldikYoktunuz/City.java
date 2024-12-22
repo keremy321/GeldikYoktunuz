@@ -2,15 +2,15 @@ package org.geldikYoktunuz;
 
 public class City {
     private String cityName;
-    private String cityId;
-    public City(String cityName, String cityId) {
+    private int cityId;
+    public City(String cityName, int cityId) {
         this.cityName = cityName;
         this.cityId = cityId;
     }
     public String getCityName() {
         return cityName;
     }
-    public String getCityId() {
+    public int getCityId() {
         return cityId;
     }
 }
