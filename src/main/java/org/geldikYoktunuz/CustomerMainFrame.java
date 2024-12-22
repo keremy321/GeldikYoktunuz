@@ -1,6 +1,8 @@
 package org.geldikYoktunuz;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -65,9 +67,20 @@ public class CustomerMainFrame extends JFrame {
         // Column names
         String[] columnNames = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
 
+
         // Create the custom table
         CustomTable customTable = new CustomTable(data, columnNames);
         customTable.setBounds(201, 274, 800, 380);
+
+        JTable table = customTable.getTable();
+
+
+
+        RoundedSearchBar searchBar = new RoundedSearchBar(filterText -> filterTable(table, filterText));
+        searchBar.setBounds(700, 218, 300, 50); // Position the search bar
+
+
+
 
 //        CircularImagePanel circularImagePanel = new CircularImagePanel("CustomerStorage.getCurrentCustomer().getCustomerPhoto()", 150);
 //        circularImagePanel.setBounds(201, 53, 150, 150);
@@ -193,6 +206,7 @@ public class CustomerMainFrame extends JFrame {
         accountLayer.add(labelNameSurname, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(labelID, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(customTable, JLayeredPane.PALETTE_LAYER);
+        accountLayer.add(searchBar, JLayeredPane.PALETTE_LAYER);
 
         this.setLayout(null);
         this.setTitle("Geldik Yoktunuz");
@@ -202,4 +216,24 @@ public class CustomerMainFrame extends JFrame {
         this.setVisible(true);
         this.setResizable(false);
     }
+
+    private static void filterTable(JTable table, String filterText) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+
+        table.setRowSorter(sorter);
+
+        if (filterText == null || filterText.trim().isEmpty()) {
+            // If filter text is empty, show all rows
+            sorter.setRowFilter(null);
+        } else {
+            try {
+                // Filter rows based on the text
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + filterText));
+            } catch (java.util.regex.PatternSyntaxException e) {
+                JOptionPane.showMessageDialog(null, "Invalid search text.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 package org.geldikYoktunuz;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
-public class AdminMainFrame extends JFrame implements ActionListener {
+public class AdminMainFrame extends JFrame {
 
     public AdminMainFrame() {
         this.setName("adminFrame");
@@ -44,6 +46,10 @@ public class AdminMainFrame extends JFrame implements ActionListener {
 
         BackgroundImage bgManagement = new BackgroundImage("/backgrounds/bgManagement.png");
         bgManagement.setBounds(0, 0, 1100, 700);
+
+        RoundedSearchBar searchBarAll = new RoundedSearchBar();
+        searchBarAll.setBounds(740, 8, 300, 50);
+
 
         Object[][] data1 = {
                 {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
@@ -174,6 +180,13 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         // Create the custom table
         CustomTable customTable = new CustomTable(data, columnNames);
         customTable.setBounds(201, 274, 800, 380);
+
+        JTable table = customTable.getTable();
+
+
+
+        RoundedSearchBar searchBar = new RoundedSearchBar(filterText -> filterTable(table, filterText));
+        searchBar.setBounds(700, 218, 300, 50); // Position the search bar
 
 
 //        CircularImagePanel circularImagePanel = new CircularImagePanel("CustomerStorage.getCurrentCustomer().getCustomerPhoto()", 150);
@@ -315,6 +328,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         managementLayer.add(labelEffectEditPackage, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(customTable1, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(customTable2, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(searchBarAll, JLayeredPane.PALETTE_LAYER);
 
 
         accountLayer.add(bgAccount, JLayeredPane.DEFAULT_LAYER);
@@ -322,6 +336,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         accountLayer.add(labelID, JLayeredPane.PALETTE_LAYER);
 //        accountLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(customTable, JLayeredPane.PALETTE_LAYER);
+        accountLayer.add(searchBar, JLayeredPane.PALETTE_LAYER);
 
         this.setLayout(null);
         this.setTitle("Geldik Yoktunuz");
@@ -332,8 +347,23 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         this.setResizable(false);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    private static void filterTable(JTable table, String filterText) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
 
+        table.setRowSorter(sorter);
+
+        if (filterText == null || filterText.trim().isEmpty()) {
+            // If filter text is empty, show all rows
+            sorter.setRowFilter(null);
+        } else {
+            try {
+                // Filter rows based on the text
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + filterText));
+            } catch (java.util.regex.PatternSyntaxException e) {
+                JOptionPane.showMessageDialog(null, "Invalid search text.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
+
 }

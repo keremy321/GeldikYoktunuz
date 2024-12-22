@@ -9,6 +9,8 @@ import java.io.IOException;
 
 public class CustomTable extends JPanel {
 
+    JTable table;
+
     public CustomTable(Object[][] data, String[] columnNames) {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(800, 380)); // Set panel size
@@ -24,7 +26,7 @@ public class CustomTable extends JPanel {
             }
         };
 
-        JTable table = new JTable(tableModel) {
+        table = new JTable(tableModel) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component component = super.prepareRenderer(renderer, row, column);
@@ -67,9 +69,8 @@ public class CustomTable extends JPanel {
         table.setFocusable(false);
         table.setRowSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        // Enable sorting
-        table.setAutoCreateRowSorter(true);
+        table.setAutoCreateRowSorter(true); // Enable sorting
+        table.setRowHeight(40);
 
         // Adjust column widths: ID column tighter, others equal
         int totalWidth = 800; // Total width of the table
@@ -145,7 +146,6 @@ public class CustomTable extends JPanel {
             }
         };
 
-
         roundedPanel.setLayout(new BorderLayout());
         roundedPanel.setPreferredSize(new Dimension(800, 380)); // Set rounded panel size
         roundedPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -200,5 +200,9 @@ public class CustomTable extends JPanel {
 
         newFrame.add(panel);
         newFrame.setVisible(true);
+    }
+
+    public JTable getTable() {
+        return table; // Expose the JTable instance
     }
 }
