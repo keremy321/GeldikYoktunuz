@@ -11,8 +11,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Map;
 
-    public class SignInMouseListener implements MouseListener {
+public class SignInMouseListener implements MouseListener {
         private String path;
         private JLabel label;
         private JLabel effect;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
         private JFrame currentFrame;
         private static boolean dontRing = false;
         private LocalDate[] selectedDates = new LocalDate[2];
+        JComboBox<Customer> comboBox;
 
         public SignInMouseListener(JLabel label, JLabel effect, String path, JFrame currentFrame) {
             this.currentFrame = currentFrame;
@@ -99,6 +101,7 @@ import java.time.LocalDate;
             public void mouseClicked(MouseEvent e) {
                 dialogChooseAccount.dispose();
                 currentFrame.dispose();
+                CustomerStorage.setCurrentCustomer((Customer) comboBox.getSelectedItem());
                 new CustomerMainFrame();
             }
 
@@ -133,7 +136,7 @@ import java.time.LocalDate;
         UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
 
 
-        JComboBox<Customer> comboBox = new JComboBox<>();
+        comboBox = new JComboBox<>();
         comboBox.setBounds(117, 108, 567, 54);
         comboBox.setBackground(new Color(0x159a80));
 
@@ -166,10 +169,10 @@ import java.time.LocalDate;
         });
 
 
-        comboBox.addItem(new Customer("Ali", "Veli", "/pp/pp1.png"));
-        comboBox.addItem(new Customer("Ayşe", "Fatma", "/pp/pp2.png"));
-        comboBox.addItem(new Customer("Mehmet", "Ahmet", "/pp/pp3.png"));
-        comboBox.addItem(new Customer("Zeynep", "Selin", "/pp/pp4.png"));
+        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+            comboBox.addItem(customer);
+        }
+
 
         dialogChooseAccount.setSize(816, 289);
         dialogChooseAccount.setLocationRelativeTo(null);

@@ -6,7 +6,13 @@ import raven.datetime.component.date.DateSelectionAble;
 import raven.datetime.component.date.DateSelectionListener;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -23,6 +29,7 @@ public class ManagementMouseListener implements MouseListener {
     private JFrame currentFrame;
     private static boolean dontRing = false;
     private LocalDate[] selectedDates = new LocalDate[2];
+    private JComboBox<Customer> comboBox;
 
     private JTextField textFieldName;
     private JTextField textFieldSurname;
@@ -58,7 +65,7 @@ public class ManagementMouseListener implements MouseListener {
             addUser();
             System.out.println("addUser");
         } else if ("editUser".equals(label.getName())) {
-            editUser();
+            chooseAccount();
             System.out.println("editUser");
         } else if ("addPackage".equals(label.getName())) {
             addPackage();
@@ -164,16 +171,78 @@ public class ManagementMouseListener implements MouseListener {
         BackgroundImage bgEditUser = new BackgroundImage("/backgrounds/bgEditUser.png");
         bgEditUser.setBounds(0, 0, 800, 500);
 
+
+
         JLabel labelEditUser = new JLabel();
         ImageIcon defaultIconEditUser = new ImageIcon(getClass().getResource("/dialogButtons/edit.png"));
         ImageIcon enteredIconEditUser = new ImageIcon(getClass().getResource("/dialogButtons/editEntered.png"));
         ImageIcon pressedIconEditUser = new ImageIcon(getClass().getResource("/dialogButtons/editPressed.png"));
+
+        ppLabels(editUserLayer);
+        userAdditions(editUserLayer);
+
+        labelID.setText("#" + CustomerStorage.getCurrentCustomer().getCustomerId());
+
+        dialogEditUser.addWindowFocusListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowGainedFocus(java.awt.event.WindowEvent e) {
+                labelEditUser.requestFocusInWindow(); // Or any other component
+            }
+        });
+
+        textFieldName.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textFieldName.getText().equals(CustomerStorage.getCurrentCustomer().getCustomerName())) {
+                    textFieldName.setText("");
+                    textFieldName.setForeground(new Color(0x363f4f));
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textFieldName.getText().isEmpty()) {
+                    textFieldName.setForeground(Color.GRAY);
+                    textFieldName.setText(CustomerStorage.getCurrentCustomer().getCustomerName());
+                }
+            }
+        });
+
+// Set placeholder manually at initialization
+        textFieldName.setText(CustomerStorage.getCurrentCustomer().getCustomerName());
+        textFieldName.setForeground(Color.GRAY);
+
+        textFieldSurname.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textFieldSurname.getText().equals(CustomerStorage.getCurrentCustomer().getCustomerSurname())) {
+                    textFieldSurname.setText("");
+                    textFieldSurname.setForeground(new Color(0x363f4f));
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textFieldSurname.getText().isEmpty()) {
+                    textFieldSurname.setForeground(Color.GRAY);
+                    textFieldSurname.setText(CustomerStorage.getCurrentCustomer().getCustomerSurname());
+                }
+            }
+        });
+
+// Set placeholder manually at initialization
+        textFieldSurname.setText(CustomerStorage.getCurrentCustomer().getCustomerSurname());
+        textFieldSurname.setForeground(Color.GRAY);
 
         labelEditUser.setIcon(defaultIconEditUser);
         labelEditUser.setBounds(591, 449, 167, 38);
         labelEditUser.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                CustomerStorage.getCurrentCustomer().setCustomerName(textFieldName.getText());
+                CustomerStorage.getCurrentCustomer().setCustomerSurname(textFieldSurname.getText());
+                CustomerStorage.getCurrentCustomer().setCustomerPhoto(PPMouseListener.getPpPath());
+
                 dialogEditUser.dispose();
             }
 
@@ -232,8 +301,7 @@ public class ManagementMouseListener implements MouseListener {
             }
         });
 
-        ppLabels(editUserLayer);
-        userAdditions(editUserLayer);
+
 
         dialogEditUser.setSize(816, 539);
         dialogEditUser.setLocationRelativeTo(null);
@@ -410,7 +478,7 @@ public class ManagementMouseListener implements MouseListener {
         labelEffectMan.setVisible(false);
 
         JLabel labelMan = new JLabel();
-        labelMan.setName("labelManEdit");
+        labelMan.setName("labelMan");
         labelMan.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/man.png")));
         labelMan.setBounds(99, 140, 134, 134);
         labelMan.addMouseListener(new PPMouseListener(labelMan, labelEffectMan));
@@ -421,7 +489,7 @@ public class ManagementMouseListener implements MouseListener {
         labelEffectWoman.setVisible(false);
 
         JLabel labelWoman = new JLabel();
-        labelWoman.setName("labelWomanEdit");
+        labelWoman.setName("labelWoman");
         labelWoman.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/woman.png")));
         labelWoman.setBounds(333, 140, 134, 134);
         labelWoman.addMouseListener(new PPMouseListener(labelWoman, labelEffectWoman));
@@ -622,5 +690,110 @@ public class ManagementMouseListener implements MouseListener {
         layeredPane.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(editor, JLayeredPane.PALETTE_LAYER);
     }
+
+    public void chooseAccount() {
+        JDialog dialogChooseAccount = new JDialog(currentFrame, "Choose Account", true);
+
+        JLayeredPane chooseUserLayer = new JLayeredPane();
+        chooseUserLayer.setBounds(0, 0, 816, 289);
+
+        BackgroundImage byChooseAccount = new BackgroundImage("/backgrounds/bgChooseAccount.png");
+        byChooseAccount.setBounds(0, 0, 800, 250);
+
+        JLabel labelChoose = new JLabel();
+        ImageIcon defaultIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/choose.png"));
+        ImageIcon enteredIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/chooseEntered.png"));
+        ImageIcon pressedIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/choosePressed.png"));
+
+        labelChoose.setIcon(defaultIconChoose);
+        labelChoose.setBounds(591, 194, 167, 38);
+        labelChoose.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dialogChooseAccount.dispose();
+                CustomerStorage.setCurrentCustomer((Customer) comboBox.getSelectedItem());
+                System.out.println("Current Customer: " + CustomerStorage.getCurrentCustomer().getCustomerName());
+                editUser();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelChoose.setIcon(pressedIconChoose);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelChoose.setIcon(defaultIconChoose);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelChoose.setIcon(enteredIconChoose);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelChoose.setIcon(defaultIconChoose);
+            }
+        });
+
+        UIManager.put("ComboBox.arc", 15); // Set the corner radius to 15
+
+
+        UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
+        UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+
+
+        comboBox = new JComboBox<>();
+        comboBox.setBounds(117, 108, 567, 54);
+        comboBox.setBackground(new Color(0x159a80));
+
+        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+            comboBox.addItem(customer);
+        }
+
+        comboBox.setForeground(Color.WHITE);
+
+        // Customize Border: Focused and Non-Focused
+        Border defaultBorder = new CompoundBorder(
+                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new EmptyBorder(5, 5, 5, 5)
+        );
+        Border focusedBorder = new CompoundBorder(
+                new LineBorder(Color.WHITE, 2), // White border when focused
+                new EmptyBorder(5, 5, 5, 5)
+        );
+
+        comboBox.setBorder(defaultBorder);
+
+        // Add focus listener to change border dynamically
+        comboBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                comboBox.setBorder(focusedBorder);
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                comboBox.setBorder(defaultBorder);
+            }
+        });
+
+        dialogChooseAccount.setSize(816, 289);
+        dialogChooseAccount.setLocationRelativeTo(null);
+        dialogChooseAccount.setResizable(false);
+        dialogChooseAccount.setLayout(null);
+
+        chooseUserLayer.add(byChooseAccount, JLayeredPane.DEFAULT_LAYER);
+        chooseUserLayer.add(labelChoose, JLayeredPane.PALETTE_LAYER);
+        chooseUserLayer.add(comboBox, JLayeredPane.PALETTE_LAYER);
+
+        dialogChooseAccount.add(chooseUserLayer);
+        dialogChooseAccount.setVisible(true);
+    }
+
 }
 

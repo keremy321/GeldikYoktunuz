@@ -33,10 +33,82 @@ public class CustomerMainFrame extends JFrame {
         BackgroundImage bgHome = new BackgroundImage("/backgrounds/bgHome.png");
         bgHome.setBounds(0, 0, 1100, 700);
 
+
+//      ACCOUNT LAYER
+
 //      ACCOUNT LAYER
 
         BackgroundImage bgAccount = new BackgroundImage("/backgrounds/bgAccount.png");
         bgAccount.setBounds(0, 0, 1100, 700);
+
+
+
+        Object[][] data = {
+                {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
+                {2, "Package B", "2024-12-02", "2024-12-05", "In Transit"},
+                {3, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {4, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {5, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {6, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {7, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {8, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {9, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {10, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {11, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {12, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {13, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {14, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {15, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {16, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+        };
+
+        // Column names
+        String[] columnNames = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
+
+        // Create the custom table
+        CustomTable customTable = new CustomTable(data, columnNames);
+        customTable.setBounds(201, 274, 800, 380);
+
+//        CircularImagePanel circularImagePanel = new CircularImagePanel("CustomerStorage.getCurrentCustomer().getCustomerPhoto()", 150);
+//        circularImagePanel.setBounds(201, 53, 150, 150);
+
+        JLabel labelNameSurname = new JLabel();
+        if (CustomerStorage.getCurrentCustomer() != null){
+            labelNameSurname.setText(CustomerStorage.getCurrentCustomer().getCustomerName() + " " + CustomerStorage.getCurrentCustomer().getCustomerSurname());
+            System.out.println("Current Customer: " + CustomerStorage.getCurrentCustomer().getCustomerName() + " " + CustomerStorage.getCurrentCustomer().getCustomerSurname());
+        }
+        else {
+            labelNameSurname.setText("Default Name Surname");
+
+            System.out.println("Current Customer: null");
+        }
+
+        labelNameSurname.setBounds(373,90, 680, 60);
+        labelNameSurname.setForeground(new Color(0x34495e));
+
+        JLabel labelID = new JLabel();
+        if (CustomerStorage.getCurrentCustomer() != null){
+            labelID.setText("#" + CustomerStorage.getCurrentCustomer().getCustomerId());
+            System.out.println("Current Customer: " + CustomerStorage.getCurrentCustomer().getCustomerName() + " " + CustomerStorage.getCurrentCustomer().getCustomerSurname());
+        }
+        else {
+            labelID.setText("Default ID");
+
+            System.out.println("Current Customer: null");
+        }
+
+        labelID.setBounds(373,130, 680, 60);
+        labelID.setForeground(new Color(0x34495e));
+        try {
+            Font montserratFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/Montserrat-Bold.ttf")).deriveFont(36f);
+            Font montserratLightFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/Montserrat-Light.ttf")).deriveFont(26f);
+            labelNameSurname.setFont(montserratFont);
+            labelID.setFont(montserratLightFont);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            labelNameSurname.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            labelID.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        }
 
 //      MAIN FRAME
 
@@ -118,6 +190,9 @@ public class CustomerMainFrame extends JFrame {
         homeLayer.add(bgHome, JLayeredPane.DEFAULT_LAYER);
 
         accountLayer.add(bgAccount, JLayeredPane.DEFAULT_LAYER);
+        accountLayer.add(labelNameSurname, JLayeredPane.PALETTE_LAYER);
+        accountLayer.add(labelID, JLayeredPane.PALETTE_LAYER);
+        accountLayer.add(customTable, JLayeredPane.PALETTE_LAYER);
 
         this.setLayout(null);
         this.setTitle("Geldik Yoktunuz");

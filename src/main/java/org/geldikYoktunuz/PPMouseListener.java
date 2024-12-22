@@ -1,6 +1,7 @@
 package org.geldikYoktunuz;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -11,7 +12,7 @@ public class PPMouseListener implements MouseListener {
     private ImageIcon enteredIcon;
     private ImageIcon pressedIcon;
     private ImageIcon selectedIcon;
-    private static String ppPath;
+    public static String ppPath;
 
     private static JLabel lastSelectedEffect;
 
@@ -39,7 +40,7 @@ public class PPMouseListener implements MouseListener {
             fileChooser.setDialogTitle("Choose a PNG or JPG file");
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-            fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            fileChooser.setFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(File file) {
                     return file.isDirectory() || file.getName().toLowerCase().endsWith(".png")
@@ -61,13 +62,17 @@ public class PPMouseListener implements MouseListener {
         }
 
         switch (label.getName()) {
-            case "labelMan" -> ppPath = "/dialogButtons/man.png";
-            case "labelWoman" -> ppPath = "/dialogButtons/woman.png";
-            case "labelPlus" -> {
+            case "labelMan":
+                ppPath = "/dialogButtons/man.png";
+                break;
+            case "labelWoman":
+                ppPath = "/dialogButtons/woman.png";
+                break;
+            case "labelPlus":
                 if (selectedFileAbsolutePath != null) {
                     ppPath = selectedFileAbsolutePath;
                 }
-            }
+                break;
         }
 
         System.out.println("Selected Path: " + ppPath);

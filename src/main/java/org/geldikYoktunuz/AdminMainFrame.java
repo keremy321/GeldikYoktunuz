@@ -45,6 +45,60 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         BackgroundImage bgManagement = new BackgroundImage("/backgrounds/bgManagement.png");
         bgManagement.setBounds(0, 0, 1100, 700);
 
+        Object[][] data1 = {
+                {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
+                {2, "Package B", "2024-12-02", "2024-12-05", "In Transit"},
+                {3, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {4, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {5, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {6, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {7, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {8, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {9, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {10, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {11, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {12, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {13, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {14, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {15, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {16, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+        };
+
+        // Column names
+        String[] columnNames1 = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
+
+        // Create the custom table
+        CustomTable customTable1 = new CustomTable(data1, columnNames1);
+        customTable1.setBounds(201, 296, 800, 155);
+
+
+        Object[][] data2 = {
+                {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
+                {2, "Package B", "2024-12-02", "2024-12-05", "In Transit"},
+                {3, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {4, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {5, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {6, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {7, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {8, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {9, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {10, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {11, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {12, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {13, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {14, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {15, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {16, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+        };
+
+        // Column names
+        String[] columnNames2 = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
+
+        // Create the custom table
+        CustomTable customTable2 = new CustomTable(data1, columnNames2);
+        customTable2.setBounds(201, 510, 800, 155);
+
+
         JLabel labelEffectAddUser = new JLabel();
         labelEffectAddUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
         labelEffectAddUser.setBounds(125, 22, 286, 256);
@@ -94,6 +148,75 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         BackgroundImage bgAccount = new BackgroundImage("/backgrounds/bgAccount.png");
         bgAccount.setBounds(0, 0, 1100, 700);
 
+
+        Object[][] data = {
+                {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
+                {2, "Package B", "2024-12-02", "2024-12-05", "In Transit"},
+                {3, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {4, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {5, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {6, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {7, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {8, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {9, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {10, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {11, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {12, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {13, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {14, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {15, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+                {16, "Package C", "2024-12-03", "2024-12-06", "Pending"},
+        };
+
+        // Column names
+        String[] columnNames = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
+
+        // Create the custom table
+        CustomTable customTable = new CustomTable(data, columnNames);
+        customTable.setBounds(201, 274, 800, 380);
+
+
+//        CircularImagePanel circularImagePanel = new CircularImagePanel("CustomerStorage.getCurrentCustomer().getCustomerPhoto()", 150);
+//        circularImagePanel.setBounds(201, 53, 150, 150);
+
+        JLabel labelNameSurname = new JLabel();
+        if (CustomerStorage.getCurrentCustomer() != null){
+            labelNameSurname.setText(CustomerStorage.getCurrentCustomer().getCustomerName() + " " + CustomerStorage.getCurrentCustomer().getCustomerSurname());
+            System.out.println("Current Customer: " + CustomerStorage.getCurrentCustomer().getCustomerName() + " " + CustomerStorage.getCurrentCustomer().getCustomerSurname());
+        }
+        else {
+            labelNameSurname.setText("Default Name Surname");
+
+            System.out.println("Current Customer: null");
+        }
+
+        labelNameSurname.setBounds(373,90, 680, 60);
+        labelNameSurname.setForeground(new Color(0x34495e));
+
+        JLabel labelID = new JLabel();
+        if (CustomerStorage.getCurrentCustomer() != null){
+            labelID.setText("#" + CustomerStorage.getCurrentCustomer().getCustomerId());
+            System.out.println("Current Customer: " + CustomerStorage.getCurrentCustomer().getCustomerName() + " " + CustomerStorage.getCurrentCustomer().getCustomerSurname());
+        }
+        else {
+            labelID.setText("Default ID");
+
+            System.out.println("Current Customer: null");
+        }
+
+        labelID.setBounds(373,130, 680, 60);
+        labelID.setForeground(new Color(0x34495e));
+        try {
+            Font montserratFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/Montserrat-Bold.ttf")).deriveFont(36f);
+            Font montserratLightFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/Montserrat-Light.ttf")).deriveFont(26f);
+            labelNameSurname.setFont(montserratFont);
+            labelID.setFont(montserratLightFont);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            labelNameSurname.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            labelID.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        }
+
 //      MAIN FRAME
 
         JLabel labelDelivery = new JLabel();
@@ -114,7 +237,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         JLabel labelAccount = new JLabel();
         labelAccount.setIcon(new ImageIcon(getClass().getResource("/menuButtons/account.png")));
         labelAccount.setBounds(25, 615, 50, 50);
-        labelAccount.addMouseListener(new MenuMouseListener(labelAccount, "account", layers, accountLayer, this));
+        labelAccount.addMouseListener(new MenuMouseListener(labelAccount, "account", layers, accountLayer, this, labelNameSurname, labelID, null));
 
         JLabel labelCurrentDate = new JLabel();
         labelCurrentDate.setText(CurrentDate.getCurrentDate());
@@ -190,9 +313,15 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         managementLayer.add(labelEffectEditUser, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(labelEffectAddPackage, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(labelEffectEditPackage, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(customTable1, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(customTable2, JLayeredPane.PALETTE_LAYER);
 
 
         accountLayer.add(bgAccount, JLayeredPane.DEFAULT_LAYER);
+        accountLayer.add(labelNameSurname, JLayeredPane.PALETTE_LAYER);
+        accountLayer.add(labelID, JLayeredPane.PALETTE_LAYER);
+//        accountLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
+        accountLayer.add(customTable, JLayeredPane.PALETTE_LAYER);
 
         this.setLayout(null);
         this.setTitle("Geldik Yoktunuz");

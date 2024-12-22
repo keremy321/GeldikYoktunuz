@@ -26,6 +26,8 @@ public class Customer {
         this.customerPhoto = customerPhoto;
         this.cargos = new LinkedList<>();
         this.recentCargosStack = new Stack<>();
+
+        CustomerStorage.addCustomer(this);
     }
 
     public int getCustomerId() {
