@@ -3,12 +3,13 @@ package org.geldikYoktunuz;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Cargo implements Comparable<Cargo> {
     public static int idCounter = 1;
 
     private int postId;
-    private String postDate;
+    private LocalDate postDate;
     private String deliveryDate;
     private int deliveryTime;
     private CargoStatus cargoStatus;
@@ -19,24 +20,9 @@ public class Cargo implements Comparable<Cargo> {
     private String courierPhoto;
     private String cargoName;
 
-    public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName) {
+    public Cargo(LocalDate postDate, boolean dontRing, String courierName, String courierPhoto, String cargoName , City city) {
         this.postId = idCounter++;
         this.postDate = postDate;
-        this.deliveryDate = deliveryDate;
-        this.deliveryTime = deliveryTime;
-        this.cargoStatus = CargoStatus.PENDING_APPROVAL;
-        this.dontRing = dontRing;
-        this.isCancelled = false;
-        this.courierName = courierName;
-
-        CargoStorage.addCargo(this);
-    }
-
-    public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName,String courierPhoto,String cargoName ,City city) {
-        this.postId = idCounter++;
-        this.postDate = postDate;
-        this.deliveryDate = deliveryDate;
-        this.deliveryTime = deliveryTime;
         this.cargoStatus = CargoStatus.PENDING_APPROVAL;
         this.dontRing = dontRing;
         this.isCancelled = false;
@@ -54,10 +40,10 @@ public class Cargo implements Comparable<Cargo> {
     public void setPostId(int postId) {
         this.postId = postId;
     }
-    public String getPostDate() {
+    public LocalDate getPostDate() {
         return postDate;
     }
-    public void setPostDate(String postDate) {
+    public void setPostDate(LocalDate postDate) {
         this.postDate = postDate;
     }
     public String getDeliveryDate() {

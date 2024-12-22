@@ -30,6 +30,7 @@ public class ManagementMouseListener implements MouseListener {
     private static boolean dontRing = false;
     private LocalDate[] selectedDates = new LocalDate[2];
     private JComboBox<Customer> comboBox;
+    private JComboBox<City> comboBoxCity;
 
     private JTextField textFieldName;
     private JTextField textFieldSurname;
@@ -666,7 +667,7 @@ public class ManagementMouseListener implements MouseListener {
         });
 
         JFormattedTextField editor = new JFormattedTextField();
-        editor.setBounds(241, 484, 317, 39);
+        editor.setBounds(70, 482, 317, 39);
         editor.setBackground(new Color(0x2c3e50));
 
         editor.setBorder(new RoundedBorder(20, Color.black, 2));
@@ -683,6 +684,49 @@ public class ManagementMouseListener implements MouseListener {
 
         editor.setSelectionColor(new Color(0xbdc3c7));
         editor.setSelectedTextColor(new Color(0x2c3e50));
+
+        UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
+        UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+
+
+        comboBox = new JComboBox<>();
+        comboBox.setBounds(413, 482, 317, 39);
+        comboBox.setBackground(new Color(0x159a80));
+
+        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+            comboBox.addItem(customer);
+        }
+
+        comboBox.setForeground(Color.WHITE);
+
+        // Customize Border: Focused and Non-Focused
+        Border defaultBorder = new CompoundBorder(
+                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new EmptyBorder(5, 5, 5, 5)
+        );
+        Border focusedBorder = new CompoundBorder(
+                new LineBorder(Color.WHITE, 2), // White border when focused
+                new EmptyBorder(5, 5, 5, 5)
+        );
+
+        comboBox.setBorder(defaultBorder);
+
+        // Add focus listener to change border dynamically
+        comboBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                comboBox.setBorder(focusedBorder);
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                comboBox.setBorder(defaultBorder);
+            }
+        });
+
 
         layeredPane.add(textFieldCourierName, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(textFieldDeliveryName, JLayeredPane.PALETTE_LAYER);
