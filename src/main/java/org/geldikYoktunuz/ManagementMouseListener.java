@@ -28,12 +28,16 @@ public class ManagementMouseListener implements MouseListener {
     private ImageIcon pressedIcon;
     private JFrame currentFrame;
     private static boolean dontRing = false;
-    private LocalDate[] selectedDates = new LocalDate[2];
+    private LocalDate selectedDate;
     private JComboBox<Customer> comboBox;
+    private JComboBox<Cargo> comboBoxPackage;
     private JComboBox<City> comboBoxCity;
 
     private JTextField textFieldName;
     private JTextField textFieldSurname;
+    private JTextField textFieldCourierName;
+    private JTextField textFieldDeliveryName;
+    private JLabel labelIDDelivery;
     private JLabel labelID;
 
     public ManagementMouseListener(JLabel label, JLabel effect, String path, JFrame currentFrame) {
@@ -72,7 +76,7 @@ public class ManagementMouseListener implements MouseListener {
             addPackage();
             System.out.println("addPackage");
         } else if ("editPackage".equals(label.getName())) {
-            editPackage();
+            choosePackage();
             System.out.println("editPackage");
         }
     }
@@ -338,6 +342,9 @@ public class ManagementMouseListener implements MouseListener {
         labelAddPackage.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                Cargo cargo = new Cargo(selectedDate, dontRing, textFieldCourierName.getText(), PPMouseListener.getPpPath(),textFieldDeliveryName.getText(), (City) comboBoxCity.getSelectedItem());
+
+                System.out.println(cargo);
                 dialogAddPackage.dispose();
             }
 
@@ -377,16 +384,25 @@ public class ManagementMouseListener implements MouseListener {
         dialogAddPackage.setVisible(true);
     }
 
-    private void editPackage(){
-        //      EDIT PACKAGE ---------------------------------------------------------------
-
+    private void editPackage() {
         JDialog dialogEditPackage = new JDialog(currentFrame, "Edit Package", true);
 
         JLayeredPane editEditPackage = new JLayeredPane();
+        editEditPackage.setName("editPackageLayer");
         editEditPackage.setBounds(0, 0, 816, 639);
 
-        BackgroundImage bgEditPackage = new BackgroundImage("/backgrounds/bgAddPackage.png");
+        BackgroundImage bgEditPackage = new BackgroundImage("/backgrounds/bgEditPackage.png");
         bgEditPackage.setBounds(0, 0, 800, 600);
+
+        ppLabels(editEditPackage);
+        packageAdditions(editEditPackage);
+
+        Cargo currentCargo = CargoStorage.getCurrentCargo();
+        if (currentCargo != null) {
+            textFieldCourierName.setText(currentCargo.getCourierName());
+            textFieldDeliveryName.setText(currentCargo.getCargoName());
+            comboBoxCity.setSelectedItem(currentCargo.getCity());
+        }
 
         JLabel labelEditPackage = new JLabel();
         ImageIcon defaultIconEditPackage = new ImageIcon(getClass().getResource("/dialogButtons/edit.png"));
@@ -395,9 +411,15 @@ public class ManagementMouseListener implements MouseListener {
 
         labelEditPackage.setIcon(defaultIconEditPackage);
         labelEditPackage.setBounds(591, 547, 167, 38);
+
         labelEditPackage.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                currentCargo.setCourierName(textFieldCourierName.getText());
+                currentCargo.setCargoName(textFieldDeliveryName.getText());
+                currentCargo.setCity((City) comboBoxCity.getSelectedItem());
+                currentCargo.setCourierPhoto(PPMouseListener.getPpPath());
+
                 dialogEditPackage.dispose();
             }
 
@@ -422,55 +444,17 @@ public class ManagementMouseListener implements MouseListener {
             }
         });
 
-        JLabel labelRemovePackage = new JLabel();
-        ImageIcon defaultIconRemovePackage = new ImageIcon(getClass().getResource("/dialogButtons/remove.png"));
-        ImageIcon enteredIconRemovePackage = new ImageIcon(getClass().getResource("/dialogButtons/removeEntered.png"));
-        ImageIcon pressedIconRemovePackage = new ImageIcon(getClass().getResource("/dialogButtons/removePressed.png"));
-
-        labelRemovePackage.setIcon(defaultIconRemovePackage);
-        labelRemovePackage.setBounds(316, 547, 167, 38);
-        labelRemovePackage.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                dialogEditPackage.dispose();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                labelRemovePackage.setIcon(pressedIconRemovePackage);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                labelRemovePackage.setIcon(defaultIconRemovePackage);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                labelRemovePackage.setIcon(enteredIconRemovePackage);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                labelRemovePackage.setIcon(defaultIconRemovePackage);
-            }
-        });
-
-        ppLabels(editEditPackage);
-        packageAdditions(editEditPackage);
+        editEditPackage.add(bgEditPackage, JLayeredPane.DEFAULT_LAYER);
+        editEditPackage.add(labelEditPackage, JLayeredPane.PALETTE_LAYER);
 
         dialogEditPackage.setSize(816, 639);
         dialogEditPackage.setLocationRelativeTo(null);
         dialogEditPackage.setResizable(false);
         dialogEditPackage.setLayout(null);
-
-        editEditPackage.add(bgEditPackage, JLayeredPane.DEFAULT_LAYER);
-        editEditPackage.add(labelEditPackage, JLayeredPane.PALETTE_LAYER);
-        editEditPackage.add(labelRemovePackage, JLayeredPane.PALETTE_LAYER);
-
         dialogEditPackage.add(editEditPackage);
         dialogEditPackage.setVisible(true);
     }
+
 
     private void ppLabels(JLayeredPane layeredPane) {
         JLabel labelEffectMan = new JLabel();
@@ -557,7 +541,7 @@ public class ManagementMouseListener implements MouseListener {
     }
 
     private void packageAdditions(JLayeredPane layeredPane){
-        JTextField textFieldCourierName = new JTextField();
+        textFieldCourierName = new JTextField();
         textFieldCourierName.setBounds(325, 303, 347, 38);
         textFieldCourierName.setBorder(null);
         textFieldCourierName.setOpaque(false);
@@ -565,7 +549,7 @@ public class ManagementMouseListener implements MouseListener {
         textFieldCourierName.setSelectionColor(new Color(0xe2c3e50));
         textFieldCourierName.setSelectedTextColor(new Color(0xbdc3c7));
 
-        JTextField textFieldDeliveryName = new JTextField();
+        textFieldDeliveryName = new JTextField();
         textFieldDeliveryName.setBounds(325, 383, 347, 38);
         textFieldDeliveryName.setBorder(null);
         textFieldDeliveryName.setOpaque(false);
@@ -573,7 +557,7 @@ public class ManagementMouseListener implements MouseListener {
         textFieldDeliveryName.setSelectionColor(new Color(0xe2c3e50));
         textFieldDeliveryName.setSelectedTextColor(new Color(0xbdc3c7));
 
-        JLabel labelIDDelivery = new JLabel("#ID");
+        labelIDDelivery = new JLabel("#" + Cargo.idCounter);
         labelIDDelivery.setBounds(318, 547, 252, 38);
         labelIDDelivery.setForeground(new Color(0xbdc3c7));
         labelIDDelivery.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -600,6 +584,9 @@ public class ManagementMouseListener implements MouseListener {
 
         labelDontRing.setIcon(defaultIconDontRing);
         labelDontRing.setBounds(42, 547, 167, 38);
+
+        if (layeredPane.getName() == "editPackageLayer")
+            dontRing = CargoStorage.getCurrentCargo().isDontRing();
 
         labelDontRing.addMouseListener(new MouseListener() {
             @Override
@@ -643,7 +630,7 @@ public class ManagementMouseListener implements MouseListener {
         });
 
         DatePicker datePicker = new DatePicker();
-        datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
+        datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED);
         datePicker.setUsePanelOption(true);
         datePicker.setColor(new Color(0xe74c3c));
         datePicker.setDateSelectionAble(new DateSelectionAble() {
@@ -656,12 +643,12 @@ public class ManagementMouseListener implements MouseListener {
         datePicker.addDateSelectionListener(new DateSelectionListener() {
             @Override
             public void dateSelected(DateEvent dateEvent) {
-                selectedDates = datePicker.getSelectedDateRange();
+                selectedDate = datePicker.getSelectedDate();
                 DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                if (selectedDates == null) {
+                if (selectedDate == null) {
                     System.out.println("No date selected");
                 } else {
-                    System.out.println(selectedDates[0].format(df) + " - " + selectedDates[1].format(df));
+                    System.out.println("Selected date: " + selectedDate.format(df));
                 }
             }
         });
@@ -670,7 +657,7 @@ public class ManagementMouseListener implements MouseListener {
         editor.setBounds(70, 482, 317, 39);
         editor.setBackground(new Color(0x2c3e50));
 
-        editor.setBorder(new RoundedBorder(20, Color.black, 2));
+        editor.setBorder(new RoundedBorder(20, new Color(0x159a80), 2));
 
         datePicker.setEditor(editor);
 
@@ -686,53 +673,30 @@ public class ManagementMouseListener implements MouseListener {
         editor.setSelectedTextColor(new Color(0x2c3e50));
 
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
-        UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+        UIManager.put("ComboBox.selectionForeground", new Color(0xbdc3c7));
 
         UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
         UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
 
 
-        comboBox = new JComboBox<>();
-        comboBox.setBounds(413, 482, 317, 39);
-        comboBox.setBackground(new Color(0x159a80));
+        comboBoxCity = new JComboBox<>();
+        comboBoxCity.setBounds(413, 482, 317, 39);
+        comboBoxCity.setBackground(new Color(0x2c3e50));
 
-        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
-            comboBox.addItem(customer);
+        for (City city : CityStorage.getAllCities().values()) {
+            comboBoxCity.addItem(city);
         }
 
-        comboBox.setForeground(Color.WHITE);
+        comboBoxCity.setForeground(Color.WHITE);
 
-        // Customize Border: Focused and Non-Focused
-        Border defaultBorder = new CompoundBorder(
-                new LineBorder(new Color(0x159a80), 2), // Default border color
-                new EmptyBorder(5, 5, 5, 5)
-        );
-        Border focusedBorder = new CompoundBorder(
-                new LineBorder(Color.WHITE, 2), // White border when focused
-                new EmptyBorder(5, 5, 5, 5)
-        );
-
-        comboBox.setBorder(defaultBorder);
-
-        // Add focus listener to change border dynamically
-        comboBox.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                comboBox.setBorder(focusedBorder);
-            }
-
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                comboBox.setBorder(defaultBorder);
-            }
-        });
-
+        comboBoxCity.setBorder(new RoundedBorder(20, new Color(0x159a80), 2));
 
         layeredPane.add(textFieldCourierName, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(textFieldDeliveryName, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(labelIDDelivery, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(editor, JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(comboBoxCity, JLayeredPane.PALETTE_LAYER);
     }
 
     public void chooseAccount() {
@@ -780,9 +744,6 @@ public class ManagementMouseListener implements MouseListener {
                 labelChoose.setIcon(defaultIconChoose);
             }
         });
-
-        UIManager.put("ComboBox.arc", 15); // Set the corner radius to 15
-
 
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
@@ -837,6 +798,108 @@ public class ManagementMouseListener implements MouseListener {
 
         dialogChooseAccount.add(chooseUserLayer);
         dialogChooseAccount.setVisible(true);
+    }
+
+    public void choosePackage() {
+        JDialog dialogChoosePackage = new JDialog(currentFrame, "Choose Package", true);
+
+        JLayeredPane packageLayer = new JLayeredPane();
+        packageLayer.setBounds(0, 0, 816, 289);
+
+        // Set up background image
+        BackgroundImage bgChoosePackage = new BackgroundImage("/backgrounds/bgChoosePackage.png");
+        bgChoosePackage.setBounds(0, 0, 800, 250);
+
+        // Set up "Choose" button
+        JLabel labelChoose = new JLabel();
+        ImageIcon defaultIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/choose.png"));
+        ImageIcon enteredIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/chooseEntered.png"));
+        ImageIcon pressedIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/choosePressed.png"));
+
+        labelChoose.setIcon(defaultIconChoose);
+        labelChoose.setBounds(591, 194, 167, 38);
+        labelChoose.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dialogChoosePackage.dispose();
+                CargoStorage.setCurrentCargo(((Cargo) comboBoxPackage.getSelectedItem()));
+                System.out.println("Current Cargo: " + CargoStorage.getCurrentCargo().getPostId());
+                editPackage();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelChoose.setIcon(pressedIconChoose);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelChoose.setIcon(defaultIconChoose);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelChoose.setIcon(enteredIconChoose);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelChoose.setIcon(defaultIconChoose);
+            }
+        });
+
+        // Configure ComboBox
+        UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
+        UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+
+        comboBoxPackage = new JComboBox<>();
+        comboBoxPackage.setBounds(117, 108, 567, 54);
+        comboBoxPackage.setBackground(new Color(0x159a80));
+        comboBoxPackage.setForeground(Color.WHITE);
+
+        // Add all customers to ComboBox
+        for (Cargo cargo : CargoStorage.getAllCargos().values()) {
+            comboBoxPackage.addItem(cargo);
+        }
+
+        // Customize ComboBox border
+        Border defaultBorder = new CompoundBorder(
+                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new EmptyBorder(5, 5, 5, 5)
+        );
+        Border focusedBorder = new CompoundBorder(
+                new LineBorder(Color.WHITE, 2), // White border when focused
+                new EmptyBorder(5, 5, 5, 5)
+        );
+
+        comboBoxPackage.setBorder(defaultBorder);
+
+        comboBoxPackage.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                comboBoxPackage.setBorder(focusedBorder);
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                comboBoxPackage.setBorder(defaultBorder);
+            }
+        });
+
+        // Dialog setup
+        dialogChoosePackage.setSize(816, 289);
+        dialogChoosePackage.setLocationRelativeTo(null);
+        dialogChoosePackage.setResizable(false);
+        dialogChoosePackage.setLayout(null);
+
+        // Add components to layered pane
+        packageLayer.add(bgChoosePackage, JLayeredPane.DEFAULT_LAYER);
+        packageLayer.add(labelChoose, JLayeredPane.PALETTE_LAYER);
+        packageLayer.add(comboBoxPackage, JLayeredPane.PALETTE_LAYER);
+
+        // Add layered pane to dialog
+        dialogChoosePackage.add(packageLayer);
+        dialogChoosePackage.setVisible(true);
     }
 
 }

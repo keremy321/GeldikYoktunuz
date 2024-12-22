@@ -129,14 +129,6 @@ public class Cargo implements Comparable<Cargo> {
 
     @Override
     public String toString() {
-        return "Cargo{" +
-                "postId=" + postId +
-                ", postDate='" + postDate + '\'' +
-                ", deliveryDate='" + deliveryDate + '\'' +
-                ", deliveryTime=" + deliveryTime +
-                ", cargoStatus='" + cargoStatus + '\'' +
-                ", dontRing=" + dontRing +
-                ", isCancelled=" + isCancelled +
-                '}';
+        return cargoName + " #" + postId + " -> " + city.getCityName();
     }
 }

@@ -6,10 +6,10 @@ public class Main {
 
     public static void main(String[] args) {
         // 6 adet kargo nesnesi oluşturuyoruz
-        Cargo cargo1 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo1", CityStorage.getCityById(35));
-        Cargo cargo2 = new Cargo(CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo2",CityStorage.getCityById(10));
-        Cargo cargo3 = new Cargo( CurrentDate.currentDate, true, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41));
-        Cargo cargo4 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45));
+        Cargo cargo1 = new Cargo( CurrentDate.currentDate, false, "Mehmet Aydın", "Photo","Cargo1", CityStorage.getCityById(35));
+        Cargo cargo2 = new Cargo(CurrentDate.currentDate, false, "Mehmet Aydın", "Photo","Cargo2",CityStorage.getCityById(10));
+        Cargo cargo3 = new Cargo( CurrentDate.currentDate, false, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41));
+        Cargo cargo4 = new Cargo( CurrentDate.currentDate, false, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45));
         Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11));
         Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(64));
         cargo5.setCargoStatus(CargoStatus.DELIVERED);
@@ -68,11 +68,11 @@ public class Main {
 //        System.out.println("\nKargo Öncelik Sırası:");
 //        System.out.println(CargoPrioritization.prioritization(customer1));
 //
-        CargoRouting cr = new CargoRouting();
-
-        List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos().values());
-        cr.routing(allCargos);
-
+//        CargoRouting cr = new CargoRouting();
+//
+//        List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos().values());
+//        cr.routing(allCargos);
+//
 
         SignInFrame signInFrame = new SignInFrame();
 //

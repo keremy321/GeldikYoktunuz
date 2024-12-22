@@ -13,4 +13,9 @@ public class City {
     public int getCityId() {
         return cityId;
     }
+
+    @Override
+    public String toString() {
+        return cityName;
+    }
 }

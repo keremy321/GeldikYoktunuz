@@ -41,10 +41,4 @@ public class CityStorage {
     public static Map<Integer, City> getAllCities() {
         return cityMap;
     }
-
-    public static String[] getAllCityNames() {
-        return cityMap.values().stream()
-                .map(City::getCityName)
-                .toArray(String[]::new);
-    }
 }
