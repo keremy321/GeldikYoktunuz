@@ -14,10 +14,21 @@ public class Cargo implements Comparable<Cargo> {
     private CargoStatus cargoStatus;
     private boolean dontRing;
     private boolean isCancelled;
-    private String city;
+    private City city;
     private String courierName;
 
-    public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName, String city) {
+    public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName) {
+        this.postId = idCounter++;
+        this.postDate = postDate;
+        this.deliveryDate = deliveryDate;
+        this.deliveryTime = deliveryTime;
+        this.cargoStatus = CargoStatus.PENDING_APPROVAL;
+        this.dontRing = dontRing;
+        this.isCancelled = false;
+        this.courierName = courierName;
+    }
+
+    public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName, City city) {
         this.postId = idCounter++;
         this.postDate = postDate;
         this.deliveryDate = deliveryDate;
@@ -71,10 +82,10 @@ public class Cargo implements Comparable<Cargo> {
     public void setCancelled(boolean cancelled) {
         isCancelled = cancelled;
     }
-    public String getCity() {
+    public City getCity() {
         return city;
     }
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 

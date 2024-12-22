@@ -1,5 +1,6 @@
 package org.geldikYoktunuz;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -8,12 +9,12 @@ public class Main {
     public static void main(String[] args) {
 
         // 6 adet kargo nesnesi oluşturuyoruz
-        Cargo cargo1 = new Cargo( "20 Mayıs 2025", "23 Mayıs 2025", 3, false, "Mehmet Aydın","Ankara");
-        Cargo cargo2 = new Cargo("1 Haziran 2025", "6 Temmuz 2025", 35, true, "Mehmet Aydın","Izmir");
-        Cargo cargo3 = new Cargo( "1 Haziran 2025", "20 Haziran 2025", 19, true, "Semih Bekdaş","Bursa");
-        Cargo cargo4 = new Cargo( "10 Temmuz 2025", "15 Temmuz 2025", 25, false, "Ahmet Yılmaz","Antalya");
-        Cargo cargo5 = new Cargo( "15 Temmuz 2025", "25 Temmuz 2025", 30, true, "Mehmet Aydın","Antalya");
-        Cargo cargo6 = new Cargo( "20 Temmuz 2025", "30 Temmuz 2025", 40, false, "Semih Bekdaş","Antalya");
+        Cargo cargo1 = new Cargo( "20 Mayıs 2025", "23 Mayıs 2025", 3, false, "Mehmet Aydın");
+        Cargo cargo2 = new Cargo("1 Haziran 2025", "6 Temmuz 2025", 35, true, "Mehmet Aydın");
+        Cargo cargo3 = new Cargo( "1 Haziran 2025", "20 Haziran 2025", 19, true, "Semih Bekdaş");
+        Cargo cargo4 = new Cargo( "10 Temmuz 2025", "15 Temmuz 2025", 25, false, "Ahmet Yılmaz");
+        Cargo cargo5 = new Cargo( "15 Temmuz 2025", "25 Temmuz 2025", 30, true, "Mehmet Aydın");
+        Cargo cargo6 = new Cargo( "20 Temmuz 2025", "30 Temmuz 2025", 40, false, "Semih Bekdaş");
         cargo5.setCargoStatus(CargoStatus.DELIVERED);
 
         Customer customer1 = new Customer("Ahmed Er", "Faruk", "/dialogButtons/man.png");
@@ -22,13 +23,13 @@ public class Main {
         Customer customer4 = new Customer("İbrahim", "Çetin", "/dialogButtons/woman.png");
 
 
-        // Kargoları müşteriye ekliyoruz
-//        customer1.addCargo(cargo1);
-//        customer1.addCargo(cargo2);
-//        customer1.addCargo(cargo3);
-//        customer1.addCargo(cargo4);
-//        customer1.addCargo(cargo5);
-//        customer1.addCargo(cargo6); // 6. kargo da eklendi, böylece stack 5 kargo tutacak
+//         Kargoları müşteriye ekliyoruz
+        customer1.addCargo(cargo1);
+        customer2.addCargo(cargo2);
+        customer1.addCargo(cargo3);
+        customer3.addCargo(cargo4);
+        customer1.addCargo(cargo5);
+        customer4.addCargo(cargo6); // 6. kargo da eklendi, böylece stack 5 kargo tutacak
 
 //        // Müşterinin son 5 kargosunu alıyoruz
 ////        Stack<Cargo> recentCargos = customer1.getRecentCargosStack();
@@ -71,6 +72,7 @@ public class Main {
 //        System.out.println(CargoPrioritization.prioritization(customer1));
 //
         CargoRouting cr = new CargoRouting();
+
         cr.routing(cargo6);
 
 

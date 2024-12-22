@@ -9,7 +9,7 @@ public class CargoRouting {
         cities();
         System.out.println("En kısa mesafe:"+routWithDijkstra(cargo.getCity()));
     }
-    public int routWithDijkstra(String target) {
+    private int routWithDijkstra(City target) {
         Map<String, Integer> distances = new HashMap<>();
         Map<String, String> previous = new HashMap<>(); // Hangi şehirden geldiğimizi takip etmek için
         PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(Comparator.comparingInt(Map.Entry::getValue));
@@ -28,10 +28,10 @@ public class CargoRouting {
             int currentDistance = current.getValue();
 
             // Eğer hedefe ulaşıldıysa, işlem tamamlanır
-            if (currentVertex.equals(target)) {
-                printPath(previous, "Istanbul", target);
-                return currentDistance;
-            }
+//            if (currentVertex.equals(target)) {
+//                printPath(previous, "Istanbul", target);
+//                return currentDistance;
+//            }
 
             // Explore neighbors
             for (Map.Entry<String, Integer> neighbor : cg.getAdjacencyList().get(currentVertex).entrySet()) {
@@ -66,7 +66,16 @@ public class CargoRouting {
             System.out.println("Hedefe ulaşmak mümkün değil.");
         }
     }
-    public void cities(){
+    private void cities(){
+
+        String[] cities = {
+                "Istanbul", "Kocaeli", "Bursa", "Tekirdag", "Yalova", "Sakarya", "Bilecik", "Edirne",
+                "Canakkale", "Kirklareli", "Balikesir", "Izmir", "Aydin", "Manisa", "Kutahya", "Usak", "Denizli",
+                "Afyonkarahisar", "Mugla"
+        };
+
+
+
         cg.addVertex("Istanbul");
         cg.addVertex("Kocaeli");
         cg.addVertex("Bursa");
@@ -175,8 +184,6 @@ public class CargoRouting {
         cg.addEdge("Afyonkarahisar", "Kutahya", 140);
         cg.addEdge("Afyonkarahisar", "Usak", 120);
         cg.addEdge("Afyonkarahisar", "Denizli", 250);
-
-
 
     }
 }
