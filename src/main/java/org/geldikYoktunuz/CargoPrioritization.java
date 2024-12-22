@@ -23,7 +23,7 @@ public class CargoPrioritization {
         PriorityQueue<Cargo> priorityQueue= new PriorityQueue<>();
         for(Cargo cargo : cargos) {
             if(cargo.getCargoStatus()==CargoStatus.PENDING_APPROVAL){
-                cargo.setCargoStatus(CargoStatus.IN_PROCESS);
+//                cargo.setCargoStatus(CargoStatus.IN_PROCESS);
                 priorityQueue.add(cargo);
             }
         }
