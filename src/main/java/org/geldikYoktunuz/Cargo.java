@@ -16,6 +16,8 @@ public class Cargo implements Comparable<Cargo> {
     private boolean isCancelled;
     private City city;
     private String courierName;
+    private String courierPhoto;
+    private String cargoName;
 
     public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName) {
         this.postId = idCounter++;
@@ -30,7 +32,7 @@ public class Cargo implements Comparable<Cargo> {
         CargoStorage.addCargo(this);
     }
 
-    public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName, City city) {
+    public Cargo(String postDate, String deliveryDate, int deliveryTime, boolean dontRing,String courierName,String courierPhoto,String cargoName ,City city) {
         this.postId = idCounter++;
         this.postDate = postDate;
         this.deliveryDate = deliveryDate;
@@ -40,6 +42,8 @@ public class Cargo implements Comparable<Cargo> {
         this.isCancelled = false;
         this.courierName = courierName;
         this.city = city;
+        this.courierPhoto = courierPhoto;
+        this.cargoName = cargoName;
 
         CargoStorage.addCargo(this);
     }
@@ -91,6 +95,30 @@ public class Cargo implements Comparable<Cargo> {
     }
     public void setCity(City city) {
         this.city = city;
+    }
+
+    public String getCourierName() {
+        return courierName;
+    }
+
+    public void setCourierName(String courierName) {
+        this.courierName = courierName;
+    }
+
+    public String getCourierPhoto() {
+        return courierPhoto;
+    }
+
+    public void setCourierPhoto(String courierPhoto) {
+        this.courierPhoto = courierPhoto;
+    }
+
+    public String getCargoName() {
+        return cargoName;
+    }
+
+    public void setCargoName(String cargoName) {
+        this.cargoName = cargoName;
     }
 
     @Override
