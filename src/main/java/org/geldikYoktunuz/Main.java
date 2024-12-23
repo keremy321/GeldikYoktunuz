@@ -20,7 +20,6 @@ public class Main {
         Cargo cargo4 = new Cargo( CurrentDate.currentDate, false, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45));
         Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11));
         Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(64));
-//        cargo5.setCargoStatus(CargoStatus.DELIVERED);
 
         customer1.addCargo(cargo1);
         customer2.addCargo(cargo2);
@@ -29,6 +28,21 @@ public class Main {
         customer1.addCargo(cargo5);
         customer4.addCargo(cargo6);
 
+
+//        cargo4.setCargoStatus(CargoStatus.DELIVERED);
+//        //teslim edilen kargoların arasında aramak
+//        int searchId = 4; // Örnek ID
+//        Cargo foundCargo = CargoStorage.binarySearchById(searchId);
+//        if (foundCargo != null) {
+//            System.out.println("Bulunan kargo: " + foundCargo);
+//        } else {
+//            System.out.println("Kargo bulunamadı.");
+//        }
+//
+//
+//        //teslim edilmeyen kargoları sıralamak
+//        List<Cargo> sortedUndeliveredCargos = CargoStorage.getSortedUndeliveredCargosByDeliveryTime();
+//        sortedUndeliveredCargos.forEach(System.out::println);
 
 ////         Kargoları müşteriye ekliyoruz
 //        customer1.addCargo(cargo1);
