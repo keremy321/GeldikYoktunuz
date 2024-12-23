@@ -36,6 +36,7 @@ public class CargoRouting {
                     for (Cargo c : sortedCargos) {
                         if (c.getCity().getCityName() == sortedCargos.get(0).getCity().getCityName()) {
                             c.setCargoDistance(sortedCargos.get(0).getCargoDistance());
+                            c.setCargoRoute(sortedCargos.get(0).getCargoRoute());
                         }
                     }
                 }
@@ -107,8 +108,10 @@ public class CargoRouting {
                 cargoRouteHandler = String.join(" -> ", path);
             }
             else {
-                c.setCargoRoute(cargoRouteHandler + " -----> "  + String.join(" -> ", path));
-                cargoRouteHandler = cargoRouteHandler + " -----> " + String.join(" -> ", path);
+                for (int i=1; i<path.size(); i++) {
+                    c.setCargoRoute(cargoRouteHandler + " -> " + path.get(i));
+                    cargoRouteHandler = cargoRouteHandler + " -> " + path.get(i);
+                }
             }
 
         } else {

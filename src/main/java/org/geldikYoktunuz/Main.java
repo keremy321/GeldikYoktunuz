@@ -19,10 +19,10 @@ public class Main {
         Cargo cargo3 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41));
         Cargo cargo4 = new Cargo( CurrentDate.currentDate, false, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45));
         Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11));
-        Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(64));
-        Cargo cargo7 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo7",CityStorage.getCityById(64));
-        Cargo cargo8 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo8",CityStorage.getCityById(64));
-        Cargo cargo9 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo9",CityStorage.getCityById(64));
+        Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(54));
+        Cargo cargo7 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo7",CityStorage.getCityById(22));
+        Cargo cargo8 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo8",CityStorage.getCityById(48));
+        Cargo cargo9 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo9",CityStorage.getCityById(16));
         Cargo cargo10 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo10",CityStorage.getCityById(64));
 
         customer1.addCargo(cargo1);
