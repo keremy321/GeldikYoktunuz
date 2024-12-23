@@ -231,7 +231,7 @@ public class MenuMouseListener implements MouseListener {
         comboBox.setBounds(117, 108, 567, 54);
         comboBox.setBackground(new Color(0x159a80));
 
-        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+        for (Customer customer : CustomerStorage.getAllCustomers()) {
             comboBox.addItem(customer);
         }
 

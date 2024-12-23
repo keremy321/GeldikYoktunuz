@@ -169,7 +169,7 @@ public class SignInMouseListener implements MouseListener {
         });
 
 
-        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+        for (Customer customer : CustomerStorage.getAllCustomers()) {
             comboBox.addItem(customer);
         }
 

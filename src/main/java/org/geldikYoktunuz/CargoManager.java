@@ -1,15 +1,15 @@
 package org.geldikYoktunuz;
 
-import java.util.*;
+import java.util.LinkedList;
 
 public class CargoManager {
     private static CargoManager instance;
 
-    private Map<Integer, Cargo> cargoMap; // Map to store cargos by ID
+    private LinkedList<Cargo> cargoList; // LinkedList to store cargos
     private Cargo currentCargo; // Currently selected cargo
 
     private CargoManager() {
-        cargoMap = new HashMap<>();
+        cargoList = new LinkedList<>(); // Initialize as LinkedList
     }
 
     public static CargoManager getInstance() {
@@ -20,15 +20,20 @@ public class CargoManager {
     }
 
     public void addCargo(Cargo cargo) {
-        cargoMap.put(cargo.getPostId(), cargo);
+        cargoList.add(cargo); // Add cargo to the LinkedList
     }
 
     public Cargo getCargoById(int cargoId) {
-        return cargoMap.get(cargoId);
+        for (Cargo cargo : cargoList) {
+            if (cargo.getPostId() == cargoId) {
+                return cargo;
+            }
+        }
+        return null; // Return null if not found
     }
 
-    public Map<Integer, Cargo> getAllCargos() {
-        return cargoMap;
+    public LinkedList<Cargo> getAllCargos() {
+        return cargoList;
     }
 
     public Cargo getCurrentCargo() {

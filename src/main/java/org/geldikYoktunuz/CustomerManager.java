@@ -1,16 +1,15 @@
 package org.geldikYoktunuz;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
 
 public class CustomerManager {
     private static CustomerManager instance;
 
-    private Map<Integer, Customer> customerMap; // Map to store customers by ID
+    private LinkedList<Customer> customerList; // LinkedList to store customers
     private Customer currentCustomer; // Currently selected customer
 
     private CustomerManager() {
-        customerMap = new HashMap<>();
+        customerList = new LinkedList<>(); // Initialize as LinkedList
     }
 
     public static CustomerManager getInstance() {
@@ -21,15 +20,20 @@ public class CustomerManager {
     }
 
     public void addCustomer(Customer customer) {
-        customerMap.put(customer.getCustomerId(), customer);
+        customerList.add(customer); // Add customer to the LinkedList
     }
 
     public Customer getCustomerById(int customerId) {
-        return customerMap.get(customerId);
+        for (Customer customer : customerList) {
+            if (customer.getCustomerId() == customerId) {
+                return customer;
+            }
+        }
+        return null; // Return null if not found
     }
 
-    public Map<Integer, Customer> getAllCustomers() {
-        return customerMap;
+    public LinkedList<Customer> getAllCustomers() {
+        return customerList;
     }
 
     public Customer getCurrentCustomer() {

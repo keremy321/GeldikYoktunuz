@@ -23,8 +23,7 @@ public class Cargo implements Comparable<Cargo> {
     private int cargoDistance;
     private Customer customer;
 
-    public Cargo(LocalDate postDate, boolean dontRing, String courierName, String courierPhoto, String cargoName , City city, Customer customer) {
-        this.customer = customer;
+    public Cargo(LocalDate postDate, boolean dontRing, String courierName, String courierPhoto, String cargoName , City city) {
         this.postId = idCounter++;
         this.postDate = postDate;
         this.cargoStatus = CargoStatus.PENDING_APPROVAL;
@@ -34,8 +33,6 @@ public class Cargo implements Comparable<Cargo> {
         this.city = city;
         this.courierPhoto = courierPhoto;
         this.cargoName = cargoName;
-
-        CargoStorage.addCargo(this);
     }
 
     public int getPostId() {

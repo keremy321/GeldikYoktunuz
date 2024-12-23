@@ -372,7 +372,12 @@ public class ManagementMouseListener implements MouseListener {
         labelAddPackage.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Cargo cargo = new Cargo(selectedDate, dontRing, textFieldCourierName.getText(), PPMouseListener.getPpPath(),textFieldDeliveryName.getText(), (City) comboBoxCity.getSelectedItem(), CustomerStorage.getCurrentCustomer());
+                Cargo cargo = new Cargo(selectedDate, dontRing, textFieldCourierName.getText(), PPMouseListener.getPpPath(),textFieldDeliveryName.getText(), (City) comboBoxCity.getSelectedItem());
+
+                Customer customer = new Customer("İb124124m", "Ç124in", "/dialogButtons/woman.png");
+                customer.addCargo(cargo);
+
+
 
                 System.out.println(cargo);
                 dialogAddPackage.dispose();
@@ -786,7 +791,7 @@ public class ManagementMouseListener implements MouseListener {
         comboBox.setBounds(117, 108, 567, 54);
         comboBox.setBackground(new Color(0x159a80));
 
-        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+        for (Customer customer : CustomerStorage.getAllCustomers()) {
             comboBox.addItem(customer);
         }
 
@@ -888,7 +893,7 @@ public class ManagementMouseListener implements MouseListener {
         comboBoxPackage.setForeground(Color.WHITE);
 
         // Add all customers to ComboBox
-        for (Cargo cargo : CargoStorage.getAllCargos().values()) {
+        for (Cargo cargo : CargoStorage.getAllCargos()) {
             comboBoxPackage.addItem(cargo);
         }
 

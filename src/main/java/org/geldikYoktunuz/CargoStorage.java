@@ -1,22 +1,26 @@
 package org.geldikYoktunuz;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
 
 public class CargoStorage {
-    private static Map<Integer, Cargo> cargoMap = new HashMap<>();
+    private static LinkedList<Cargo> cargoList = new LinkedList<>();
     private static Cargo currentCargo;
 
     public static void addCargo(Cargo cargo) {
-        cargoMap.put(cargo.getPostId(), cargo);
+        cargoList.add(cargo); // Add cargo to the LinkedList
     }
 
     public static Cargo getCargoById(int cargoId) {
-        return cargoMap.get(cargoId);
+        for (Cargo cargo : cargoList) {
+            if (cargo.getPostId() == cargoId) {
+                return cargo;
+            }
+        }
+        return null; // Return null if not found
     }
 
-    public static Map<Integer, Cargo> getAllCargos() {
-        return cargoMap;
+    public static LinkedList<Cargo> getAllCargos() {
+        return cargoList;
     }
 
     public static Cargo getCurrentCargo() {

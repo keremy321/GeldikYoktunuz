@@ -72,8 +72,10 @@ public class Customer {
 
     // Yeni gönderim ekleme
     public void addCargo(Cargo cargo) {
-        // LinkedList'e ekle
+        cargo.setCustomer(this);
         this.cargos.add(cargo);
+
+        CargoStorage.addCargo(cargo);
 
         // Stack'e ekle
         if (recentCargosStack.size() == 5) {

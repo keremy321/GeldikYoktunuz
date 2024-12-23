@@ -60,13 +60,14 @@ public class AdminMainFrame extends JFrame {
 
         List<Object[]> data1List = new ArrayList<>();
 
-        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+        for (Customer customer : CustomerStorage.getAllCustomers()) {
             data1List.add(new Object[]{
                     customer.getCustomerId(),
                     customer.getCustomerName() + " " + customer.getCustomerSurname(),
                     customer.getCustomerPhoto()
             });
         }
+
 
         Object[][] data1 = data1List.toArray(new Object[0][]);
 
@@ -80,7 +81,7 @@ public class AdminMainFrame extends JFrame {
         List<Object[]> data2List = new ArrayList<>();
 
 // Populate the list with cargo details
-        for (Cargo cargo : CargoStorage.getAllCargos().values()) {
+        for (Cargo cargo : CargoStorage.getAllCargos()) {
             data2List.add(new Object[]{
                     cargo.getPostId(),
                     cargo.getCargoName(),
@@ -271,7 +272,7 @@ public class AdminMainFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 CurrentDate.passDay();
                 CargoRouting cr = new CargoRouting();
-                List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos().values());
+                List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos());
                 CargoStatusManager.statusChanger(allCargos);
                 cr.routing(allCargos);
                 for (Cargo c : allCargos){
@@ -388,7 +389,7 @@ public class AdminMainFrame extends JFrame {
 
         // Add refreshed data to customTable1
         List<Object[]> data1List = new ArrayList<>();
-        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+        for (Customer customer : CustomerStorage.getAllCustomers()) {
             data1List.add(new Object[]{
                     customer.getCustomerId(),
                     customer.getCustomerName() + " " + customer.getCustomerSurname(),
@@ -404,7 +405,7 @@ public class AdminMainFrame extends JFrame {
         // Add refreshed data to customTable2
         List<Object[]> data2List = new ArrayList<>();
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        for (Cargo cargo : CargoStorage.getAllCargos().values()) {
+        for (Cargo cargo : CargoStorage.getAllCargos()) {
             data2List.add(new Object[]{
                     cargo.getPostId(),
                     cargo.getCargoName(),

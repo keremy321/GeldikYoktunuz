@@ -14,14 +14,20 @@ public class Main {
 
 
         // 6 adet kargo nesnesi oluşturuyoruz
-        Cargo cargo1 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Mehmet Aydın", "Photo","Cargo1", CityStorage.getCityById(35), customer1);
-        Cargo cargo2 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Mehmet Aydın", "Photo","Cargo2",CityStorage.getCityById(10), customer1);
-        Cargo cargo3 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41), customer2);
-        Cargo cargo4 = new Cargo( CurrentDate.currentDate, false, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45), customer4);
-        Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11), customer3);
-        Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(64), customer1);
+        Cargo cargo1 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Mehmet Aydın", "Photo","Cargo1", CityStorage.getCityById(35));
+        Cargo cargo2 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Mehmet Aydın", "Photo","Cargo2",CityStorage.getCityById(10));
+        Cargo cargo3 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41));
+        Cargo cargo4 = new Cargo( CurrentDate.currentDate, false, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45));
+        Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11));
+        Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(64));
 //        cargo5.setCargoStatus(CargoStatus.DELIVERED);
 
+        customer1.addCargo(cargo1);
+        customer2.addCargo(cargo2);
+        customer1.addCargo(cargo3);
+        customer3.addCargo(cargo4);
+        customer1.addCargo(cargo5);
+        customer4.addCargo(cargo6);
 
 
 ////         Kargoları müşteriye ekliyoruz
@@ -73,7 +79,7 @@ public class Main {
 //        System.out.println(CargoPrioritization.prioritization(customer1));
 //
         CargoRouting cr = new CargoRouting();
-        List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos().values());
+        List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos());
         cr.routing(allCargos);
 //        System.out.println(cargo1.getPostDate().plusDays(1));
 //        System.out.println(cargo1.getPostDate());
