@@ -133,7 +133,7 @@ public class CargoRouting {
         cg.addEdge("Tekirdag", "Istanbul", 135);
         cg.addEdge("Tekirdag", "Edirne", 105);
         cg.addEdge("Tekirdag", "Canakkale", 205);
-        cg.addEdge("Tekirdag", "Kırklareli", 115);
+        cg.addEdge("Tekirdag", "Kirklareli", 115);
 
         cg.addEdge("Edirne", "Tekirdag", 105);
         cg.addEdge("Edirne", "Canakkale", 350);
