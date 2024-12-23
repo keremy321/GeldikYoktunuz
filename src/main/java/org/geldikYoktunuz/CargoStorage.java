@@ -57,7 +57,7 @@ public class CargoStorage {
                 left = mid + 1;
             }
         }
-        return null; // Kargo bulunamadıysa
+        return null;
     }
 
     // Teslim Edilmemiş Kargaları Teslimat Süresine Göre Sıralama (Merge Sort)

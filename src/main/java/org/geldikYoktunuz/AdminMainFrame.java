@@ -1,21 +1,45 @@
 package org.geldikYoktunuz;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminMainFrame extends JFrame {
+
+    JComboBox<String> comboBoxFilter;
+
+    CustomTable customTable2;
+
+    private String latestFilter = "All Packages"; // Default filter
+
+    private List<Cargo> getAllCargos() {
+        return new ArrayList<>(CargoStorage.getAllCargos()); // Return all cargos
+    }
+
+    private List<Cargo> getDeliveredCargos() {
+        return CargoStorage.getAllCargos().stream()
+                .filter(cargo -> cargo.getCargoStatus() == CargoStatus.DELIVERED)
+                .collect(Collectors.toList());
+    }
+
+    private List<Cargo> getNotDeliveredCargos() {
+        return CargoStorage.getAllCargos().stream()
+                .filter(cargo -> cargo.getCargoStatus() != CargoStatus.DELIVERED)
+                .collect(Collectors.toList());
+    }
+
 
     public AdminMainFrame() {
         this.setName("adminFrame");
@@ -100,9 +124,93 @@ public class AdminMainFrame extends JFrame {
         String[] columnNames2 = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
 // Create the custom table using data2 and columnNames2
-        CustomTable customTable2 = new CustomTable(data2, columnNames2);
+        customTable2 = new CustomTable(data2, columnNames2);
         customTable2.setBounds(201, 510, 800, 155);
 
+        UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
+        UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+
+
+        String[] filterOptions = {"All Packages", "Delivered Packages", "Not Delivered Packages"};
+        comboBoxFilter = new JComboBox<>(filterOptions);
+
+        comboBoxFilter.setBounds(457, 464, 171, 33);
+        comboBoxFilter.setBackground(new Color(0x159a80));
+
+
+
+        comboBoxFilter.setForeground(Color.WHITE);
+
+        // Customize Border: Focused and Non-Focused
+        Border defaultBorder = new CompoundBorder(
+                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new EmptyBorder(5, 5, 5, 5)
+        );
+        Border focusedBorder = new CompoundBorder(
+                new LineBorder(Color.WHITE, 2), // White border when focused
+                new EmptyBorder(5, 5, 5, 5)
+        );
+
+        comboBoxFilter.setBorder(defaultBorder);
+
+        // Add focus listener to change border dynamically
+        comboBoxFilter.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                comboBoxFilter.setBorder(focusedBorder);
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                comboBoxFilter.setBorder(defaultBorder);
+            }
+        });
+
+
+        comboBoxFilter.addActionListener(e -> {
+            String selectedFilter = (String) comboBoxFilter.getSelectedItem();
+            if (selectedFilter != null) {
+                latestFilter = selectedFilter; // Store the selected filter
+                List<Cargo> filteredCargos = getCargosByFilter(latestFilter);
+                updateCargoTable(filteredCargos);
+            }
+        });
+
+        JLabel labelSort = new JLabel();
+        labelSort.setIcon(new ImageIcon(getClass().getResource("/tableButtons/sort.png")));
+        labelSort.setBounds(645, 464, 171, 33);
+        labelSort.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Sort the table
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelSort.setIcon(new ImageIcon(getClass().getResource("/tableButtons/sortPressed.png")));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelSort.setIcon(new ImageIcon(getClass().getResource("/tableButtons/sort.png")));
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelSort.setIcon(new ImageIcon(getClass().getResource("/tableButtons/sortEntered.png")));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelSort.setIcon(new ImageIcon(getClass().getResource("/tableButtons/sort.png")));
+            }
+        });
+
+        RoundedSearchBar searchBarID = new RoundedSearchBar();
+        searchBarID.setBounds(834, 464, 171, 33);
 
         JLabel labelEffectAddUser = new JLabel();
         labelEffectAddUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
@@ -338,7 +446,9 @@ public class AdminMainFrame extends JFrame {
         managementLayer.add(customTable1, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(customTable2, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(searchBarAll, JLayeredPane.PALETTE_LAYER);
-
+        managementLayer.add(comboBoxFilter, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(labelSort, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(searchBarID, JLayeredPane.PALETTE_LAYER);
 
         accountLayer.add(bgAccount, JLayeredPane.DEFAULT_LAYER);
         accountLayer.add(labelNameSurname, JLayeredPane.PALETTE_LAYER);
@@ -376,18 +486,20 @@ public class AdminMainFrame extends JFrame {
     }
 
     private void refreshManagementLayer(JLayeredPane managementLayer) {
-        managementLayer.removeAll(); // Clear all components from the layer
+        // Update the customer table
+        updateCustomerTable();
 
-        // Add background
-        BackgroundImage bgManagement = new BackgroundImage("/backgrounds/bgManagement.png");
-        bgManagement.setBounds(0, 0, 1100, 700);
-        managementLayer.add(bgManagement, JLayeredPane.DEFAULT_LAYER);
+        // Use the latest filter to display the correct cargos
+        List<Cargo> cargosToDisplay = getCargosByFilter(latestFilter);
+        updateCargoTable(cargosToDisplay);
 
-        RoundedSearchBar searchBarAll = new RoundedSearchBar();
-        searchBarAll.setBounds(740, 8, 300, 50);
+        // Revalidate and repaint the management layer to reflect changes
+        managementLayer.revalidate();
+        managementLayer.repaint();
+    }
 
-
-        // Add refreshed data to customTable1
+    private void updateCustomerTable() {
+        // Prepare updated data for the customer table
         List<Object[]> data1List = new ArrayList<>();
         for (Customer customer : CustomerStorage.getAllCustomers()) {
             data1List.add(new Object[]{
@@ -396,91 +508,58 @@ public class AdminMainFrame extends JFrame {
                     customer.getCustomerPhoto()
             });
         }
+
         Object[][] data1 = data1List.toArray(new Object[0][]);
         String[] columnNames1 = {"ID", "Customer", "Photo Path"};
-        CustomTable customTable1 = new CustomTable(data1, columnNames1);
-        customTable1.setBounds(201, 296, 800, 155);
-        managementLayer.add(customTable1, JLayeredPane.PALETTE_LAYER);
 
-        // Add refreshed data to customTable2
-        List<Object[]> data2List = new ArrayList<>();
+        // Replace the data model of the customer table
+        DefaultTableModel customerTableModel = new DefaultTableModel(data1, columnNames1);
+        JTable customerTable = customTable2.getTable(); // Use the correct reference for the customer table
+        customerTable.setModel(customerTableModel);
+        customerTable.repaint();
+    }
+
+
+    private void updateCargoTable(List<Cargo> cargos) {
+        if (cargos == null) {
+            cargos = getAllCargos(); // Fallback to all cargos if null
+        }
+
+        // Prepare updated data for the cargo table
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        for (Cargo cargo : CargoStorage.getAllCargos()) {
+        List<Object[]> data2List = new ArrayList<>();
+        for (Cargo cargo : cargos) {
             data2List.add(new Object[]{
                     cargo.getPostId(),
                     cargo.getCargoName(),
                     cargo.getCustomer().getCustomerName() + " " + cargo.getCustomer().getCustomerSurname(),
                     cargo.getPostDate().format(df),
-                    cargo.getDeliveryDate(),
+                    cargo.getDeliveryDate() != null ? cargo.getDeliveryDate().format(df) : "N/A",
                     cargo.getCity().getCityName(),
-                    cargo.getCargoStatus().toString()
+                    cargo.getCargoStatus().getDescription()
             });
         }
+
         Object[][] data2 = data2List.toArray(new Object[0][]);
         String[] columnNames2 = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
-        CustomTable customTable2 = new CustomTable(data2, columnNames2);
-        customTable2.setBounds(201, 510, 800, 155);
-        managementLayer.add(customTable2, JLayeredPane.PALETTE_LAYER);
 
-        // Add other components (e.g., labels, buttons, etc.)
-        // Example: Re-adding "Add User" button
-        JLabel labelEffectAddUser = new JLabel();
-        labelEffectAddUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
-        labelEffectAddUser.setBounds(125, 22, 286, 256);
-        labelEffectAddUser.setVisible(false);
-
-        JLabel labelAddUser = new JLabel();
-        labelAddUser.setName("addUser");
-        labelAddUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addUser.png")));
-        labelAddUser.setBounds(193, 90, 150, 120);
-        labelAddUser.addMouseListener(new ManagementMouseListener(labelAddUser, labelEffectAddUser, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
-
-        JLabel labelEffectEditUser = new JLabel();
-        labelEffectEditUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
-        labelEffectEditUser.setBounds(347, 22, 286, 256);
-        labelEffectEditUser.setVisible(false);
-
-        JLabel labelEditUser = new JLabel();
-        labelEditUser.setName("editUser");
-        labelEditUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editUser.png")));
-        labelEditUser.setBounds(415, 90, 150, 120);
-        labelEditUser.addMouseListener(new ManagementMouseListener(labelEditUser, labelEffectEditUser, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
-
-        JLabel labelEffectAddPackage = new JLabel();
-        labelEffectAddPackage.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
-        labelEffectAddPackage.setBounds(569, 22, 286, 256);
-        labelEffectAddPackage.setVisible(false);
-
-        JLabel labelAddPackage = new JLabel();
-        labelAddPackage.setName("addPackage");
-        labelAddPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addPackage.png")));
-        labelAddPackage.setBounds(637, 90, 150, 120);
-        labelAddPackage.addMouseListener(new ManagementMouseListener(labelAddPackage, labelEffectAddPackage, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
-
-        JLabel labelEffectEditPackage = new JLabel();
-        labelEffectEditPackage.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
-        labelEffectEditPackage.setBounds(791, 22, 286, 256);
-        labelEffectEditPackage.setVisible(false);
-
-        JLabel labelEditPackage = new JLabel();
-        labelEditPackage.setName("editPackage");
-        labelEditPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editPackage.png")));
-        labelEditPackage.setBounds(859, 90, 150, 120);
-        labelEditPackage.addMouseListener(new ManagementMouseListener(labelEditPackage, labelEffectEditPackage, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
-
-        managementLayer.add(labelAddUser, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(labelEditUser, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(labelAddPackage, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(labelEditPackage, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(labelEffectAddUser, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(labelEffectEditUser, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(labelEffectAddPackage, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(labelEffectEditPackage, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(searchBarAll, JLayeredPane.PALETTE_LAYER);
-
-        managementLayer.revalidate(); // Revalidate the layer
-        managementLayer.repaint(); // Repaint to reflect changes
+        // Replace the data model of the cargo table
+        DefaultTableModel cargoTableModel = new DefaultTableModel(data2, columnNames2);
+        JTable cargoTable = customTable2.getTable(); // Use the correct reference for the cargo table
+        cargoTable.setModel(cargoTableModel);
+        cargoTable.repaint();
     }
 
+    private List<Cargo> getCargosByFilter(String filter) {
+        switch (filter) {
+            case "Delivered Packages":
+                return getDeliveredCargos();
+            case "Not Delivered Packages":
+                return getNotDeliveredCargos();
+            case "All Packages":
+            default:
+                return getAllCargos();
+        }
+    }
 
 }

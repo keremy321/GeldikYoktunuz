@@ -268,8 +268,7 @@ public class CustomerMainFrame extends JFrame {
         };
 
         // Column names
-        String[] columnNames = {"ID", "Cargo Name", "Gönderi Tarihi", "Teslim Tarihi", "Kargo Durumu"};
-
+        String[] columnNames = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
         // Create the custom table
         CustomTable customTable = new CustomTable(data, columnNames);

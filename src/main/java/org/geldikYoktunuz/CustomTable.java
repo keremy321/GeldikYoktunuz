@@ -402,4 +402,13 @@ public class CustomTable extends JPanel {
     public JTable getTable() {
         return table; // Expose the JTable instance
     }
+
+    public void setModel(TableModel model) {
+        table.setModel(model);
+    }
+
+    public TableModel getModel() {
+        return table.getModel();
+    }
+
 }

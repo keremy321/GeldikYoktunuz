@@ -150,8 +150,15 @@ public class RoundedSearchBar extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        // Use rounded rectangle for borders
-        float arcSize = 50f;
+
+        float arcSize;
+        if (this.getWidth() == 171 && this.getHeight() == 33) {
+            arcSize = 35f;
+        } else {
+            arcSize = 50f;
+        }
+
+
         float borderWidth = 2.5f;
         float halfBorder = borderWidth / 2f;
 
