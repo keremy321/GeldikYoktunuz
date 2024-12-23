@@ -101,6 +101,7 @@ public class Main {
 //        System.out.println("\nKargo Öncelik Sırası:");
 //        System.out.println(CargoPrioritization.prioritization(customer1));
 //
+        CargoCancel.cargoCanceling(cargo1);
         CargoRouting cr = new CargoRouting();
         List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos());
         cr.routing(allCargos);

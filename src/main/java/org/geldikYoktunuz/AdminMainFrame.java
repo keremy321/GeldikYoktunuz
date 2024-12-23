@@ -440,7 +440,6 @@ public class AdminMainFrame extends JFrame {
                 for (Cargo c : allCargos){
                     System.out.println(c.getCargoName()+"--"+c.getCargoStatus().getDescription());
                 }
-
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
 

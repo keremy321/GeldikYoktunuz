@@ -374,6 +374,14 @@ public class CustomerMainFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 CurrentDate.passDay();
+                CargoRouting cr = new CargoRouting();
+                List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos());
+                CargoStatusManager.statusChanger(allCargos);
+                cr.routing(allCargos);
+                for (Cargo c : allCargos){
+                    System.out.println(c.getCargoName()+"--"+c.getCargoStatus().getDescription());
+                }
+
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
             }
