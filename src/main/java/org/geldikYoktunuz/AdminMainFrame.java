@@ -22,6 +22,11 @@ public class AdminMainFrame extends JFrame {
 
     CustomTable customTable2;
 
+    CustomTable customTable1;
+
+    JLabel labelSort;
+    RoundedSearchBar searchBarID;
+
     private String latestFilter = "All Packages"; // Default filter
 
     private List<Cargo> getAllCargos() {
@@ -99,7 +104,7 @@ public class AdminMainFrame extends JFrame {
         String[] columnNames1 = {"ID", "Customer", "Photo Path"};
 
         // Create the custom table
-        CustomTable customTable1 = new CustomTable(data1, columnNames1);
+        customTable1 = new CustomTable(data1, columnNames1);
         customTable1.setBounds(201, 296, 800, 155);
 
         List<Object[]> data2List = new ArrayList<>();
@@ -176,16 +181,28 @@ public class AdminMainFrame extends JFrame {
                 latestFilter = selectedFilter; // Store the selected filter
                 List<Cargo> filteredCargos = getCargosByFilter(latestFilter);
                 updateCargoTable(filteredCargos);
+                refreshManagementLayer(managementLayer);
             }
         });
 
-        JLabel labelSort = new JLabel();
+        labelSort = new JLabel();
         labelSort.setIcon(new ImageIcon(getClass().getResource("/tableButtons/sort.png")));
         labelSort.setBounds(645, 464, 171, 33);
+
+        boolean[] sortOrder = {true}; // Track sort order: true for ascending, false for descending
+
         labelSort.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Sort the table
+                List<Cargo> sortedCargos;
+                if (sortOrder[0]) {
+                    sortedCargos = CargoStorage.getSortedUndeliveredCargosByDeliveryTime(); // Ascending order
+                } else {
+                    sortedCargos = CargoStorage.getSortedUndeliveredCargosByDeliveryTimeDescending(); // Descending order
+                }
+
+                updateCargoTable(sortedCargos);
+                sortOrder[0] = !sortOrder[0]; // Toggle sort order
             }
 
             @Override
@@ -209,8 +226,41 @@ public class AdminMainFrame extends JFrame {
             }
         });
 
-        RoundedSearchBar searchBarID = new RoundedSearchBar();
-        searchBarID.setBounds(834, 464, 171, 33);
+        labelSort.setVisible(false);
+
+        searchBarID = new RoundedSearchBar(filterText -> {
+            if (filterText != null && !filterText.trim().isEmpty()) {
+                try {
+                    int targetId = Integer.parseInt(filterText.trim());
+
+                    // Perform binary search
+                    Cargo foundCargo = CargoStorage.binarySearchById(targetId);
+
+                    if (foundCargo != null) {
+                        // Display the search result in the table
+                        List<Cargo> searchResult = new ArrayList<>();
+                        searchResult.add(foundCargo);
+                        updateCargoTable(searchResult);
+                    } else {
+                        // Show message if no cargo is found
+                        JOptionPane.showMessageDialog(this, "No delivered cargo found with ID: " + targetId, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                        updateCargoTable(new ArrayList<>()); // Clear the table
+                    }
+                } catch (NumberFormatException e) {
+                    // Show error if input is invalid
+                    JOptionPane.showMessageDialog(this, "Please enter a valid numeric ID.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                // Reset to show all delivered cargos if the search bar is cleared
+                List<Cargo> deliveredCargos = CargoStorage.getAllCargos().stream()
+                        .filter(cargo -> cargo.getCargoStatus() == CargoStatus.DELIVERED)
+                        .collect(Collectors.toList());
+                updateCargoTable(deliveredCargos);
+            }
+        });
+        searchBarID.setBounds(834, 464, 171, 33); // Position the search bar
+
+        searchBarID.setVisible(false);
 
         JLabel labelEffectAddUser = new JLabel();
         labelEffectAddUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
@@ -489,14 +539,34 @@ public class AdminMainFrame extends JFrame {
         // Update the customer table
         updateCustomerTable();
 
-        // Use the latest filter to display the correct cargos
+        // Get cargos based on the latest filter
         List<Cargo> cargosToDisplay = getCargosByFilter(latestFilter);
         updateCargoTable(cargosToDisplay);
 
-        // Revalidate and repaint the management layer to reflect changes
+        // Toggle visibility of searchBarID and labelSort
+        switch (latestFilter) {
+            case "All Packages":
+                searchBarID.setVisible(false);
+                labelSort.setVisible(false);
+                System.out.println("Filter: All Packages - searchBarID and labelSort hidden.");
+                break;
+            case "Delivered Packages":
+                searchBarID.setVisible(true);
+                labelSort.setVisible(false);
+                System.out.println("Filter: Delivered Packages - searchBarID shown, labelSort hidden.");
+                break;
+            case "Not Delivered Packages":
+                searchBarID.setVisible(false);
+                labelSort.setVisible(true);
+                System.out.println("Filter: Not Delivered Packages - labelSort shown, searchBarID hidden.");
+                break;
+        }
+
+        // Refresh the management layer
         managementLayer.revalidate();
         managementLayer.repaint();
     }
+
 
     private void updateCustomerTable() {
         // Prepare updated data for the customer table
@@ -514,8 +584,12 @@ public class AdminMainFrame extends JFrame {
 
         // Replace the data model of the customer table
         DefaultTableModel customerTableModel = new DefaultTableModel(data1, columnNames1);
-        JTable customerTable = customTable2.getTable(); // Use the correct reference for the customer table
+        JTable customerTable = customTable1.getTable(); // Use the correct reference for the customer table
         customerTable.setModel(customerTableModel);
+
+        System.out.println("Customer Table updated.");
+
+        customerTable.revalidate();
         customerTable.repaint();
     }
 

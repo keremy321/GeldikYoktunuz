@@ -70,6 +70,17 @@ public class CargoStorage {
         return undeliveredCargos;
     }
 
+    public static List<Cargo> getSortedUndeliveredCargosByDeliveryTimeDescending() {
+        // Get the list sorted in ascending order
+        List<Cargo> undeliveredCargos = getSortedUndeliveredCargosByDeliveryTime();
+
+        // Reverse the list to get descending order
+        Collections.reverse(undeliveredCargos);
+
+        return undeliveredCargos;
+    }
+
+
     private static void mergeSortByDeliveryTime(List<Cargo> cargos) {
         if (cargos.size() <= 1) {
             return;
@@ -84,6 +95,8 @@ public class CargoStorage {
 
         merge(cargos, left, right);
     }
+
+
 
     private static void merge(List<Cargo> cargos, List<Cargo> left, List<Cargo> right) {
         int i = 0, j = 0, k = 0;
