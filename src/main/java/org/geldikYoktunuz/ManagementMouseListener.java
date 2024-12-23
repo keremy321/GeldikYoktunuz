@@ -39,12 +39,39 @@ public class ManagementMouseListener implements MouseListener {
     private JTextField textFieldDeliveryName;
     private JLabel labelIDDelivery;
     private JLabel labelID;
+    private Runnable refreshCallback;
+
 
     public ManagementMouseListener(JLabel label, JLabel effect, String path, JFrame currentFrame) {
         this.currentFrame = currentFrame;
         this.label = label;
         this.effect = effect;
         this.path = path;
+
+        this.enteredIcon = (ImageIcon) effect.getIcon();
+
+        try {
+            URL effectURL = getClass().getResource(path);
+            if (effectURL != null) {
+                pressedIcon = new ImageIcon(effectURL);
+            } else {
+                System.err.println("Pressed icon not found: " + path);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FlatMacDarkLaf.setup();
+    }
+
+
+
+    public ManagementMouseListener(JLabel label, JLabel effect, String path, JFrame currentFrame, Runnable refreshCallback) {
+        this.currentFrame = currentFrame;
+        this.label = label;
+        this.effect = effect;
+        this.path = path;
+        this.refreshCallback = refreshCallback;
 
         this.enteredIcon = (ImageIcon) effect.getIcon();
 
@@ -78,6 +105,10 @@ public class ManagementMouseListener implements MouseListener {
         } else if ("editPackage".equals(label.getName())) {
             choosePackage();
             System.out.println("editPackage");
+        }
+
+        if (refreshCallback != null) {
+            refreshCallback.run();
         }
     }
 
@@ -235,7 +266,6 @@ public class ManagementMouseListener implements MouseListener {
             }
         });
 
-// Set placeholder manually at initialization
         textFieldSurname.setText(CustomerStorage.getCurrentCustomer().getCustomerSurname());
         textFieldSurname.setForeground(Color.GRAY);
 

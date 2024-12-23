@@ -112,7 +112,7 @@ public class AdminMainFrame extends JFrame {
         labelAddUser.setName("addUser");
         labelAddUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addUser.png")));
         labelAddUser.setBounds(193, 90, 150, 120);
-        labelAddUser.addMouseListener(new ManagementMouseListener(labelAddUser, labelEffectAddUser, "/managementButtons/pressed.png", this));
+        labelAddUser.addMouseListener(new ManagementMouseListener(labelAddUser, labelEffectAddUser, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
 
         JLabel labelEffectEditUser = new JLabel();
         labelEffectEditUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
@@ -123,7 +123,7 @@ public class AdminMainFrame extends JFrame {
         labelEditUser.setName("editUser");
         labelEditUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editUser.png")));
         labelEditUser.setBounds(415, 90, 150, 120);
-        labelEditUser.addMouseListener(new ManagementMouseListener(labelEditUser, labelEffectEditUser, "/managementButtons/pressed.png", this));
+        labelEditUser.addMouseListener(new ManagementMouseListener(labelEditUser, labelEffectEditUser, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
 
         JLabel labelEffectAddPackage = new JLabel();
         labelEffectAddPackage.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
@@ -134,7 +134,7 @@ public class AdminMainFrame extends JFrame {
         labelAddPackage.setName("addPackage");
         labelAddPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addPackage.png")));
         labelAddPackage.setBounds(637, 90, 150, 120);
-        labelAddPackage.addMouseListener(new ManagementMouseListener(labelAddPackage, labelEffectAddPackage, "/managementButtons/pressed.png", this));
+        labelAddPackage.addMouseListener(new ManagementMouseListener(labelAddPackage, labelEffectAddPackage, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
 
         JLabel labelEffectEditPackage = new JLabel();
         labelEffectEditPackage.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
@@ -145,7 +145,7 @@ public class AdminMainFrame extends JFrame {
         labelEditPackage.setName("editPackage");
         labelEditPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editPackage.png")));
         labelEditPackage.setBounds(859, 90, 150, 120);
-        labelEditPackage.addMouseListener(new ManagementMouseListener(labelEditPackage, labelEffectEditPackage, "/managementButtons/pressed.png", this));
+        labelEditPackage.addMouseListener(new ManagementMouseListener(labelEditPackage, labelEffectEditPackage, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
 
 //      ACCOUNT LAYER
 
@@ -277,8 +277,11 @@ public class AdminMainFrame extends JFrame {
                 for (Cargo c : allCargos){
                     System.out.println(c.getCargoName()+"--"+c.getCargoStatus().getDescription());
                 }
+
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
+
+                refreshManagementLayer(managementLayer);
             }
 
             @Override
@@ -370,5 +373,113 @@ public class AdminMainFrame extends JFrame {
             }
         }
     }
+
+    private void refreshManagementLayer(JLayeredPane managementLayer) {
+        managementLayer.removeAll(); // Clear all components from the layer
+
+        // Add background
+        BackgroundImage bgManagement = new BackgroundImage("/backgrounds/bgManagement.png");
+        bgManagement.setBounds(0, 0, 1100, 700);
+        managementLayer.add(bgManagement, JLayeredPane.DEFAULT_LAYER);
+
+        RoundedSearchBar searchBarAll = new RoundedSearchBar();
+        searchBarAll.setBounds(740, 8, 300, 50);
+
+
+        // Add refreshed data to customTable1
+        List<Object[]> data1List = new ArrayList<>();
+        for (Customer customer : CustomerStorage.getAllCustomers().values()) {
+            data1List.add(new Object[]{
+                    customer.getCustomerId(),
+                    customer.getCustomerName() + " " + customer.getCustomerSurname(),
+                    customer.getCustomerPhoto()
+            });
+        }
+        Object[][] data1 = data1List.toArray(new Object[0][]);
+        String[] columnNames1 = {"ID", "Customer", "Photo Path"};
+        CustomTable customTable1 = new CustomTable(data1, columnNames1);
+        customTable1.setBounds(201, 296, 800, 155);
+        managementLayer.add(customTable1, JLayeredPane.PALETTE_LAYER);
+
+        // Add refreshed data to customTable2
+        List<Object[]> data2List = new ArrayList<>();
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        for (Cargo cargo : CargoStorage.getAllCargos().values()) {
+            data2List.add(new Object[]{
+                    cargo.getPostId(),
+                    cargo.getCargoName(),
+                    cargo.getCustomer().getCustomerName() + " " + cargo.getCustomer().getCustomerSurname(),
+                    cargo.getPostDate().format(df),
+                    cargo.getDeliveryDate(),
+                    cargo.getCity().getCityName(),
+                    cargo.getCargoStatus().toString()
+            });
+        }
+        Object[][] data2 = data2List.toArray(new Object[0][]);
+        String[] columnNames2 = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
+        CustomTable customTable2 = new CustomTable(data2, columnNames2);
+        customTable2.setBounds(201, 510, 800, 155);
+        managementLayer.add(customTable2, JLayeredPane.PALETTE_LAYER);
+
+        // Add other components (e.g., labels, buttons, etc.)
+        // Example: Re-adding "Add User" button
+        JLabel labelEffectAddUser = new JLabel();
+        labelEffectAddUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
+        labelEffectAddUser.setBounds(125, 22, 286, 256);
+        labelEffectAddUser.setVisible(false);
+
+        JLabel labelAddUser = new JLabel();
+        labelAddUser.setName("addUser");
+        labelAddUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addUser.png")));
+        labelAddUser.setBounds(193, 90, 150, 120);
+        labelAddUser.addMouseListener(new ManagementMouseListener(labelAddUser, labelEffectAddUser, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
+
+        JLabel labelEffectEditUser = new JLabel();
+        labelEffectEditUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
+        labelEffectEditUser.setBounds(347, 22, 286, 256);
+        labelEffectEditUser.setVisible(false);
+
+        JLabel labelEditUser = new JLabel();
+        labelEditUser.setName("editUser");
+        labelEditUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editUser.png")));
+        labelEditUser.setBounds(415, 90, 150, 120);
+        labelEditUser.addMouseListener(new ManagementMouseListener(labelEditUser, labelEffectEditUser, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
+
+        JLabel labelEffectAddPackage = new JLabel();
+        labelEffectAddPackage.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
+        labelEffectAddPackage.setBounds(569, 22, 286, 256);
+        labelEffectAddPackage.setVisible(false);
+
+        JLabel labelAddPackage = new JLabel();
+        labelAddPackage.setName("addPackage");
+        labelAddPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addPackage.png")));
+        labelAddPackage.setBounds(637, 90, 150, 120);
+        labelAddPackage.addMouseListener(new ManagementMouseListener(labelAddPackage, labelEffectAddPackage, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
+
+        JLabel labelEffectEditPackage = new JLabel();
+        labelEffectEditPackage.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
+        labelEffectEditPackage.setBounds(791, 22, 286, 256);
+        labelEffectEditPackage.setVisible(false);
+
+        JLabel labelEditPackage = new JLabel();
+        labelEditPackage.setName("editPackage");
+        labelEditPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editPackage.png")));
+        labelEditPackage.setBounds(859, 90, 150, 120);
+        labelEditPackage.addMouseListener(new ManagementMouseListener(labelEditPackage, labelEffectEditPackage, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
+
+        managementLayer.add(labelAddUser, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(labelEditUser, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(labelAddPackage, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(labelEditPackage, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(labelEffectAddUser, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(labelEffectEditUser, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(labelEffectAddPackage, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(labelEffectEditPackage, JLayeredPane.PALETTE_LAYER);
+        managementLayer.add(searchBarAll, JLayeredPane.PALETTE_LAYER);
+
+        managementLayer.revalidate(); // Revalidate the layer
+        managementLayer.repaint(); // Repaint to reflect changes
+    }
+
 
 }
