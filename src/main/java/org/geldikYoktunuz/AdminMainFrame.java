@@ -84,6 +84,12 @@ public class AdminMainFrame extends JFrame {
         BackgroundImage bgHome = new BackgroundImage("/backgrounds/bgHome.png");
         bgHome.setBounds(0, 0, 1100, 700);
 
+//      DELIVERY LAYER
+
+        GraphPanel graphPanel = new GraphPanel();
+        graphPanel.setBounds(0,0,1000,700);
+
+
 //      MANAGEMENT LAYER
 
         BackgroundImage bgManagement = new BackgroundImage("/backgrounds/bgManagement.png");
@@ -396,7 +402,7 @@ public class AdminMainFrame extends JFrame {
         JLabel labelDelivery = new JLabel();
         labelDelivery.setIcon(new ImageIcon(getClass().getResource("/menuButtons/delivery.png")));
         labelDelivery.setBounds(25, 135, 50, 30);
-        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, homeLayer, this));
+        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, deliveryLayer, this));
 
         JLabel labelManagement = new JLabel();
         labelManagement.setIcon(new ImageIcon(getClass().getResource("/menuButtons/management.png")));
@@ -443,6 +449,9 @@ public class AdminMainFrame extends JFrame {
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
 
+                graphPanel.updateGraph(); // Update the graph with new routes/paths if needed
+                graphPanel.repaint(); // Ensure the panel is visually updated
+
                 refreshManagementLayer(managementLayer);
             }
 
@@ -486,6 +495,8 @@ public class AdminMainFrame extends JFrame {
         frameLayer.add(labelCurrentDate, JLayeredPane.PALETTE_LAYER);
 
         homeLayer.add(bgHome, JLayeredPane.DEFAULT_LAYER);
+
+        deliveryLayer.add(graphPanel, JLayeredPane.DEFAULT_LAYER);
 
         managementLayer.add(bgManagement, JLayeredPane.DEFAULT_LAYER);
         managementLayer.add(labelAddUser, JLayeredPane.PALETTE_LAYER);

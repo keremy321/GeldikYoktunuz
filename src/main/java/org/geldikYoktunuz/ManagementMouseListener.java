@@ -912,7 +912,7 @@ public class ManagementMouseListener implements MouseListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 dialogChoosePackage.dispose();
-                CargoStorage.setCurrentCargo(((Cargo) comboBoxPackage.getSelectedItem()));
+                CargoStorage.setCurrentCargo(((Cargo) comboBoxPackage .getSelectedItem()));
                 System.out.println("Current Cargo: " + CargoStorage.getCurrentCargo().getPostId());
                 editPackage();
             }
