@@ -32,6 +32,7 @@ public class ManagementMouseListener implements MouseListener {
     private JComboBox<Customer> comboBox;
     private JComboBox<Cargo> comboBoxPackage;
     private JComboBox<City> comboBoxCity;
+    private JComboBox<Customer> comboBoxCustomer;
 
     private JTextField textFieldName;
     private JTextField textFieldSurname;
@@ -155,9 +156,21 @@ public class ManagementMouseListener implements MouseListener {
         labelAddUser.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Customer customer = new Customer(textFieldName.getText(), textFieldSurname.getText(), PPMouseListener.getPpPath());
-                System.out.println("Customer: " + customer);
-                dialogAddUser.dispose();
+                if (textFieldName.getText().isEmpty() || textFieldSurname.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(addUserLayer,
+                            "Error: Please ensure all fields are filled in:\n" +
+                                    "- Name\n" +
+                                    "- Surname",
+                            "Missing Information",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else{
+                    Customer customer = new Customer(textFieldName.getText(), textFieldSurname.getText(), PPMouseListener.getPpPath());
+                    System.out.println("Customer: " + customer);
+                    dialogAddUser.dispose();
+                }
+
+
             }
 
             @Override
@@ -372,15 +385,30 @@ public class ManagementMouseListener implements MouseListener {
         labelAddPackage.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Cargo cargo = new Cargo(selectedDate, dontRing, textFieldCourierName.getText(), PPMouseListener.getPpPath(),textFieldDeliveryName.getText(), (City) comboBoxCity.getSelectedItem());
+                if (textFieldCourierName.getText().isEmpty() || textFieldDeliveryName.getText().isEmpty() || selectedDate == null || comboBoxCustomer.getSelectedItem() == null || comboBoxCity.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(bgAddPackage,
+                            "Error: Please ensure all fields are filled in:\n" +
+                                    "- Courier Name\n" +
+                                    "- Delivery Name\n" +
+                                    "- Delivery Date\n" +
+                                    "- Customer Selection\n" +
+                                    "- City Selection",
+                            "Missing Information",
+                            JOptionPane.WARNING_MESSAGE);
 
-                Customer customer = new Customer("İb124124m", "Ç124in", "/dialogButtons/woman.png");
-                customer.addCargo(cargo);
+                }
+                else {
+                    Cargo cargo = new Cargo(selectedDate, dontRing, textFieldCourierName.getText(), PPMouseListener.getPpPath(),textFieldDeliveryName.getText(), (City) comboBoxCity.getSelectedItem());
+
+                    Customer customer = (Customer) comboBoxCustomer.getSelectedItem();
+
+                    customer.addCargo(cargo);
 
 
+                    System.out.println(cargo);
+                    dialogAddPackage.dispose();
 
-                System.out.println(cargo);
-                dialogAddPackage.dispose();
+                }
             }
 
             @Override
@@ -437,6 +465,7 @@ public class ManagementMouseListener implements MouseListener {
             textFieldCourierName.setText(currentCargo.getCourierName());
             textFieldDeliveryName.setText(currentCargo.getCargoName());
             comboBoxCity.setSelectedItem(currentCargo.getCity());
+            comboBoxCustomer.setSelectedItem(currentCargo.getCustomer());
         }
 
         JLabel labelEditPackage = new JLabel();
@@ -450,12 +479,26 @@ public class ManagementMouseListener implements MouseListener {
         labelEditPackage.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                currentCargo.setCourierName(textFieldCourierName.getText());
-                currentCargo.setCargoName(textFieldDeliveryName.getText());
-                currentCargo.setCity((City) comboBoxCity.getSelectedItem());
-                currentCargo.setCourierPhoto(PPMouseListener.getPpPath());
+                if (textFieldCourierName.getText().isEmpty() || textFieldDeliveryName.getText().isEmpty() && selectedDate == null || comboBoxCustomer.getSelectedItem() == null || comboBoxCity.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(editEditPackage,
+                            "Error: Please ensure all fields are filled in:\n" +
+                                    "- Courier Name\n" +
+                                    "- Delivery Name\n" +
+                                    "- Delivery Date\n" +
+                                    "- Customer Selection\n" +
+                                    "- City Selection",
+                            "Missing Information",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    currentCargo.setCourierName(textFieldCourierName.getText());
+                    currentCargo.setCargoName(textFieldDeliveryName.getText());
+                    currentCargo.setCity((City) comboBoxCity.getSelectedItem());
+                    currentCargo.setCourierPhoto(PPMouseListener.getPpPath());
+                    currentCargo.setCustomer((Customer) comboBoxCustomer.getSelectedItem());
 
-                dialogEditPackage.dispose();
+                    dialogEditPackage.dispose();
+                }
             }
 
             @Override
@@ -671,7 +714,7 @@ public class ManagementMouseListener implements MouseListener {
         datePicker.setDateSelectionAble(new DateSelectionAble() {
             @Override
             public boolean isDateSelectedAble(LocalDate localDate) {
-                return !localDate.isBefore(LocalDate.now());
+                return !localDate.isBefore(CurrentDate.currentDate);
             }
         });
 
@@ -689,7 +732,7 @@ public class ManagementMouseListener implements MouseListener {
         });
 
         JFormattedTextField editor = new JFormattedTextField();
-        editor.setBounds(70, 482, 317, 39);
+        editor.setBounds(16, 482, 232, 39);
         editor.setBackground(new Color(0x2c3e50));
 
         editor.setBorder(new RoundedBorder(20, new Color(0x159a80), 2));
@@ -713,9 +756,20 @@ public class ManagementMouseListener implements MouseListener {
         UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
         UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
 
+        comboBoxCustomer = new JComboBox<>();
+        comboBoxCustomer.setBounds(284, 482, 232, 39);
+        comboBoxCustomer.setBackground(new Color(0x2c3e50));
+
+        for (Customer customer : CustomerStorage.getAllCustomers()) {
+            comboBoxCustomer.addItem(customer);
+        }
+
+        comboBoxCustomer.setForeground(Color.WHITE);
+
+        comboBoxCustomer.setBorder(new RoundedBorder(20, new Color(0x159a80), 2));
 
         comboBoxCity = new JComboBox<>();
-        comboBoxCity.setBounds(413, 482, 317, 39);
+        comboBoxCity.setBounds(552, 482, 232, 39);
         comboBoxCity.setBackground(new Color(0x2c3e50));
 
         for (City city : CityStorage.getAllCities().values()) {
@@ -732,6 +786,7 @@ public class ManagementMouseListener implements MouseListener {
         layeredPane.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(editor, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(comboBoxCity, JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(comboBoxCustomer, JLayeredPane.PALETTE_LAYER);
     }
 
     public void chooseAccount() {
