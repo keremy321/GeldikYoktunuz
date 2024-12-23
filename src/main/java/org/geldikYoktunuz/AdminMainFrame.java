@@ -8,12 +8,15 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
 public class AdminMainFrame extends JFrame {
@@ -23,6 +26,8 @@ public class AdminMainFrame extends JFrame {
     CustomTable customTable2;
 
     CustomTable customTable1;
+
+    CustomTable customTableAccount;
 
     JLabel labelSort;
     RoundedSearchBar searchBarID;
@@ -109,7 +114,6 @@ public class AdminMainFrame extends JFrame {
 
         List<Object[]> data2List = new ArrayList<>();
 
-// Populate the list with cargo details
         for (Cargo cargo : CargoStorage.getAllCargos()) {
             data2List.add(new Object[]{
                     cargo.getPostId(),
@@ -162,14 +166,14 @@ public class AdminMainFrame extends JFrame {
         comboBoxFilter.setBorder(defaultBorder);
 
         // Add focus listener to change border dynamically
-        comboBoxFilter.addFocusListener(new java.awt.event.FocusAdapter() {
+        comboBoxFilter.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
+            public void focusGained(FocusEvent e) {
                 comboBoxFilter.setBorder(focusedBorder);
             }
 
             @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 comboBoxFilter.setBorder(defaultBorder);
             }
         });
@@ -312,40 +316,6 @@ public class AdminMainFrame extends JFrame {
         bgAccount.setBounds(0, 0, 1100, 700);
 
 
-        Object[][] data = {
-                {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
-                {2, "Package B", "2024-12-02", "2024-12-05", "In Transit"},
-                {3, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {4, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {5, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {6, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {7, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {8, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {9, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {10, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {11, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {12, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {13, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {14, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {15, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {16, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-        };
-
-        // Column names
-        String[] columnNames = {"ID", "Customer", "Photo"};
-
-        // Create the custom table
-        CustomTable customTable = new CustomTable(data, columnNames);
-        customTable.setBounds(201, 274, 800, 380);
-
-        JTable tableCargos = customTable.getTable();
-
-
-
-        RoundedSearchBar searchBar = new RoundedSearchBar(filterText -> filterTable(tableCargos, filterText));
-        searchBar.setBounds(700, 218, 300, 50); // Position the search bar
-
-
 //        CircularImagePanel circularImagePanel = new CircularImagePanel("CustomerStorage.getCurrentCustomer().getCustomerPhoto()", 150);
 //        circularImagePanel.setBounds(201, 53, 150, 150);
 
@@ -387,6 +357,40 @@ public class AdminMainFrame extends JFrame {
             labelID.setFont(new Font("SansSerif", Font.PLAIN, 12));
         }
 
+        List<Object[]> dataList = new ArrayList<>();
+
+        if (CustomerStorage.getCurrentCustomer() != null){
+            for (Cargo cargo : CustomerStorage.getCurrentCustomer().getRecentCargosStack()) {
+                dataList.add(new Object[]{
+                        cargo.getPostId(),
+                        cargo.getCargoName(),
+                        cargo.getPostDate().format(df),
+                        cargo.getDeliveryDate(),
+                        cargo.getCity().getCityName(),
+                        cargo.getCargoStatus().toString()
+                });
+            }
+            System.out.println(CustomerStorage.getCurrentCustomer().getRecentCargosStack());
+            System.out.println("Recent Cargos: " + CustomerStorage.getCurrentCustomer().getCustomerName());
+        }
+        else {
+            System.out.println("Stack");
+        }
+
+        Object[][] data = dataList.toArray(new Object[0][]);
+
+        String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
+
+        customTableAccount = new CustomTable(data, columnNames);
+        customTableAccount.setBounds(201, 274, 800, 380);
+
+        JTable tableCargos = customTableAccount.getTable();
+
+        RoundedSearchBar searchBar = new RoundedSearchBar(filterText -> filterTable(tableCargos, filterText));
+        searchBar.setBounds(700, 218, 300, 50);
+
+
+
 //      MAIN FRAME
 
         JLabel labelDelivery = new JLabel();
@@ -407,7 +411,7 @@ public class AdminMainFrame extends JFrame {
         JLabel labelAccount = new JLabel();
         labelAccount.setIcon(new ImageIcon(getClass().getResource("/menuButtons/account.png")));
         labelAccount.setBounds(25, 615, 50, 50);
-        labelAccount.addMouseListener(new MenuMouseListener(labelAccount, "account", layers, accountLayer, this, labelNameSurname, labelID, null));
+        labelAccount.addMouseListener(new MenuMouseListener(labelAccount, "account", layers, accountLayer, this, labelNameSurname, labelID, null, customTableAccount));
 
         JLabel labelCurrentDate = new JLabel();
         labelCurrentDate.setText(CurrentDate.getCurrentDate());
@@ -504,7 +508,7 @@ public class AdminMainFrame extends JFrame {
         accountLayer.add(labelNameSurname, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(labelID, JLayeredPane.PALETTE_LAYER);
 //        accountLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
-        accountLayer.add(customTable, JLayeredPane.PALETTE_LAYER);
+        accountLayer.add(customTableAccount, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(searchBar, JLayeredPane.PALETTE_LAYER);
 
         this.setLayout(null);
@@ -529,7 +533,7 @@ public class AdminMainFrame extends JFrame {
             try {
                 // Filter rows based on the text
                 sorter.setRowFilter(RowFilter.regexFilter("(?i)" + filterText));
-            } catch (java.util.regex.PatternSyntaxException e) {
+            } catch (PatternSyntaxException e) {
                 JOptionPane.showMessageDialog(null, "Invalid search text.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -542,6 +546,8 @@ public class AdminMainFrame extends JFrame {
         // Get cargos based on the latest filter
         List<Cargo> cargosToDisplay = getCargosByFilter(latestFilter);
         updateCargoTable(cargosToDisplay);
+
+        updateCargoTableAccount();
 
         // Toggle visibility of searchBarID and labelSort
         switch (latestFilter) {
@@ -623,6 +629,39 @@ public class AdminMainFrame extends JFrame {
         cargoTable.setModel(cargoTableModel);
         cargoTable.repaint();
     }
+
+    private void updateCargoTableAccount() {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<Object[]> dataList = new ArrayList<>();
+
+        if (CustomerStorage.getCurrentCustomer() != null){
+            for (Cargo cargo : CustomerStorage.getCurrentCustomer().getRecentCargosStack()) {
+                dataList.add(new Object[]{
+                        cargo.getPostId(),
+                        cargo.getCargoName(),
+                        cargo.getPostDate().format(df),
+                        cargo.getDeliveryDate(),
+                        cargo.getCity().getCityName(),
+                        cargo.getCargoStatus().toString()
+                });
+            }
+            System.out.println(CustomerStorage.getCurrentCustomer().getRecentCargosStack());
+            System.out.println("Recent Cargos: " + CustomerStorage.getCurrentCustomer().getCustomerName());
+        }
+        else {
+            System.out.println("Stack");
+        }
+
+        Object[][] data = dataList.toArray(new Object[0][]);
+
+        String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
+
+        DefaultTableModel cargoTableModel = new DefaultTableModel(data, columnNames);
+        JTable cargoTable = customTableAccount.getTable(); // Use the correct reference for the cargo table
+        cargoTable.setModel(cargoTableModel);
+        cargoTable.repaint();
+    }
+
 
     private List<Cargo> getCargosByFilter(String filter) {
         switch (filter) {

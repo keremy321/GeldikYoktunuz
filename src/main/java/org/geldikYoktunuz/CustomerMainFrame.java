@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerMainFrame extends JFrame {
 
@@ -248,38 +250,48 @@ public class CustomerMainFrame extends JFrame {
 
 
 
-        Object[][] data = {
-                {1, "Package A", "2024-12-01", "2024-12-03", "Delivered"},
-                {2, "Package B", "2024-12-02", "2024-12-05", "In Transit"},
-                {3, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {4, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {5, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {6, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {7, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {8, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {9, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {10, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {11, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {12, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {13, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {14, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {15, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-                {16, "Package C", "2024-12-03", "2024-12-06", "Pending"},
-        };
+        List<Object[]> dataList = new ArrayList<>();
+
+        if (CustomerStorage.getCurrentCustomer() == null) {
+            System.out.println("No current customer is set!");
+        } else {
+            System.out.println("Current Customer ID: " + CustomerStorage.getCurrentCustomer().getCustomerId());
+        }
+
+
+        if (CustomerStorage.getCurrentCustomer() != null){
+            for (Cargo cargo : CustomerStorage.getCurrentCustomer().getRecentCargosStack()) {
+                dataList.add(new Object[]{
+                        cargo.getPostId(),
+                        cargo.getCargoName(),
+                        cargo.getPostDate().format(df),
+                        cargo.getDeliveryDate(),
+                        cargo.getCity().getCityName(),
+                        cargo.getCargoStatus().toString()
+                });
+            }
+            System.out.println(CustomerStorage.getCurrentCustomer().getRecentCargosStack());
+            System.out.println("Recent Cargos: " + CustomerStorage.getCurrentCustomer().getCustomerName());
+        }
+        else {
+            System.out.println("Stack");
+        }
+
+// Convert the list to a two-dimensional array
+        Object[][] data = dataList.toArray(new Object[0][]);
 
         // Column names
-        String[] columnNames = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
+        String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
         // Create the custom table
-        CustomTable customTable = new CustomTable(data, columnNames);
-        customTable.setBounds(201, 274, 800, 380);
+        CustomTable customTableAccount = new CustomTable(data, columnNames);
+        customTableAccount.setBounds(201, 274, 800, 380);
 
-        JTable table = customTable.getTable();
+        JTable tableCargos = customTableAccount.getTable();
 
-
-
-        RoundedSearchBar searchBar = new RoundedSearchBar(filterText -> filterTable(table, filterText));
+        RoundedSearchBar searchBar = new RoundedSearchBar(filterText -> filterTable(tableCargos, filterText));
         searchBar.setBounds(700, 218, 300, 50); // Position the search bar
+
 
 
 
@@ -421,7 +433,7 @@ public class CustomerMainFrame extends JFrame {
         accountLayer.add(bgAccount, JLayeredPane.DEFAULT_LAYER);
         accountLayer.add(labelNameSurname, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(labelID, JLayeredPane.PALETTE_LAYER);
-        accountLayer.add(customTable, JLayeredPane.PALETTE_LAYER);
+        accountLayer.add(customTableAccount, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(searchBar, JLayeredPane.PALETTE_LAYER);
 
         this.setLayout(null);

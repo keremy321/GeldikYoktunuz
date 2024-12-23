@@ -5,10 +5,14 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MenuMouseListener implements MouseListener {
@@ -26,8 +30,9 @@ public class MenuMouseListener implements MouseListener {
     private JLabel labelNameSurname;
     private JLabel labelNameID;
     private CircularImagePanel circularImagePanel;
+    private CustomTable customTableAccount;
 
-    public MenuMouseListener(JLabel label, String key, JLayeredPane[] layers, JLayeredPane nextLayer, JFrame currentFrame, JLabel labelNameSurname, JLabel labelNameID, CircularImagePanel circularImagePanel) {
+    public MenuMouseListener(JLabel label, String key, JLayeredPane[] layers, JLayeredPane nextLayer, JFrame currentFrame, JLabel labelNameSurname, JLabel labelNameID, CircularImagePanel circularImagePanel, CustomTable customTableAccount) {
         this.circularImagePanel = circularImagePanel;
         this.labelNameID = labelNameID;
         this.currentFrame = currentFrame;
@@ -36,6 +41,7 @@ public class MenuMouseListener implements MouseListener {
         this.layers = layers;
         this.nextLayer = nextLayer;
         this.labelNameSurname = labelNameSurname;
+        this.customTableAccount = customTableAccount;
         this.originalIcon = (ImageIcon) label.getIcon();
 
         this.enteredIcon = loadImageIcon("/menuButtons/" + key + "Entered.png");
@@ -173,14 +179,20 @@ public class MenuMouseListener implements MouseListener {
                     CustomerStorage.setCurrentCustomer(selectedCustomer);
                     System.out.println("Current Customer: " + selectedCustomer.getCustomerName());
 
-                    labelNameSurname.setText(selectedCustomer.getCustomerName() + " " + selectedCustomer.getCustomerSurname());
-                    labelNameSurname.revalidate();
-                    labelNameSurname.repaint();
+                    // Update labels
+                    if (labelNameSurname != null) {
+                        labelNameSurname.setText(selectedCustomer.getCustomerName() + " " + selectedCustomer.getCustomerSurname());
+                        labelNameSurname.revalidate();
+                        labelNameSurname.repaint();
+                    }
 
-                    labelNameID.setText("#" + selectedCustomer.getCustomerId());
-                    labelNameID.revalidate();
-                    labelNameID.repaint();
+                    if (labelNameID != null) {
+                        labelNameID.setText("#" + selectedCustomer.getCustomerId());
+                        labelNameID.revalidate();
+                        labelNameID.repaint();
+                    }
 
+                    // Update circular image panel
                     if (circularImagePanel != null) {
                         nextLayer.remove(circularImagePanel);
                     }
@@ -188,6 +200,31 @@ public class MenuMouseListener implements MouseListener {
                     circularImagePanel.setBounds(201, 53, 150, 150);
                     nextLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
 
+                    // Update table data
+                    DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    List<Object[]> dataList = new ArrayList<>();
+
+                    for (Cargo cargo : selectedCustomer.getRecentCargosStack()) {
+                        dataList.add(new Object[]{
+                                cargo.getPostId(),
+                                cargo.getCargoName(),
+                                cargo.getPostDate().format(df),
+                                cargo.getDeliveryDate() != null ? cargo.getDeliveryDate().format(df) : "N/A",
+                                cargo.getCity().getCityName(),
+                                cargo.getCargoStatus().toString()
+                        });
+                    }
+
+                    String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
+                    Object[][] data = dataList.toArray(new Object[0][]);
+
+                    JTable tableCargos = customTableAccount.getTable();
+                    DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
+                    tableCargos.setModel(tableModel);
+
+                    // Revalidate and repaint table and parent container
+                    tableCargos.revalidate();
+                    tableCargos.repaint();
                     nextLayer.revalidate();
                     nextLayer.repaint();
                 }
