@@ -382,6 +382,36 @@ public class CustomerMainFrame extends JFrame {
                 }
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
+                List<Object[]> dataList = new ArrayList<>();
+
+                if (CustomerStorage.getCurrentCustomer() != null){
+                    for (Cargo cargo : CustomerStorage.getCurrentCustomer().getRecentCargosStack()) {
+                        dataList.add(new Object[]{
+                                cargo.getPostId(),
+                                cargo.getCargoName(),
+                                cargo.getPostDate().format(df),
+                                cargo.getDeliveryDate(),
+                                cargo.getCity().getCityName(),
+                                cargo.getCargoStatus().toString()
+                        });
+                    }
+                    System.out.println(CustomerStorage.getCurrentCustomer().getRecentCargosStack());
+                    System.out.println("Recent Cargos: " + CustomerStorage.getCurrentCustomer().getCustomerName());
+                }
+                else {
+                    System.out.println("Stack");
+                }
+
+                Object[][] data = dataList.toArray(new Object[0][]);
+
+                String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
+
+                DefaultTableModel cargoTableModel = new DefaultTableModel(data, columnNames);
+                JTable cargoTable = customTableAccount.getTable();
+                cargoTable.setModel(cargoTableModel);
+                cargoTable.repaint();
+//                tableCargos.revalidate();
+//                tableCargos.repaint();
             }
 
             @Override
