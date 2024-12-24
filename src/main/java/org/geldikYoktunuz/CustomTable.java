@@ -200,10 +200,10 @@ public class CustomTable extends JPanel {
                 bgDelivery = new BackgroundImage("/backgrounds/bg1.png");
                 break;
             case IN_PROCESS:
-                bgDelivery = new BackgroundImage("/backgrounds/bg3.png");
+                bgDelivery = new BackgroundImage("/backgrounds/bg2.png");
                 break;
             case OUT_FOR_DELIVERY:
-                bgDelivery = new BackgroundImage("/backgrounds/bg2.png");
+                bgDelivery = new BackgroundImage("/backgrounds/bg3.png");
                 break;
             case DELIVERED:
                 bgDelivery = new BackgroundImage("/backgrounds/bg4.png");

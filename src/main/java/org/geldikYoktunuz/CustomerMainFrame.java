@@ -67,10 +67,10 @@ public class CustomerMainFrame extends JFrame {
                 bgDelivery = new BackgroundImage("/backgrounds/bg1.png");
                 break;
             case IN_PROCESS:
-                bgDelivery = new BackgroundImage("/backgrounds/bg3.png");
+                bgDelivery = new BackgroundImage("/backgrounds/bg2.png");
                 break;
             case OUT_FOR_DELIVERY:
-                bgDelivery = new BackgroundImage("/backgrounds/bg2.png");
+                bgDelivery = new BackgroundImage("/backgrounds/bg3.png");
                 break;
             case DELIVERED:
                 bgDelivery = new BackgroundImage("/backgrounds/bg4.png");
@@ -342,7 +342,7 @@ public class CustomerMainFrame extends JFrame {
         JLabel labelDelivery = new JLabel();
         labelDelivery.setIcon(new ImageIcon(getClass().getResource("/menuButtons/delivery.png")));
         labelDelivery.setBounds(25, 135, 50, 30);
-        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, deliveryLayer, this));
+        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, deliveryLayer, this, () -> updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo())));
 
         JLabel labelHelp = new JLabel();
         labelHelp.setIcon(new ImageIcon(getClass().getResource("/menuButtons/help.png")));
@@ -381,6 +381,8 @@ public class CustomerMainFrame extends JFrame {
                 for (Cargo c : allCargos){
                     System.out.println(c.getCargoName()+"--"+c.getCargoStatus().getDescription());
                 }
+
+                updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
 
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
@@ -470,6 +472,113 @@ public class CustomerMainFrame extends JFrame {
                 JOptionPane.showMessageDialog(null, "Invalid search text.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    private void updateDeliveryLayer(JLayeredPane deliveryLayer, Cargo currentCargo) {
+        // Remove all existing components from the layer
+        deliveryLayer.removeAll();
+
+        // Set the updated background based on cargo status
+        BackgroundImage bgDelivery;
+        switch (currentCargo.getCargoStatus()){
+            case PENDING_APPROVAL:
+                bgDelivery = new BackgroundImage("/backgrounds/bg1.png");
+                break;
+            case IN_PROCESS:
+                bgDelivery = new BackgroundImage("/backgrounds/bg2.png");
+                break;
+            case OUT_FOR_DELIVERY:
+                bgDelivery = new BackgroundImage("/backgrounds/bg3.png");
+                break;
+            case DELIVERED:
+                bgDelivery = new BackgroundImage("/backgrounds/bg4.png");
+                break;
+            default:
+                bgDelivery = new BackgroundImage("/backgrounds/bg0.png");
+        }
+        bgDelivery.setBounds(0, 0, 1100, 700);
+        deliveryLayer.add(bgDelivery, JLayeredPane.DEFAULT_LAYER);
+
+        // Update cargo information
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        JLabel labelNameAndID = createLabel(
+                currentCargo.getCargoName() + " : #" + currentCargo.getPostId(),
+                new Rectangle(100, 74, 1000, 60),
+                new Color(0xf7f7f7),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.BOLD, 20) // Placeholder font
+        );
+
+        JLabel labelCustomerName = createLabel(
+                currentCargo.getCustomer().getCustomerName() + " " + currentCargo.getCustomer().getCustomerSurname(),
+                new Rectangle(325, 575, 300, 40),
+                new Color(0x34495e),
+                SwingConstants.LEFT,
+                new Font("SansSerif", Font.BOLD, 18) // Placeholder font
+        );
+
+        JLabel labelDeliveryStatus = createLabel(
+                currentCargo.getCargoStatus().getDescription(),
+                new Rectangle(144, 172, 181, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelDestinationCity = createLabel(
+                currentCargo.getCity().toString(),
+                new Rectangle(391, 172, 188, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelShipmentDate = createLabel(
+                currentCargo.getPostDate().format(df),
+                new Rectangle(645, 172, 167, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelDeliveryDate = createLabel(
+                currentCargo.getDeliveryDate() != null ? currentCargo.getDeliveryDate().format(df) : "-",
+                new Rectangle(896, 172, 158, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        CircularImagePanel circularImagePanel = new CircularImagePanel(currentCargo.getCustomer().getCustomerPhoto(), 150);
+        circularImagePanel.setBounds(150, 526, 150, 150);
+
+        CircularImagePanel circularImagePanelCourier = new CircularImagePanel(currentCargo.getCourierPhoto(), 150);
+        circularImagePanelCourier.setBounds(641, 526, 150, 150);
+
+        // Add components to delivery layer
+        deliveryLayer.add(labelNameAndID, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCustomerName, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDeliveryStatus, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDestinationCity, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelShipmentDate, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDeliveryDate, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(circularImagePanelCourier, JLayeredPane.PALETTE_LAYER);
+
+        // Revalidate and repaint the delivery layer
+        deliveryLayer.revalidate();
+        deliveryLayer.repaint();
+    }
+
+    // Create a helper method to generate labels
+    private JLabel createLabel(String text, Rectangle bounds, Color color, int alignment, Font font) {
+        JLabel label = new JLabel(text);
+        label.setBounds(bounds);
+        label.setForeground(color);
+        label.setHorizontalAlignment(alignment);
+        label.setFont(font);
+        return label;
     }
 
 }
