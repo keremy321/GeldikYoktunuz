@@ -51,7 +51,7 @@ public class CargoRouting {
     }
     private int routWithDijkstra(Cargo c,City start,City target) {
         Map<String, Integer> distances = new HashMap<>();
-        Map<String, String> previous = new HashMap<>(); // Hangi şehirden geldiğimizi takip etmek için
+        Map<String, String> previous = new HashMap<>();
         PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(Comparator.comparingInt(Map.Entry::getValue));
 
         // Initialize distances
@@ -67,7 +67,6 @@ public class CargoRouting {
             String currentVertex = current.getKey();
             int currentDistance = current.getValue();
 
-//             Eğer hedefe ulaşıldıysa, işlem tamamlanır
             if (currentVertex.equals(target.getCityName())) {
                 if (a==true) {
                     printPath(c, previous, start.getCityName(), target.getCityName());
@@ -83,7 +82,7 @@ public class CargoRouting {
 
                 if (newDist < distances.get(neighborVertex)) {
                     distances.put(neighborVertex, newDist);
-                    previous.put(neighborVertex, currentVertex); // Hangi şehirden geldiğimizi kaydet
+                    previous.put(neighborVertex, currentVertex);
                     pq.add(new AbstractMap.SimpleEntry<>(neighborVertex, newDist));
                 }
             }

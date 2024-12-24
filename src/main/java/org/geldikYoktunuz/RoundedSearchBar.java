@@ -11,15 +11,13 @@ public class RoundedSearchBar extends JPanel {
 
     public RoundedSearchBar() {
         setLayout(new BorderLayout());
-        setBackground(new Color(0xf7f7f7)); // Light background color
-        setPreferredSize(new Dimension(300, 50)); // Set the preferred size for a taller look
+        setBackground(new Color(0xf7f7f7));
+        setPreferredSize(new Dimension(300, 50));
 
-        // Search icon
         JLabel searchIcon = new JLabel();
         searchIcon.setIcon(new ImageIcon(getClass().getResource("/icons/search-icon.png")));
-        searchIcon.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 5)); // Adjust padding
+        searchIcon.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 5));
 
-        // Search field
         JTextField searchField = new JTextField("Search...") {
             private boolean clicked = false;
 
@@ -41,17 +39,16 @@ public class RoundedSearchBar extends JPanel {
                 }
             }
         };
-        searchField.setFont(getMontserratFont(26)); // Use Montserrat font
-        searchField.setForeground(new Color(0x95a5a6)); // Placeholder color
-        searchField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 15)); // Remove default border
-        searchField.setOpaque(false); // Transparent background
+        searchField.setFont(getMontserratFont(26));
+        searchField.setForeground(new Color(0x95a5a6));
+        searchField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 15));
+        searchField.setOpaque(false);
 
-        // Placeholder behavior
         searchField.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
                 if (searchField.getText().equals("Search...")) {
-                    searchField.setText(""); // Clear placeholder on focus
+                    searchField.setText("");
                     searchField.setForeground(Color.BLACK);
                 }
             }
@@ -59,28 +56,25 @@ public class RoundedSearchBar extends JPanel {
             @Override
             public void focusLost(java.awt.event.FocusEvent e) {
                 if (searchField.getText().isEmpty()) {
-                    searchField.setText("Search..."); // Reset placeholder if empty
+                    searchField.setText("Search...");
                     searchField.setForeground(new Color(0x95a5a6));
                 }
             }
         });
 
-        // Add components to the panel
         add(searchIcon, BorderLayout.WEST);
         add(searchField, BorderLayout.CENTER);
     }
 
     public RoundedSearchBar(Consumer<String> onSearch) {
         setLayout(new BorderLayout());
-        setBackground(new Color(0xf7f7f7)); // Light background color
-        setPreferredSize(new Dimension(300, 50)); // Set the preferred size for a taller look
+        setBackground(new Color(0xf7f7f7));
+        setPreferredSize(new Dimension(300, 50));
 
-        // Search icon
         JLabel searchIcon = new JLabel();
         searchIcon.setIcon(new ImageIcon(getClass().getResource("/icons/search-icon.png")));
-        searchIcon.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 5)); // Adjust padding
+        searchIcon.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 5));
 
-        // Search field
         JTextField searchField = new JTextField("Search...") {
             private boolean clicked = false;
 
@@ -102,17 +96,16 @@ public class RoundedSearchBar extends JPanel {
                 }
             }
         };
-        searchField.setFont(getMontserratFont(26)); // Use Montserrat font
-        searchField.setForeground(new Color(0x95a5a6)); // Placeholder color
-        searchField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 15)); // Remove default border
-        searchField.setOpaque(false); // Transparent background
+        searchField.setFont(getMontserratFont(26));
+        searchField.setForeground(new Color(0x95a5a6));
+        searchField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 15));
+        searchField.setOpaque(false);
 
-        // Placeholder behavior
         searchField.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
                 if (searchField.getText().equals("Search...")) {
-                    searchField.setText(""); // Clear placeholder on focus
+                    searchField.setText("");
                     searchField.setForeground(Color.BLACK);
                 }
             }
@@ -120,13 +113,12 @@ public class RoundedSearchBar extends JPanel {
             @Override
             public void focusLost(java.awt.event.FocusEvent e) {
                 if (searchField.getText().isEmpty()) {
-                    searchField.setText("Search..."); // Reset placeholder if empty
+                    searchField.setText("Search...");
                     searchField.setForeground(new Color(0x95a5a6));
                 }
             }
         });
 
-        // Notify on text change
         searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -134,7 +126,6 @@ public class RoundedSearchBar extends JPanel {
             }
         });
 
-        // Add components to the panel
         add(searchIcon, BorderLayout.WEST);
         add(searchField, BorderLayout.CENTER);
     }
@@ -145,7 +136,6 @@ public class RoundedSearchBar extends JPanel {
 
         Graphics2D g2d = (Graphics2D) g.create();
 
-        // Enable high-quality rendering settings
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);

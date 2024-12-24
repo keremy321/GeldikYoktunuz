@@ -106,10 +106,8 @@ public class MenuMouseListener implements MouseListener {
             layer.setVisible(false);
         }
 
-        // Make the target layer visible
         nextLayer.setVisible(true);
 
-        // Force the UI to update immediately
         nextLayer.revalidate();
         nextLayer.repaint();
 
@@ -123,7 +121,6 @@ public class MenuMouseListener implements MouseListener {
             if (currentCustomer != null) {
                 System.out.println("Updating UI for: " + currentCustomer.getCustomerName());
 
-                // Update Name Surname
                 if (labelNameSurname != null) {
                     labelNameSurname.setText(currentCustomer.getCustomerName() + " " + currentCustomer.getCustomerSurname());
                     labelNameSurname.revalidate();
@@ -132,14 +129,12 @@ public class MenuMouseListener implements MouseListener {
                     System.err.println("labelNameSurname is null!");
                 }
 
-                // Update Customer ID
                 if (labelNameID != null) {
                     labelNameID.setText("#" + currentCustomer.getCustomerId());
                     labelNameID.revalidate();
                     labelNameID.repaint();
                 }
 
-                // Update Circular Image
                 if (circularImagePanel != null) {
                     nextLayer.remove(circularImagePanel);
                 }
@@ -259,7 +254,6 @@ public class MenuMouseListener implements MouseListener {
                     DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
                     tableCargos.setModel(tableModel);
 
-                    // Revalidate and repaint table and parent container
                     tableCargos.revalidate();
                     tableCargos.repaint();
                     nextLayer.revalidate();
@@ -291,14 +285,14 @@ public class MenuMouseListener implements MouseListener {
             }
         });
 
-        UIManager.put("ComboBox.arc", 15); // Set the corner radius to 15
+        UIManager.put("ComboBox.arc", 15);
 
 
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
 
-        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
-        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE);
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50));
 
 
         comboBox = new JComboBox<>();
@@ -311,19 +305,17 @@ public class MenuMouseListener implements MouseListener {
 
         comboBox.setForeground(Color.WHITE);
 
-        // Customize Border: Focused and Non-Focused
         Border defaultBorder = new CompoundBorder(
-                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new LineBorder(new Color(0x159a80), 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
         Border focusedBorder = new CompoundBorder(
-                new LineBorder(Color.WHITE, 2), // White border when focused
+                new LineBorder(Color.WHITE, 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
 
         comboBox.setBorder(defaultBorder);
 
-        // Add focus listener to change border dynamically
         comboBox.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
@@ -414,8 +406,8 @@ public class MenuMouseListener implements MouseListener {
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
 
-        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
-        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE);
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50));
 
 
         comboBoxPackage = new JComboBox<>();
@@ -439,7 +431,6 @@ public class MenuMouseListener implements MouseListener {
 
         comboBoxPackage.setBorder(defaultBorder);
 
-        // Add focus listener to change border dynamically
         comboBoxPackage.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
@@ -522,8 +513,8 @@ public class MenuMouseListener implements MouseListener {
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
 
-        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
-        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE);
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50));
 
 
         comboBoxPackageCustomer = new JComboBox<>();
@@ -547,7 +538,6 @@ public class MenuMouseListener implements MouseListener {
 
         comboBoxPackageCustomer.setBorder(defaultBorder);
 
-        // Add focus listener to change border dynamically
         comboBoxPackageCustomer.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {

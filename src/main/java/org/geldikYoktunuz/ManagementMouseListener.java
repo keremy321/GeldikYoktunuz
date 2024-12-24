@@ -802,8 +802,8 @@ public class ManagementMouseListener implements MouseListener {
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", new Color(0xbdc3c7));
 
-        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
-        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE);
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50));
 
         comboBoxCustomer = new JComboBox<>();
         comboBoxCustomer.setBounds(284, 482, 232, 39);
@@ -887,8 +887,8 @@ public class ManagementMouseListener implements MouseListener {
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
 
-        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
-        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE);
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50));
 
 
         comboBox = new JComboBox<>();
@@ -901,19 +901,17 @@ public class ManagementMouseListener implements MouseListener {
 
         comboBox.setForeground(Color.WHITE);
 
-        // Customize Border: Focused and Non-Focused
         Border defaultBorder = new CompoundBorder(
-                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new LineBorder(new Color(0x159a80), 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
         Border focusedBorder = new CompoundBorder(
-                new LineBorder(Color.WHITE, 2), // White border when focused
+                new LineBorder(Color.WHITE, 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
 
         comboBox.setBorder(defaultBorder);
 
-        // Add focus listener to change border dynamically
         comboBox.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
@@ -945,11 +943,9 @@ public class ManagementMouseListener implements MouseListener {
         JLayeredPane packageLayer = new JLayeredPane();
         packageLayer.setBounds(0, 0, 816, 289);
 
-        // Set up background image
         BackgroundImage bgChoosePackage = new BackgroundImage("/backgrounds/bgChoosePackage.png");
         bgChoosePackage.setBounds(0, 0, 800, 250);
 
-        // Set up "Choose" button
         JLabel labelChoose = new JLabel();
         ImageIcon defaultIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/choose.png"));
         ImageIcon enteredIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/chooseEntered.png"));
@@ -987,7 +983,6 @@ public class ManagementMouseListener implements MouseListener {
             }
         });
 
-        // Configure ComboBox
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
 
@@ -996,18 +991,16 @@ public class ManagementMouseListener implements MouseListener {
         comboBoxPackage.setBackground(new Color(0x159a80));
         comboBoxPackage.setForeground(Color.WHITE);
 
-        // Add all customers to ComboBox
         for (Cargo cargo : CargoStorage.getAllCargos()) {
             comboBoxPackage.addItem(cargo);
         }
 
-        // Customize ComboBox border
         Border defaultBorder = new CompoundBorder(
-                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new LineBorder(new Color(0x159a80), 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
         Border focusedBorder = new CompoundBorder(
-                new LineBorder(Color.WHITE, 2), // White border when focused
+                new LineBorder(Color.WHITE, 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
 
@@ -1025,18 +1018,15 @@ public class ManagementMouseListener implements MouseListener {
             }
         });
 
-        // Dialog setup
         dialogChoosePackage.setSize(816, 289);
         dialogChoosePackage.setLocationRelativeTo(null);
         dialogChoosePackage.setResizable(false);
         dialogChoosePackage.setLayout(null);
 
-        // Add components to layered pane
         packageLayer.add(bgChoosePackage, JLayeredPane.DEFAULT_LAYER);
         packageLayer.add(labelChoose, JLayeredPane.PALETTE_LAYER);
         packageLayer.add(comboBoxPackage, JLayeredPane.PALETTE_LAYER);
 
-        // Add layered pane to dialog
         dialogChoosePackage.add(packageLayer);
         dialogChoosePackage.setVisible(true);
     }

@@ -8,7 +8,7 @@ public class CargoStorage {
     private static Cargo currentCargo;
 
     public static void addCargo(Cargo cargo) {
-        cargoList.add(cargo); // Add cargo to the LinkedList
+        cargoList.add(cargo);
     }
 
     public static Cargo getCargoById(int cargoId) {
@@ -17,7 +17,7 @@ public class CargoStorage {
                 return cargo;
             }
         }
-        return null; // Return null if not found
+        return null;
     }
 
     public static LinkedList<Cargo> getAllCargos() {
@@ -32,9 +32,7 @@ public class CargoStorage {
         currentCargo = cargo;
     }
 
-    // Teslim Edilmiş Kargaları Kargo ID'ye Göre Arama (Binary Search)
     public static Cargo binarySearchById(int targetId) {
-        // Teslim edilmiş kargoları ID'ye göre sıralama
         List<Cargo> deliveredCargos = cargoList.stream()
                 .filter(cargo -> cargo.getCargoStatus() == CargoStatus.DELIVERED)
                 .sorted(Comparator.comparingInt(Cargo::getPostId))
@@ -60,7 +58,6 @@ public class CargoStorage {
         return null;
     }
 
-    // Teslim Edilmemiş Kargaları Teslimat Süresine Göre Sıralama (Merge Sort)
     public static List<Cargo> getSortedUndeliveredCargosByDeliveryTime() {
         List<Cargo> undeliveredCargos = cargoList.stream()
                 .filter(cargo -> cargo.getCargoStatus() != CargoStatus.DELIVERED)
@@ -71,10 +68,8 @@ public class CargoStorage {
     }
 
     public static List<Cargo> getSortedUndeliveredCargosByDeliveryTimeDescending() {
-        // Get the list sorted in ascending order
         List<Cargo> undeliveredCargos = getSortedUndeliveredCargosByDeliveryTime();
 
-        // Reverse the list to get descending order
         Collections.reverse(undeliveredCargos);
 
         return undeliveredCargos;

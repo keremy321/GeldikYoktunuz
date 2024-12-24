@@ -273,13 +273,10 @@ public class CustomerMainFrame extends JFrame {
             System.out.println("Stack");
         }
 
-// Convert the list to a two-dimensional array
         Object[][] data = dataList.toArray(new Object[0][]);
 
-        // Column names
         String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
-        // Create the custom table
         CustomTable customTableAccount = new CustomTable(data, columnNames, true);
         customTableAccount.setBounds(201, 274, 800, 380);
 
@@ -491,11 +488,9 @@ public class CustomerMainFrame extends JFrame {
         table.setRowSorter(sorter);
 
         if (filterText == null || filterText.trim().isEmpty()) {
-            // If filter text is empty, show all rows
             sorter.setRowFilter(null);
         } else {
             try {
-                // Filter rows based on the text
                 sorter.setRowFilter(RowFilter.regexFilter("(?i)" + filterText));
             } catch (java.util.regex.PatternSyntaxException e) {
                 JOptionPane.showMessageDialog(null, "Invalid search text.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -699,7 +694,6 @@ public class CustomerMainFrame extends JFrame {
         deliveryLayer.repaint();
     }
 
-    // Create a helper method to generate labels
     private JLabel createLabel(String text, Rectangle bounds, Color color, int alignment, Font font) {
         JLabel label = new JLabel(text);
         label.setBounds(bounds);

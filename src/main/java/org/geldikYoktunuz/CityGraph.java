@@ -24,7 +24,7 @@ public class CityGraph {
         adjacencyList.putIfAbsent(from, new HashMap<>());
         adjacencyList.putIfAbsent(to, new HashMap<>());
         adjacencyList.get(from).put(to, distance);
-        adjacencyList.get(to).put(from, distance);  // Eğer mesafeler karşılıklıysa
+        adjacencyList.get(to).put(from, distance);
     }
 
 }

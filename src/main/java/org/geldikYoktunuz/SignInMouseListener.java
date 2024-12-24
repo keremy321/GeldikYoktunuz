@@ -126,14 +126,14 @@ public class SignInMouseListener implements MouseListener {
             }
         });
 
-        UIManager.put("ComboBox.arc", 15); // Set the corner radius to 15
+        UIManager.put("ComboBox.arc", 15);
 
 
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
 
-        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
-        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE);
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50));
 
 
         comboBox = new JComboBox<>();
@@ -143,19 +143,17 @@ public class SignInMouseListener implements MouseListener {
 
         comboBox.setForeground(Color.WHITE);
 
-        // Customize Border: Focused and Non-Focused
         Border defaultBorder = new CompoundBorder(
-                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new LineBorder(new Color(0x159a80), 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
         Border focusedBorder = new CompoundBorder(
-                new LineBorder(Color.WHITE, 2), // White border when focused
+                new LineBorder(Color.WHITE, 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
 
         comboBox.setBorder(defaultBorder);
 
-        // Add focus listener to change border dynamically
         comboBox.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {

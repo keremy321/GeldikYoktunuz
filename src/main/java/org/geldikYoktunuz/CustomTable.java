@@ -15,16 +15,15 @@ public class CustomTable extends JPanel {
 
     public CustomTable(Object[][] data, String[] columnNames, boolean enableDoubleClick) {
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(800, 380)); // Set panel size
+        setPreferredSize(new Dimension(800, 380));
 
-        // Custom TableModel to handle ID column as Integer for sorting
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0) {
-                    return Integer.class; // Define the ID column as Integer
+                    return Integer.class;
                 }
-                return String.class; // Other columns are Strings
+                return String.class;
             }
         };
 
@@ -33,75 +32,68 @@ public class CustomTable extends JPanel {
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component component = super.prepareRenderer(renderer, row, column);
 
-                // Selection colors
                 if (isCellSelected(row, column)) {
-                    component.setBackground(new Color(0x16a085)); // Selection background
-                    component.setForeground(new Color(0xFFFFFF)); // Selected text color
+                    component.setBackground(new Color(0x16a085));
+                    component.setForeground(new Color(0xFFFFFF));
                 } else {
                     component.setBackground(getBackground());
                     component.setForeground(getForeground());
                 }
 
-                // Add gray borders to the left, right, and bottom of rows
                 if (component instanceof JComponent) {
                     JComponent jc = (JComponent) component;
                     jc.setBorder(BorderFactory.createMatteBorder(
-                            0,                                // Top border (no border)
-                            (column == 0 ? 1 : 0),           // Left border for the first column
-                            1,                                // Bottom border for all rows
-                            (column == getColumnCount() - 1 ? 1 : 0), // Right border for the last column
-                            new Color(0xCCCCCC)));           // Gray border color
+                            0,
+                            (column == 0 ? 1 : 0),
+                            1,
+                            (column == getColumnCount() - 1 ? 1 : 0),
+                            new Color(0xCCCCCC)));
                 }
 
                 if (component instanceof JLabel) {
                     JLabel label = (JLabel) component;
                     label.setHorizontalAlignment(SwingConstants.CENTER);
-                    label.setFont(getMontserratFont(14)); // Set Montserrat font for cells
+                    label.setFont(getMontserratFont(14));
                 }
                 return component;
             }
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make all cells non-editable
+                return false;
             }
         };
 
-        // Clear initial focus but keep row selection
         table.setFocusable(false);
         table.setRowSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setAutoCreateRowSorter(true); // Enable sorting
+        table.setAutoCreateRowSorter(true);
         table.setRowHeight(40);
 
-        // Adjust column widths: ID column tighter, others equal
-        int totalWidth = 800; // Total width of the table
-        int idColumnWidth = 50; // Width for the ID column
+        int totalWidth = 800;
+        int idColumnWidth = 50;
         int otherColumnWidth = (totalWidth - idColumnWidth) / (columnNames.length - 1);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(idColumnWidth); // Set tighter ID column width
+        table.getColumnModel().getColumn(0).setPreferredWidth(idColumnWidth);
         for (int i = 1; i < columnNames.length; i++) {
-            table.getColumnModel().getColumn(i).setPreferredWidth(otherColumnWidth); // Set equal width for other columns
+            table.getColumnModel().getColumn(i).setPreferredWidth(otherColumnWidth);
         }
 
-        // Set table properties
         table.setRowHeight(40);
         table.setShowGrid(false);
         table.setOpaque(false);
-        table.setBackground(new Color(0x2c3e50)); // Background color
-        table.setForeground(new Color(0xFFFFFF)); // Text color
-        table.setSelectionBackground(new Color(0x16a085)); // Selection color
-        table.setSelectionForeground(new Color(0xFFFFFF)); // Selected text color
+        table.setBackground(new Color(0x2c3e50));
+        table.setForeground(new Color(0xFFFFFF));
+        table.setSelectionBackground(new Color(0x16a085));
+        table.setSelectionForeground(new Color(0xFFFFFF));
 
-        // Set header properties
         JTableHeader header = table.getTableHeader();
         header.setPreferredSize(new Dimension(100, 40));
-        header.setFont(getMontserratSemiBoldFont(14)); // Set Montserrat SemiBold font for header
-        header.setBackground(new Color(0x34495e)); // Header background color
-        header.setForeground(new Color(0xe74c3c)); // Header text color
+        header.setFont(getMontserratSemiBoldFont(14));
+        header.setBackground(new Color(0x34495e));
+        header.setForeground(new Color(0xe74c3c));
         header.setReorderingAllowed(false);
 
-        // Center-align header text and customize grid line color (top, bottom, and vertical)
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -110,7 +102,7 @@ public class CustomTable extends JPanel {
                 label.setFont(getMontserratSemiBoldFont(14));
                 label.setForeground(new Color(0xe74c3c));
                 label.setBackground(new Color(0x34495e));
-                label.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(0x16a085))); // Top, bottom, and vertical lines
+                label.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(0x16a085)));
                 return label;
             }
         });
@@ -119,7 +111,7 @@ public class CustomTable extends JPanel {
             table.addMouseListener(new MouseInputAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 2) { // Detect double-click
+                    if (e.getClickCount() == 2) {
                         int row = table.rowAtPoint(e.getPoint());
                         if (row != -1) {
                             openNewFrameForRow(data[row]);
@@ -129,7 +121,6 @@ public class CustomTable extends JPanel {
             });
         }
 
-        // Wrap the table in a rounded JPanel
         JPanel roundedPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -137,12 +128,10 @@ public class CustomTable extends JPanel {
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Fill the entire panel with the outer background color
-                g2d.setColor(new Color(0xf7f7f7)); // Outer area background color
+                g2d.setColor(new Color(0xf7f7f7));
                 g2d.fillRect(0, 0, getWidth(), getHeight());
 
-                // Draw rounded rectangle for the panel background
-                g2d.setColor(new Color(0x2c3e50)); // Inner panel background color
+                g2d.setColor(new Color(0x2c3e50));
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 60, 60);
 
                 g2d.dispose();
@@ -150,13 +139,13 @@ public class CustomTable extends JPanel {
         };
 
         roundedPanel.setLayout(new BorderLayout());
-        roundedPanel.setPreferredSize(new Dimension(800, 380)); // Set rounded panel size
+        roundedPanel.setPreferredSize(new Dimension(800, 380));
         roundedPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         roundedPanel.add(new JScrollPane(table) {
             {
-                getViewport().setOpaque(false); // Make viewport transparent
-                setBorder(BorderFactory.createEmptyBorder()); // Remove border
-                setBackground(new Color(0xf7f7f7)); // Outer area background color
+                getViewport().setOpaque(false);
+                setBorder(BorderFactory.createEmptyBorder());
+                setBackground(new Color(0xf7f7f7));
             }
         }, BorderLayout.CENTER);
 
@@ -169,7 +158,7 @@ public class CustomTable extends JPanel {
                     .deriveFont(size);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
-            return new Font("SansSerif", Font.PLAIN, (int) size); // Fallback font
+            return new Font("SansSerif", Font.PLAIN, (int) size);
         }
     }
 
@@ -179,7 +168,7 @@ public class CustomTable extends JPanel {
                     .deriveFont(size);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
-            return new Font("SansSerif", Font.BOLD, (int) size); // Fallback font
+            return new Font("SansSerif", Font.BOLD, (int) size);
         }
     }
 
@@ -491,7 +480,7 @@ public class CustomTable extends JPanel {
                 currentCargo.getCourierName(),
                 new Rectangle(817, 575, 300, 40),
                 new Color(0x34495e),
-                SwingConstants.LEFT, // Assuming alignment should be left; adjust if needed
+                SwingConstants.LEFT,
                 new Font("SansSerif", Font.PLAIN, 16)
         );
 

@@ -15,7 +15,7 @@ public class CircularImagePanel extends JPanel {
     public CircularImagePanel(String imagePath, int diameter) {
         this.diameter = diameter;
         setPreferredSize(new Dimension(diameter, diameter));
-        setOpaque(false); // Ensure the panel background is transparent
+        setOpaque(false);
 
         try {
             File file = new File(imagePath);
@@ -45,16 +45,13 @@ public class CircularImagePanel extends JPanel {
             BufferedImage resizedImage = getResizedImage(image, diameter, diameter);
             Graphics2D g2d = (Graphics2D) g.create();
 
-            // Enable high-quality rendering
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
             g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
-            // Create the circular clip
             Shape circle = new Ellipse2D.Double(0, 0, diameter, diameter);
             g2d.setClip(circle);
 
-            // Draw the resized image inside the circular clip
             g2d.drawImage(resizedImage, 0, 0, null);
 
             g2d.dispose();
@@ -67,7 +64,6 @@ public class CircularImagePanel extends JPanel {
         BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = resizedImage.createGraphics();
 
-        // Enable high-quality scaling
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);

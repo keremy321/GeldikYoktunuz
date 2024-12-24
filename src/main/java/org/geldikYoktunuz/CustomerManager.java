@@ -5,11 +5,11 @@ import java.util.LinkedList;
 public class CustomerManager {
     private static CustomerManager instance;
 
-    private LinkedList<Customer> customerList; // LinkedList to store customers
-    private Customer currentCustomer; // Currently selected customer
+    private LinkedList<Customer> customerList;
+    private Customer currentCustomer;
 
     private CustomerManager() {
-        customerList = new LinkedList<>(); // Initialize as LinkedList
+        customerList = new LinkedList<>();
     }
 
     public static CustomerManager getInstance() {
@@ -20,7 +20,7 @@ public class CustomerManager {
     }
 
     public void addCustomer(Customer customer) {
-        customerList.add(customer); // Add customer to the LinkedList
+        customerList.add(customer);
     }
 
     public Customer getCustomerById(int customerId) {
@@ -29,7 +29,7 @@ public class CustomerManager {
                 return customer;
             }
         }
-        return null; // Return null if not found
+        return null;
     }
 
     public LinkedList<Customer> getAllCustomers() {

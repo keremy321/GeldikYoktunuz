@@ -2,7 +2,6 @@ package org.geldikYoktunuz;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Cargo implements Comparable<Cargo> {

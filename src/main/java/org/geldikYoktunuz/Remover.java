@@ -10,7 +10,7 @@ public class Remover {
             for (int j = customer.getCargos().size() - 1; j >= 0; j--) {
                 if (cargo.getPostId()==(customer.getCargos().get(j).getPostId())) {
                     customer.getCargos().remove(j);
-                    allCargosIterator.remove(); // Iterator kullanılarak eleman kaldırılır.
+                    allCargosIterator.remove();
                     break;
                 }
             }

@@ -5,11 +5,11 @@ import java.util.LinkedList;
 public class CargoManager {
     private static CargoManager instance;
 
-    private LinkedList<Cargo> cargoList; // LinkedList to store cargos
-    private Cargo currentCargo; // Currently selected cargo
+    private LinkedList<Cargo> cargoList;
+    private Cargo currentCargo;
 
     private CargoManager() {
-        cargoList = new LinkedList<>(); // Initialize as LinkedList
+        cargoList = new LinkedList<>();
     }
 
     public static CargoManager getInstance() {
@@ -20,7 +20,7 @@ public class CargoManager {
     }
 
     public void addCargo(Cargo cargo) {
-        cargoList.add(cargo); // Add cargo to the LinkedList
+        cargoList.add(cargo);
     }
 
     public Cargo getCargoById(int cargoId) {
@@ -29,7 +29,7 @@ public class CargoManager {
                 return cargo;
             }
         }
-        return null; // Return null if not found
+        return null;
     }
 
     public LinkedList<Cargo> getAllCargos() {

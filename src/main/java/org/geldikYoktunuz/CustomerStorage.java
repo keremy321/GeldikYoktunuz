@@ -7,7 +7,7 @@ public class CustomerStorage {
     private static Customer currentCustomer;
 
     public static void addCustomer(Customer customer) {
-        customerList.add(customer); // Add customer to the LinkedList
+        customerList.add(customer);
     }
 
     public static Customer getCustomerById(int customerId) {
@@ -16,7 +16,7 @@ public class CustomerStorage {
                 return customer;
             }
         }
-        return null; // Return null if not found
+        return null;
     }
 
     public static LinkedList<Customer> getAllCustomers() {
