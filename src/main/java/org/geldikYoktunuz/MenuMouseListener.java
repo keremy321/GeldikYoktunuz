@@ -102,9 +102,24 @@ public class MenuMouseListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        for (JLayeredPane layer : layers) {
+            layer.setVisible(false);
+        }
+
+        // Make the target layer visible
+        nextLayer.setVisible(true);
+
+        // Force the UI to update immediately
+        nextLayer.revalidate();
+        nextLayer.repaint();
+
 
         if ("customerFrame".equals(currentFrame.getName()) && "account".equals(nextLayer.getName())) {
             Customer currentCustomer = CustomerStorage.getCurrentCustomer();
+
+            getCurrentLayer().setVisible(false);
+            nextLayer.setVisible(true);
+
             if (currentCustomer != null) {
                 System.out.println("Updating UI for: " + currentCustomer.getCustomerName());
 
@@ -137,9 +152,6 @@ public class MenuMouseListener implements MouseListener {
             } else {
                 System.err.println("Current customer is null!");
             }
-
-            getCurrentLayer().setVisible(false);
-            nextLayer.setVisible(true);
         }
 
         else if ("adminFrame".equals(currentFrame.getName()) && "delivery".equals(nextLayer.getName())) {

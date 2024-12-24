@@ -468,6 +468,44 @@ public class ManagementMouseListener implements MouseListener {
             comboBoxCustomer.setSelectedItem(currentCargo.getCustomer());
         }
 
+        JLabel labelCancel = new JLabel();
+        ImageIcon defaultIconlabelCancel = new ImageIcon(getClass().getResource("/dialogButtons/cancel.png"));
+        ImageIcon enteredIconlabelCancel = new ImageIcon(getClass().getResource("/dialogButtons/cancelEntered.png"));
+        ImageIcon pressedIconlabelCancel = new ImageIcon(getClass().getResource("/dialogButtons/cancelPressed.png"));
+
+        labelCancel.setIcon(defaultIconlabelCancel);
+        labelCancel.setBounds(316, 547, 167, 38);
+
+        labelCancel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+               CargoCancel.cargoCanceling(currentCargo);
+
+                dialogEditPackage.dispose();
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelCancel.setIcon(pressedIconlabelCancel);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelCancel.setIcon(defaultIconlabelCancel);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelCancel.setIcon(enteredIconlabelCancel);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelCancel.setIcon(defaultIconlabelCancel);
+            }
+        });
+
         JLabel labelEditPackage = new JLabel();
         ImageIcon defaultIconEditPackage = new ImageIcon(getClass().getResource("/dialogButtons/edit.png"));
         ImageIcon enteredIconEditPackage = new ImageIcon(getClass().getResource("/dialogButtons/editEntered.png"));
@@ -524,6 +562,7 @@ public class ManagementMouseListener implements MouseListener {
 
         editEditPackage.add(bgEditPackage, JLayeredPane.DEFAULT_LAYER);
         editEditPackage.add(labelEditPackage, JLayeredPane.PALETTE_LAYER);
+        editEditPackage.add(labelCancel, JLayeredPane.PALETTE_LAYER);
 
         dialogEditPackage.setSize(816, 639);
         dialogEditPackage.setLocationRelativeTo(null);
@@ -531,6 +570,7 @@ public class ManagementMouseListener implements MouseListener {
         dialogEditPackage.setLayout(null);
         dialogEditPackage.add(editEditPackage);
         dialogEditPackage.setVisible(true);
+
     }
 
 
@@ -676,6 +716,8 @@ public class ManagementMouseListener implements MouseListener {
                 } else {
                     labelDontRing.setIcon(defaultIconDontRing);
                 }
+
+                CargoStorage.getCurrentCargo().setDontRing(dontRing);
             }
 
             @Override

@@ -287,7 +287,6 @@ public class CustomTable extends JPanel {
         }
 
         boolean dontRing = false;
-        boolean isCancelled;
 
         JLabel labelCancel = new JLabel();
         ImageIcon defaultIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancel.png"));
@@ -299,7 +298,211 @@ public class CustomTable extends JPanel {
         labelCancel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                CargoCancel.cargoCanceling(currentCargo);
+                updateDeliveryLayer(deliveryLayer, currentCargo);
+            }
 
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelCancel.setIcon(pressedIconRemoveUser);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelCancel.setIcon(defaultIconRemoveUser);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelCancel.setIcon(enteredIconRemoveUser);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelCancel.setIcon(defaultIconRemoveUser);
+            }
+        });
+
+        JLabel labelDontRing = new JLabel();
+        ImageIcon defaultIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRing.png"));
+        ImageIcon enteredIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRingEntered.png"));
+        ImageIcon pressedIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRingClicked.png"));
+
+
+
+        labelDontRing.setIcon(defaultIconDontRing);
+        labelDontRing.setBounds(223, 399, 317, 39);
+
+        final boolean[] dontRingWrapper = {false};
+
+        labelDontRing.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dontRingWrapper[0] = !dontRingWrapper[0];
+
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+
+                currentCargo.setDontRing(dontRingWrapper[0]);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelDontRing.setIcon(enteredIconDontRing);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelDontRing.setIcon(enteredIconDontRing);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+        });
+
+        newFrame.setSize(1119, 739);
+        newFrame.setLocationRelativeTo(null);
+        newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        newFrame.add(deliveryLayer);
+
+        deliveryLayer.add(bgDelivery, JLayeredPane.DEFAULT_LAYER);
+        deliveryLayer.add(labelNameAndID, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCustomerName, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCustomerID, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCourierName, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDeliveryStatus, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDestinationCity, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelShipmentDate, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDeliveryDate, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(circularImagePanelCourier, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCancel, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
+
+        newFrame.setVisible(true);
+    }
+
+    public JTable getTable() {
+        return table; // Expose the JTable instance
+    }
+
+    public void setModel(TableModel model) {
+        table.setModel(model);
+    }
+
+    public TableModel getModel() {
+        return table.getModel();
+    }
+
+    private void updateDeliveryLayer(JLayeredPane deliveryLayer, Cargo currentCargo) {
+        // Remove all existing components from the layer
+        deliveryLayer.removeAll();
+
+        // Set the updated background based on cargo status
+        BackgroundImage bgDelivery;
+        switch (currentCargo.getCargoStatus()){
+            case PENDING_APPROVAL:
+                bgDelivery = new BackgroundImage("/backgrounds/bg1.png");
+                break;
+            case IN_PROCESS:
+                bgDelivery = new BackgroundImage("/backgrounds/bg2.png");
+                break;
+            case OUT_FOR_DELIVERY:
+                bgDelivery = new BackgroundImage("/backgrounds/bg3.png");
+                break;
+            case DELIVERED:
+                bgDelivery = new BackgroundImage("/backgrounds/bg4.png");
+                break;
+            default:
+                bgDelivery = new BackgroundImage("/backgrounds/bg0.png");
+        }
+        bgDelivery.setBounds(0, 0, 1100, 700);
+        deliveryLayer.add(bgDelivery, JLayeredPane.DEFAULT_LAYER);
+
+        // Update cargo information
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        JLabel labelNameAndID = createLabel(
+                currentCargo.getCargoName() + " : #" + currentCargo.getPostId(),
+                new Rectangle(100, 74, 1000, 60),
+                new Color(0xf7f7f7),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.BOLD, 20) // Placeholder font
+        );
+
+        JLabel labelCustomerName = createLabel(
+                currentCargo.getCustomer().getCustomerName() + " " + currentCargo.getCustomer().getCustomerSurname(),
+                new Rectangle(325, 575, 300, 40),
+                new Color(0x34495e),
+                SwingConstants.LEFT,
+                new Font("SansSerif", Font.BOLD, 18) // Placeholder font
+        );
+
+        JLabel labelDeliveryStatus = createLabel(
+                currentCargo.getCargoStatus().getDescription(),
+                new Rectangle(144, 172, 181, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelDestinationCity = createLabel(
+                currentCargo.getCity().toString(),
+                new Rectangle(391, 172, 188, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelShipmentDate = createLabel(
+                currentCargo.getPostDate().format(df),
+                new Rectangle(645, 172, 167, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelDeliveryDate = createLabel(
+                currentCargo.getDeliveryDate() != null ? currentCargo.getDeliveryDate().format(df) : "-",
+                new Rectangle(896, 172, 158, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        boolean dontRing = false;
+
+        JLabel labelCancel = new JLabel();
+        ImageIcon defaultIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancel.png"));
+        ImageIcon enteredIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancelEntered.png"));
+        ImageIcon pressedIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancelPressed.png"));
+
+        labelCancel.setIcon(defaultIconRemoveUser);
+        labelCancel.setBounds(668, 399, 317, 39);
+        labelCancel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                CargoCancel.cargoCanceling(CargoStorage.getCurrentCargo());
+                updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
             }
 
             @Override
@@ -376,17 +579,15 @@ public class CustomTable extends JPanel {
             }
         });
 
-        newFrame.setSize(1119, 739);
-        newFrame.setLocationRelativeTo(null);
-        newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        CircularImagePanel circularImagePanel = new CircularImagePanel(currentCargo.getCustomer().getCustomerPhoto(), 150);
+        circularImagePanel.setBounds(150, 526, 150, 150);
 
-        newFrame.add(deliveryLayer);
+        CircularImagePanel circularImagePanelCourier = new CircularImagePanel(currentCargo.getCourierPhoto(), 150);
+        circularImagePanelCourier.setBounds(641, 526, 150, 150);
 
-        deliveryLayer.add(bgDelivery, JLayeredPane.DEFAULT_LAYER);
+        // Add components to delivery layer
         deliveryLayer.add(labelNameAndID, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelCustomerName, JLayeredPane.PALETTE_LAYER);
-        deliveryLayer.add(labelCustomerID, JLayeredPane.PALETTE_LAYER);
-        deliveryLayer.add(labelCourierName, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelDeliveryStatus, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelDestinationCity, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelShipmentDate, JLayeredPane.PALETTE_LAYER);
@@ -396,19 +597,20 @@ public class CustomTable extends JPanel {
         deliveryLayer.add(labelCancel, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
 
-        newFrame.setVisible(true);
+        // Revalidate and repaint the delivery layer
+        deliveryLayer.revalidate();
+        deliveryLayer.repaint();
     }
 
-    public JTable getTable() {
-        return table; // Expose the JTable instance
+    // Create a helper method to generate labels
+    private JLabel createLabel(String text, Rectangle bounds, Color color, int alignment, Font font) {
+        JLabel label = new JLabel(text);
+        label.setBounds(bounds);
+        label.setForeground(color);
+        label.setHorizontalAlignment(alignment);
+        label.setFont(font);
+        return label;
     }
 
-    public void setModel(TableModel model) {
-        table.setModel(model);
-    }
-
-    public TableModel getModel() {
-        return table.getModel();
-    }
 
 }

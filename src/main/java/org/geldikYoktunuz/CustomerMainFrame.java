@@ -154,7 +154,6 @@ public class CustomerMainFrame extends JFrame {
         }
 
         boolean dontRing = false;
-        boolean isCancelled;
 
         JLabel labelCancel = new JLabel();
         ImageIcon defaultIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancel.png"));
@@ -166,7 +165,7 @@ public class CustomerMainFrame extends JFrame {
         labelCancel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                CargoCancel.cargoCanceling(CargoStorage.getCurrentCargo());
             }
 
             @Override
@@ -550,6 +549,98 @@ public class CustomerMainFrame extends JFrame {
                 new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
         );
 
+        boolean dontRing = false;
+
+        JLabel labelCancel = new JLabel();
+        ImageIcon defaultIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancel.png"));
+        ImageIcon enteredIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancelEntered.png"));
+        ImageIcon pressedIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancelPressed.png"));
+
+        labelCancel.setIcon(defaultIconRemoveUser);
+        labelCancel.setBounds(668, 399, 317, 39);
+        labelCancel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                CargoCancel.cargoCanceling(CargoStorage.getCurrentCargo());
+                updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelCancel.setIcon(pressedIconRemoveUser);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelCancel.setIcon(defaultIconRemoveUser);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelCancel.setIcon(enteredIconRemoveUser);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelCancel.setIcon(defaultIconRemoveUser);
+            }
+        });
+
+        JLabel labelDontRing = new JLabel();
+        ImageIcon defaultIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRing.png"));
+        ImageIcon enteredIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRingEntered.png"));
+        ImageIcon pressedIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRingClicked.png"));
+
+
+
+        labelDontRing.setIcon(defaultIconDontRing);
+        labelDontRing.setBounds(223, 399, 317, 39);
+
+        final boolean[] dontRingWrapper = {false};
+
+        labelDontRing.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dontRingWrapper[0] = !dontRingWrapper[0];
+
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+
+                currentCargo.setDontRing(dontRingWrapper[0]);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelDontRing.setIcon(enteredIconDontRing);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelDontRing.setIcon(enteredIconDontRing);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+        });
+
         CircularImagePanel circularImagePanel = new CircularImagePanel(currentCargo.getCustomer().getCustomerPhoto(), 150);
         circularImagePanel.setBounds(150, 526, 150, 150);
 
@@ -565,6 +656,8 @@ public class CustomerMainFrame extends JFrame {
         deliveryLayer.add(labelDeliveryDate, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(circularImagePanelCourier, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCancel, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
 
         // Revalidate and repaint the delivery layer
         deliveryLayer.revalidate();
