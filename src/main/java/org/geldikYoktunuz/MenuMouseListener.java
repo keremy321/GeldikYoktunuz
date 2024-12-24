@@ -376,6 +376,7 @@ public class MenuMouseListener implements MouseListener {
 
 
                 dialogChoosePackage.dispose();
+                refreshCallBack.run();
 
                 if (CargoStorage.getCurrentCargo() == null){
                     JOptionPane.showMessageDialog(currentFrame, "Please select a cargo first!", "Warning", JOptionPane.WARNING_MESSAGE);

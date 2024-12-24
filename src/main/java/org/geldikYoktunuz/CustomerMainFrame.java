@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerMainFrame extends JFrame {
-
-
-
     public CustomerMainFrame() {
         this.setName("customerFrame");
 
@@ -444,6 +441,9 @@ public class CustomerMainFrame extends JFrame {
         accountLayer.add(labelID, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(customTableAccount, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(searchBar, JLayeredPane.PALETTE_LAYER);
+
+        ImageIcon logo = new ImageIcon(getClass().getResource("/menuButtons/logoMenu.png"));
+        this.setIconImage(logo.getImage());
 
         this.setLayout(null);
         this.setTitle("Geldik Yoktunuz");

@@ -54,11 +54,11 @@ public class AdminMainFrame extends JFrame {
 
     public AdminMainFrame() {
 //        CargoStorage.setCurrentCargo(CargoStorage.getCargoById(1));
+        Cargo currentCargo = CargoStorage.getCargoById(1);
 
         this.setName("adminFrame");
 
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
 
         JLayeredPane frameLayer = new JLayeredPane();
         frameLayer.setBounds(0,0,1116,739);
@@ -88,6 +88,188 @@ public class AdminMainFrame extends JFrame {
         bgHome.setBounds(0, 0, 1100, 700);
 
 //      DELIVERY LAYER
+
+        BackgroundImage bgDelivery = new BackgroundImage("/backgrounds/bg0.png");
+
+        switch (currentCargo.getCargoStatus()){
+            case PENDING_APPROVAL:
+                bgDelivery = new BackgroundImage("/backgrounds/bg1.png");
+                break;
+            case IN_PROCESS:
+                bgDelivery = new BackgroundImage("/backgrounds/bg2.png");
+                break;
+            case OUT_FOR_DELIVERY:
+                bgDelivery = new BackgroundImage("/backgrounds/bg3.png");
+                break;
+            case DELIVERED:
+                bgDelivery = new BackgroundImage("/backgrounds/bg4.png");
+                break;
+            default:
+                bgDelivery = new BackgroundImage("/backgrounds/bg0.png");
+        }
+
+        bgDelivery.setBounds(0, 0, 1100, 700);
+
+        JLabel labelNameAndID = new JLabel();
+        labelNameAndID.setText(currentCargo.getCargoName() + " : #" + currentCargo.getPostId());
+        labelNameAndID.setBounds(100, 74, 1000, 60);
+        labelNameAndID.setForeground(new Color(0xf7f7f7));
+        labelNameAndID.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JLabel labelCustomerName = new JLabel();
+        labelCustomerName.setText(currentCargo.getCustomer().getCustomerName() + " " + currentCargo.getCustomer().getCustomerSurname());
+        labelCustomerName.setBounds(325, 575, 300, 40);
+        labelCustomerName.setForeground(new Color(0x34495e));
+
+        JLabel labelCustomerID = new JLabel();
+        labelCustomerID.setText("#" + currentCargo.getCustomer().getCustomerId());
+        labelCustomerID.setBounds(325, 605, 300, 40);
+        labelCustomerID.setForeground(new Color(0x34495e));
+
+        JLabel labelCourierName = new JLabel();
+        labelCourierName.setText(currentCargo.getCourierName());
+        labelCourierName.setBounds(817, 575, 300, 40);
+        labelCourierName.setForeground(new Color(0x34495e));
+
+        JLabel labelDeliveryStatus = new JLabel();
+        labelDeliveryStatus.setText(currentCargo.getCargoStatus().getDescription());
+        labelDeliveryStatus.setBounds(144, 172, 181, 30);
+        labelDeliveryStatus.setForeground(new Color(0x95A5A6));
+        labelDeliveryStatus.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JLabel labelDestinationCity = new JLabel();
+        labelDestinationCity.setText(currentCargo.getCity().toString());
+        labelDestinationCity.setBounds(391, 172, 188, 30);
+        labelDestinationCity.setForeground(new Color(0x95A5A6));
+        labelDestinationCity.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JLabel labelShipmentDate = new JLabel();
+        labelShipmentDate.setText(currentCargo.getPostDate().format(df));
+        labelShipmentDate.setBounds(645, 172, 167, 30);
+        labelShipmentDate.setForeground(new Color(0x95A5A6));
+        labelShipmentDate.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JLabel labelDeliveryDate = new JLabel();
+        labelDeliveryDate.setText(
+                currentCargo.getDeliveryDate() != null
+                        ? currentCargo.getDeliveryDate().format(df)
+                        : "-"
+        );        labelDeliveryDate.setBounds(896, 172, 158, 30);
+        labelDeliveryDate.setForeground(new Color(0x95A5A6));
+        labelDeliveryDate.setHorizontalAlignment(SwingConstants.CENTER);
+
+        CircularImagePanel circularImagePanel = new CircularImagePanel(currentCargo.getCustomer().getCustomerPhoto(), 150);
+        circularImagePanel.setBounds(150, 526, 150, 150);
+
+        CircularImagePanel circularImagePanelCourier = new CircularImagePanel(currentCargo.getCourierPhoto(), 150);
+        circularImagePanelCourier.setBounds(641, 526, 150, 150);
+
+        try {
+            Font montserratBoldFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/Montserrat-Bold.ttf")).deriveFont(36f);
+            Font montserratBoldSmallFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/Montserrat-Bold.ttf")).deriveFont(27f);
+            Font montserratLightFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/Montserrat-Light.ttf")).deriveFont(27f);
+            Font montserratLightSmallFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/Montserrat-Regular.ttf")).deriveFont(20f);
+            labelNameAndID.setFont(montserratBoldFont);
+            labelCustomerName.setFont(montserratBoldSmallFont);
+            labelCourierName.setFont(montserratBoldSmallFont);
+            labelCustomerID.setFont(montserratLightFont);
+            labelDeliveryStatus.setFont(montserratLightSmallFont);
+            labelDestinationCity.setFont(montserratLightSmallFont);
+            labelShipmentDate.setFont(montserratLightSmallFont);
+            labelDeliveryDate.setFont(montserratLightSmallFont);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            labelNameAndID.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        }
+
+        boolean dontRing = false;
+
+        JLabel labelCancel = new JLabel();
+        ImageIcon defaultIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancel.png"));
+        ImageIcon enteredIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancelEntered.png"));
+        ImageIcon pressedIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancelPressed.png"));
+
+        labelCancel.setIcon(defaultIconRemoveUser);
+        labelCancel.setBounds(668, 399, 317, 39);
+        labelCancel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                CargoCancel.cargoCanceling(CargoStorage.getCurrentCargo());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelCancel.setIcon(pressedIconRemoveUser);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelCancel.setIcon(defaultIconRemoveUser);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelCancel.setIcon(enteredIconRemoveUser);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelCancel.setIcon(defaultIconRemoveUser);
+            }
+        });
+
+        JLabel labelDontRing = new JLabel();
+        ImageIcon defaultIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRing.png"));
+        ImageIcon enteredIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRingEntered.png"));
+        ImageIcon pressedIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRingClicked.png"));
+
+
+
+        labelDontRing.setIcon(defaultIconDontRing);
+        labelDontRing.setBounds(223, 399, 317, 39);
+
+        final boolean[] dontRingWrapper = {false};
+
+        labelDontRing.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dontRingWrapper[0] = !dontRingWrapper[0];
+
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelDontRing.setIcon(enteredIconDontRing);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelDontRing.setIcon(enteredIconDontRing);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+        });
 
 
 //      MANAGEMENT LAYER
@@ -132,21 +314,18 @@ public class AdminMainFrame extends JFrame {
             });
         }
 
-// Convert the list to a two-dimensional array
         Object[][] data2 = data2List.toArray(new Object[0][]);
 
-// Column names
         String[] columnNames2 = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
-// Create the custom table using data2 and columnNames2
         customTable2 = new CustomTable(data2, columnNames2);
         customTable2.setBounds(201, 510, 800, 155);
 
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
 
-        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
-        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE);
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50));
 
 
         String[] filterOptions = {"All Packages", "Delivered Packages", "Not Delivered Packages"};
@@ -161,11 +340,11 @@ public class AdminMainFrame extends JFrame {
 
         // Customize Border: Focused and Non-Focused
         Border defaultBorder = new CompoundBorder(
-                new LineBorder(new Color(0x159a80), 2), // Default border color
+                new LineBorder(new Color(0x159a80), 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
         Border focusedBorder = new CompoundBorder(
-                new LineBorder(Color.WHITE, 2), // White border when focused
+                new LineBorder(Color.WHITE, 2),
                 new EmptyBorder(5, 5, 5, 5)
         );
 
@@ -188,7 +367,7 @@ public class AdminMainFrame extends JFrame {
         comboBoxFilter.addActionListener(e -> {
             String selectedFilter = (String) comboBoxFilter.getSelectedItem();
             if (selectedFilter != null) {
-                latestFilter = selectedFilter; // Store the selected filter
+                latestFilter = selectedFilter;
                 List<Cargo> filteredCargos = getCargosByFilter(latestFilter);
                 updateCargoTable(filteredCargos);
                 refreshManagementLayer(managementLayer,true);
@@ -199,20 +378,20 @@ public class AdminMainFrame extends JFrame {
         labelSort.setIcon(new ImageIcon(getClass().getResource("/tableButtons/sort.png")));
         labelSort.setBounds(645, 464, 171, 33);
 
-        boolean[] sortOrder = {true}; // Track sort order: true for ascending, false for descending
+        boolean[] sortOrder = {true};
 
         labelSort.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 List<Cargo> sortedCargos;
                 if (sortOrder[0]) {
-                    sortedCargos = CargoStorage.getSortedUndeliveredCargosByDeliveryTime(); // Ascending order
+                    sortedCargos = CargoStorage.getSortedUndeliveredCargosByDeliveryTime();
                 } else {
-                    sortedCargos = CargoStorage.getSortedUndeliveredCargosByDeliveryTimeDescending(); // Descending order
+                    sortedCargos = CargoStorage.getSortedUndeliveredCargosByDeliveryTimeDescending();
                 }
 
                 updateCargoTable(sortedCargos);
-                sortOrder[0] = !sortOrder[0]; // Toggle sort order
+                sortOrder[0] = !sortOrder[0];
             }
 
             @Override
@@ -243,32 +422,27 @@ public class AdminMainFrame extends JFrame {
                 try {
                     int targetId = Integer.parseInt(filterText.trim());
 
-                    // Perform binary search
                     Cargo foundCargo = CargoStorage.binarySearchById(targetId);
 
                     if (foundCargo != null) {
-                        // Display the search result in the table
                         List<Cargo> searchResult = new ArrayList<>();
                         searchResult.add(foundCargo);
                         updateCargoTable(searchResult);
                     } else {
-                        // Show message if no cargo is found
                         JOptionPane.showMessageDialog(this, "No delivered cargo found with ID: " + targetId, "Search Result", JOptionPane.INFORMATION_MESSAGE);
-                        updateCargoTable(new ArrayList<>()); // Clear the table
+                        updateCargoTable(new ArrayList<>());
                     }
                 } catch (NumberFormatException e) {
-                    // Show error if input is invalid
                     JOptionPane.showMessageDialog(this, "Please enter a valid numeric ID.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                // Reset to show all delivered cargos if the search bar is cleared
                 List<Cargo> deliveredCargos = CargoStorage.getAllCargos().stream()
                         .filter(cargo -> cargo.getCargoStatus() == CargoStatus.DELIVERED)
                         .collect(Collectors.toList());
                 updateCargoTable(deliveredCargos);
             }
         });
-        searchBarID.setBounds(834, 464, 171, 33); // Position the search bar
+        searchBarID.setBounds(834, 464, 171, 33);
 
         searchBarID.setVisible(false);
 
@@ -407,7 +581,7 @@ public class AdminMainFrame extends JFrame {
         JLabel labelDelivery = new JLabel();
         labelDelivery.setIcon(new ImageIcon(getClass().getResource("/menuButtons/delivery.png")));
         labelDelivery.setBounds(25, 135, 50, 30);
-        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, deliveryLayer, this));
+        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, deliveryLayer, this, () -> updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo())));
 
         JLabel labelManagement = new JLabel();
         labelManagement.setIcon(new ImageIcon(getClass().getResource("/menuButtons/management.png")));
@@ -449,7 +623,10 @@ public class AdminMainFrame extends JFrame {
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
 
+                updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
+
                 refreshManagementLayer(managementLayer,true);
+
             }
 
             @Override
@@ -494,6 +671,21 @@ public class AdminMainFrame extends JFrame {
 
         homeLayer.add(bgHome, JLayeredPane.DEFAULT_LAYER);
 
+        deliveryLayer.add(bgDelivery, JLayeredPane.DEFAULT_LAYER);
+        deliveryLayer.add(labelNameAndID, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCustomerName, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCustomerID, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCourierName, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDeliveryStatus, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDestinationCity, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelShipmentDate, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDeliveryDate, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(circularImagePanelCourier, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCancel, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
+
+
         managementLayer.add(bgManagement, JLayeredPane.DEFAULT_LAYER);
         managementLayer.add(labelAddUser, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(labelEditUser, JLayeredPane.PALETTE_LAYER);
@@ -516,6 +708,9 @@ public class AdminMainFrame extends JFrame {
 //        accountLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(customTableAccount, JLayeredPane.PALETTE_LAYER);
         accountLayer.add(searchBar, JLayeredPane.PALETTE_LAYER);
+
+        ImageIcon logo = new ImageIcon(getClass().getResource("/menuButtons/logoMenu.png"));
+        this.setIconImage(logo.getImage());
 
         this.setLayout(null);
         this.setTitle("Geldik Yoktunuz");
@@ -687,6 +882,206 @@ public class AdminMainFrame extends JFrame {
         refreshManagementLayer(managementLayer,false);
         this.dispose();
         AdminMainFrame adminMainFrame = new AdminMainFrame();
+    }
+
+    private void updateDeliveryLayer(JLayeredPane deliveryLayer, Cargo currentCargo) {
+        // Remove all existing components from the layer
+        deliveryLayer.removeAll();
+
+        // Set the updated background based on cargo status
+        BackgroundImage bgDelivery;
+        switch (currentCargo.getCargoStatus()){
+            case PENDING_APPROVAL:
+                bgDelivery = new BackgroundImage("/backgrounds/bg1.png");
+                break;
+            case IN_PROCESS:
+                bgDelivery = new BackgroundImage("/backgrounds/bg2.png");
+                break;
+            case OUT_FOR_DELIVERY:
+                bgDelivery = new BackgroundImage("/backgrounds/bg3.png");
+                break;
+            case DELIVERED:
+                bgDelivery = new BackgroundImage("/backgrounds/bg4.png");
+                break;
+            default:
+                bgDelivery = new BackgroundImage("/backgrounds/bg0.png");
+        }
+        bgDelivery.setBounds(0, 0, 1100, 700);
+        deliveryLayer.add(bgDelivery, JLayeredPane.DEFAULT_LAYER);
+
+        // Update cargo information
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        JLabel labelNameAndID = createLabel(
+                currentCargo.getCargoName() + " : #" + currentCargo.getPostId(),
+                new Rectangle(100, 74, 1000, 60),
+                new Color(0xf7f7f7),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.BOLD, 20) // Placeholder font
+        );
+
+        JLabel labelCustomerName = createLabel(
+                currentCargo.getCustomer().getCustomerName() + " " + currentCargo.getCustomer().getCustomerSurname(),
+                new Rectangle(325, 575, 300, 40),
+                new Color(0x34495e),
+                SwingConstants.LEFT,
+                new Font("SansSerif", Font.BOLD, 18) // Placeholder font
+        );
+
+        JLabel labelDeliveryStatus = createLabel(
+                currentCargo.getCargoStatus().getDescription(),
+                new Rectangle(144, 172, 181, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelDestinationCity = createLabel(
+                currentCargo.getCity().toString(),
+                new Rectangle(391, 172, 188, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelShipmentDate = createLabel(
+                currentCargo.getPostDate().format(df),
+                new Rectangle(645, 172, 167, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        JLabel labelDeliveryDate = createLabel(
+                currentCargo.getDeliveryDate() != null ? currentCargo.getDeliveryDate().format(df) : "-",
+                new Rectangle(896, 172, 158, 30),
+                new Color(0x95A5A6),
+                SwingConstants.CENTER,
+                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+        );
+
+        boolean dontRing = false;
+
+        JLabel labelCancel = new JLabel();
+        ImageIcon defaultIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancel.png"));
+        ImageIcon enteredIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancelEntered.png"));
+        ImageIcon pressedIconRemoveUser = new ImageIcon(getClass().getResource("/trackingButtons/cancelPressed.png"));
+
+        labelCancel.setIcon(defaultIconRemoveUser);
+        labelCancel.setBounds(668, 399, 317, 39);
+        labelCancel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                CargoCancel.cargoCanceling(CargoStorage.getCurrentCargo());
+                updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelCancel.setIcon(pressedIconRemoveUser);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelCancel.setIcon(defaultIconRemoveUser);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelCancel.setIcon(enteredIconRemoveUser);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelCancel.setIcon(defaultIconRemoveUser);
+            }
+        });
+
+        JLabel labelDontRing = new JLabel();
+        ImageIcon defaultIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRing.png"));
+        ImageIcon enteredIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRingEntered.png"));
+        ImageIcon pressedIconDontRing = new ImageIcon(getClass().getResource("/trackingButtons/dontRingClicked.png"));
+
+
+
+        labelDontRing.setIcon(defaultIconDontRing);
+        labelDontRing.setBounds(223, 399, 317, 39);
+
+        final boolean[] dontRingWrapper = {false};
+
+        labelDontRing.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dontRingWrapper[0] = !dontRingWrapper[0];
+
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+
+                currentCargo.setDontRing(dontRingWrapper[0]);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelDontRing.setIcon(enteredIconDontRing);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelDontRing.setIcon(enteredIconDontRing);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (dontRingWrapper[0]) {
+                    labelDontRing.setIcon(pressedIconDontRing);
+                } else {
+                    labelDontRing.setIcon(defaultIconDontRing);
+                }
+            }
+        });
+
+        CircularImagePanel circularImagePanel = new CircularImagePanel(currentCargo.getCustomer().getCustomerPhoto(), 150);
+        circularImagePanel.setBounds(150, 526, 150, 150);
+
+        CircularImagePanel circularImagePanelCourier = new CircularImagePanel(currentCargo.getCourierPhoto(), 150);
+        circularImagePanelCourier.setBounds(641, 526, 150, 150);
+
+        // Add components to delivery layer
+        deliveryLayer.add(labelNameAndID, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCustomerName, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDeliveryStatus, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDestinationCity, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelShipmentDate, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDeliveryDate, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(circularImagePanel, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(circularImagePanelCourier, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCancel, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
+
+        // Revalidate and repaint the delivery layer
+        deliveryLayer.revalidate();
+        deliveryLayer.repaint();
+    }
+
+    private JLabel createLabel(String text, Rectangle bounds, Color color, int alignment, Font font) {
+        JLabel label = new JLabel(text);
+        label.setBounds(bounds);
+        label.setForeground(color);
+        label.setHorizontalAlignment(alignment);
+        label.setFont(font);
+        return label;
     }
 
 }

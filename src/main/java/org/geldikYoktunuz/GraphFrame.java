@@ -26,20 +26,21 @@ public class GraphFrame extends JFrame {
             highlightPath(graph, shortestPath);
         }
 
-        // Create a JFrame and embed the graph
-        JFrame frame = new JFrame("City Route Visualization");
-        frame.setSize(800, 600);
+        ImageIcon logo = new ImageIcon(getClass().getResource("/menuButtons/logoMenu.png"));
+        this.setIconImage(logo.getImage());
+
+        this.setTitle("City Route Visualization");
+        this.setSize(800, 600);
 
         SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-        ViewPanel viewPanel = (ViewPanel) viewer.addDefaultView(false); // False means no new thread
+        ViewPanel viewPanel = (ViewPanel) viewer.addDefaultView(false);
 
-        frame.add(viewPanel);
-        frame.setVisible(true);
+        this.add(viewPanel);
+        this.setVisible(true);
     }
     private static void setupGraphStream(Graph graph, CityGraph cityGraph) {
-        // Add cities (nodes) to the GraphStream graph with approximate coordinates
         Map<String, double[]> cityCoordinates = new HashMap<>();
-        cityCoordinates.put("Istanbul", new double[]{41.0082, 28.9784}); // Example: [latitude, longitude]
+        cityCoordinates.put("Istanbul", new double[]{41.0082, 28.9784});
         cityCoordinates.put("Kocaeli", new double[]{40.8533, 29.8815});
         cityCoordinates.put("Tekirdag", new double[]{40.9780, 27.5111});
         cityCoordinates.put("Edirne", new double[]{41.6772, 26.5557});
@@ -61,14 +62,13 @@ public class GraphFrame extends JFrame {
 
         for (String city : cityGraph.getAdjacencyList().keySet()) {
             Node node = graph.addNode(city);
-            node.setAttribute("ui.label", city); // Set city name as label
+            node.setAttribute("ui.label", city);
             if (cityCoordinates.containsKey(city)) {
                 double[] coords = cityCoordinates.get(city);
-                node.setAttribute("xyz", coords[1], coords[0], 0); // Longitude, Latitude
+                node.setAttribute("xyz", coords[1], coords[0], 0);
             }
         }
 
-        // Add edges (routes) between cities
         for (String fromCity : cityGraph.getAdjacencyList().keySet()) {
             for (Map.Entry<String, Integer> neighbor : cityGraph.getAdjacencyList().get(fromCity).entrySet()) {
                 String toCity = neighbor.getKey();
@@ -76,24 +76,22 @@ public class GraphFrame extends JFrame {
 
                 if (graph.getEdge(fromCity + "-" + toCity) == null && graph.getEdge(toCity + "-" + fromCity) == null) {
                     Edge edge = graph.addEdge(fromCity + "-" + toCity, fromCity, toCity, false);
-                    edge.setAttribute("ui.label", String.valueOf(distance)); // Display distance on edges
+                    edge.setAttribute("ui.label", String.valueOf(distance));
                 }
             }
         }
 
-        // Apply graph styling
         graph.setAttribute("ui.stylesheet", styleSheet());
     }
 
     private static void highlightPath(Graph graph, List<String> path) {
-        // Highlight edges and nodes along the shortest path
         for (int i = 0; i < path.size() - 1; i++) {
             String fromCity = path.get(i);
             String toCity = path.get(i + 1);
 
             Edge edge = graph.getEdge(fromCity + "-" + toCity);
             if (edge == null) {
-                edge = graph.getEdge(toCity + "-" + fromCity); // Check reverse edge
+                edge = graph.getEdge(toCity + "-" + fromCity);
             }
 
             if (edge != null) {
@@ -106,7 +104,6 @@ public class GraphFrame extends JFrame {
             }
         }
 
-        // Highlight the destination node
         Node targetNode = graph.getNode(path.get(path.size() - 1));
         if (targetNode != null) {
             targetNode.setAttribute("ui.style", "fill-color: green;");
@@ -114,7 +111,6 @@ public class GraphFrame extends JFrame {
     }
 
     private static void setupCities(CityGraph cg) {
-        // Populate CityGraph with cities and routes
 
         for (String city : CityStorage.getAllCityNames()){
             cg.addVertex(city);

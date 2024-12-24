@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SignInFrame extends JFrame implements ActionListener {
+public class SignInFrame extends JFrame {
 
     public SignInFrame () {
 
@@ -55,6 +55,9 @@ public class SignInFrame extends JFrame implements ActionListener {
         frameLayer.add(labelEffectAddCustomer, JLayeredPane.PALETTE_LAYER);
         frameLayer.add(labelAddCustomer, JLayeredPane.PALETTE_LAYER);
 
+        ImageIcon logo = new ImageIcon(getClass().getResource("/menuButtons/logoMenu.png"));
+        this.setIconImage(logo.getImage());
+
         this.add(frameLayer);
 
         this.setLayout(null);
@@ -64,10 +67,5 @@ public class SignInFrame extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setResizable(false);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }
