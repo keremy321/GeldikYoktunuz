@@ -13,7 +13,6 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MenuMouseListener implements MouseListener {
 
@@ -26,6 +25,7 @@ public class MenuMouseListener implements MouseListener {
     private JLayeredPane nextLayer;
     private JFrame currentFrame;
     JComboBox<Customer> comboBox;
+    JComboBox<Cargo> comboBoxPackage;
 
     private JLabel labelNameSurname;
     private JLabel labelNameID;
@@ -86,6 +86,7 @@ public class MenuMouseListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
         if ("customerFrame".equals(currentFrame.getName()) && "account".equals(nextLayer.getName())) {
             Customer currentCustomer = CustomerStorage.getCurrentCustomer();
             if (currentCustomer != null) {
@@ -123,6 +124,10 @@ public class MenuMouseListener implements MouseListener {
 
             getCurrentLayer().setVisible(false);
             nextLayer.setVisible(true);
+        }
+
+        else if ("adminFrame".equals(currentFrame.getName()) && "delivery".equals(nextLayer.getName())) {
+            choosePackage();
         }
         else if ("adminFrame".equals(currentFrame.getName()) && "account".equals(nextLayer.getName())){
             chooseAccount();
@@ -310,5 +315,120 @@ public class MenuMouseListener implements MouseListener {
 
         dialogChooseAccount.add(chooseUserLayer);
         dialogChooseAccount.setVisible(true);
+    }
+
+    public void choosePackage() {
+        JDialog dialogChoosePackage = new JDialog(currentFrame, "Choose Package", true);
+
+        JLayeredPane choosePackage = new JLayeredPane();
+        choosePackage.setBounds(0, 0, 816, 289);
+
+        BackgroundImage byChoosePackage = new BackgroundImage("/backgrounds/bgChoosePackage.png");
+        byChoosePackage.setBounds(0, 0, 800, 250);
+
+        JLabel labelChoose = new JLabel();
+        ImageIcon defaultIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/choose.png"));
+        ImageIcon enteredIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/chooseEntered.png"));
+        ImageIcon pressedIconChoose = new ImageIcon(getClass().getResource("/dialogButtons/choosePressed.png"));
+
+        labelChoose.setIcon(defaultIconChoose);
+        labelChoose.setBounds(591, 194, 167, 38);
+        labelChoose.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Cargo selectedCargo = (Cargo) comboBoxPackage.getSelectedItem();
+                if (selectedCargo != null) {
+                    CargoStorage.setCurrentCargo(selectedCargo);
+                    System.out.println("Current Cargo: " + selectedCargo.getCargoName());
+                }
+
+
+                dialogChoosePackage.dispose();
+
+                if (CargoStorage.getCurrentCargo() == null){
+                    JOptionPane.showMessageDialog(currentFrame, "Please select a cargo first!", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                else if (CargoStorage.getCurrentCargo().getCargoRoute() == null) {
+                    JOptionPane.showMessageDialog(currentFrame, "No cargo route found. Please skip day!", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    GraphFrame graphFrame = new GraphFrame();
+                    graphFrame.setVisible(true);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                labelChoose.setIcon(pressedIconChoose);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelChoose.setIcon(defaultIconChoose);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelChoose.setIcon(enteredIconChoose);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelChoose.setIcon(defaultIconChoose);
+            }
+        });
+
+        UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
+        UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+
+        UIManager.put("ComboBox.buttonArrowColor", Color.WHITE); // Set arrow color to black
+        UIManager.put("ComboBox.buttonBackground", new Color(0x2c3e50)); // Optional: Background color new Color(0x323232)
+
+
+        comboBoxPackage = new JComboBox<>();
+        comboBoxPackage.setBounds(117, 108, 567, 54);
+        comboBoxPackage.setBackground(new Color(0x159a80));
+
+        for (Cargo cargo : CargoStorage.getAllCargos()) {
+            comboBoxPackage.addItem(cargo);
+        }
+
+        comboBoxPackage.setForeground(Color.WHITE);
+
+        Border defaultBorder = new CompoundBorder(
+                new LineBorder(new Color(0x159a80), 2),
+                new EmptyBorder(5, 5, 5, 5)
+        );
+        Border focusedBorder = new CompoundBorder(
+                new LineBorder(Color.WHITE, 2),
+                new EmptyBorder(5, 5, 5, 5)
+        );
+
+        comboBoxPackage.setBorder(defaultBorder);
+
+        // Add focus listener to change border dynamically
+        comboBoxPackage.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                comboBoxPackage.setBorder(focusedBorder);
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                comboBoxPackage.setBorder(defaultBorder);
+            }
+        });
+
+        dialogChoosePackage.setSize(816, 289);
+        dialogChoosePackage.setLocationRelativeTo(null);
+        dialogChoosePackage.setResizable(false);
+        dialogChoosePackage.setLayout(null);
+
+        choosePackage.add(byChoosePackage, JLayeredPane.DEFAULT_LAYER);
+        choosePackage.add(labelChoose, JLayeredPane.PALETTE_LAYER);
+        choosePackage.add(comboBoxPackage, JLayeredPane.PALETTE_LAYER);
+
+        dialogChoosePackage.add(choosePackage);
+        dialogChoosePackage.setVisible(true);
     }
 }

@@ -52,6 +52,8 @@ public class AdminMainFrame extends JFrame {
 
 
     public AdminMainFrame() {
+//        CargoStorage.setCurrentCargo(CargoStorage.getCargoById(1));
+
         this.setName("adminFrame");
 
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -83,6 +85,9 @@ public class AdminMainFrame extends JFrame {
 
         BackgroundImage bgHome = new BackgroundImage("/backgrounds/bgHome.png");
         bgHome.setBounds(0, 0, 1100, 700);
+
+//      DELIVERY LAYER
+
 
 //      MANAGEMENT LAYER
 
@@ -396,7 +401,7 @@ public class AdminMainFrame extends JFrame {
         JLabel labelDelivery = new JLabel();
         labelDelivery.setIcon(new ImageIcon(getClass().getResource("/menuButtons/delivery.png")));
         labelDelivery.setBounds(25, 135, 50, 30);
-        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, homeLayer, this));
+        labelDelivery.addMouseListener(new MenuMouseListener(labelDelivery, "delivery", layers, deliveryLayer, this));
 
         JLabel labelManagement = new JLabel();
         labelManagement.setIcon(new ImageIcon(getClass().getResource("/menuButtons/management.png")));

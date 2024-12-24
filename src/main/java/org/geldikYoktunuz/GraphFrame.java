@@ -8,67 +8,34 @@ import org.graphstream.ui.swing_viewer.ViewPanel;
 import javax.swing.*;
 import java.util.*;
 
-public class ImprovedGraphStreamExample {
+public class GraphFrame extends JFrame {
 
-    public static void main(String[] args) {
-        // Initialize your custom CityGraph
+    public GraphFrame() {
         CityGraph cityGraph = new CityGraph();
-        setupCities(cityGraph); // Populate CityGraph with cities and routes
+        setupCities(cityGraph);
 
-
-        Customer customer1 = new Customer("Ahmed Er", "Faruk", "/dialogButtons/man.png");
-        Customer customer2 = new Customer("Emre", "KarateKid", "/dialogButtons/woman.png");
-        Customer customer3 = new Customer("Mahmut", "Mahmutoğlu", "/dialogButtons/man.png");
-        Customer customer4 = new Customer("İbrahim", "Çetin", "/dialogButtons/woman.png");
-        Cargo cargo1 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Mehmet Aydın", "Photo","Cargo1", CityStorage.getCityById(35));
-        Cargo cargo2 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Mehmet Aydın", "Photo","Cargo2",CityStorage.getCityById(10));
-        Cargo cargo3 = new Cargo( CurrentDate.currentDate.plusDays(1), false, "Ahmet Yılmaz", "Photo","Cargo3",CityStorage.getCityById(41));
-        Cargo cargo4 = new Cargo( CurrentDate.currentDate, false, "Semih Bekdaş", "Photo","Cargo4",CityStorage.getCityById(45));
-        Cargo cargo5 = new Cargo( CurrentDate.currentDate, true, "Mehmet Aydın", "Photo","Cargo5",CityStorage.getCityById(11));
-        Cargo cargo6 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo6",CityStorage.getCityById(54));
-        Cargo cargo7 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo7",CityStorage.getCityById(22));
-        Cargo cargo8 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo8",CityStorage.getCityById(48));
-        Cargo cargo9 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo9",CityStorage.getCityById(16));
-        Cargo cargo10 = new Cargo( CurrentDate.currentDate, true, "Semih Bekdaş", "Photo","Cargo10",CityStorage.getCityById(64));
-        customer1.addCargo(cargo1);
-        customer2.addCargo(cargo2);
-        customer1.addCargo(cargo3);
-        customer3.addCargo(cargo4);
-        customer1.addCargo(cargo5);
-        customer4.addCargo(cargo6);
-        customer1.addCargo(cargo7);
-        customer1.addCargo(cargo8);
-        customer1.addCargo(cargo9);
-        customer1.addCargo(cargo10);
-
-        CurrentDate.passDay();
-        CargoRouting cr = new CargoRouting();
-        List<Cargo> allCargos=new ArrayList<>(CargoStorage.getAllCargos());
-        cr.routing(allCargos);
-
-
-
-        // Create a GraphStream graph
         Graph graph = new SingleGraph("City Routes");
         setupGraphStream(graph, cityGraph);
 
-        String[] routeHandler=cargo10.getCargoRoute().split(" -> ");
-        List<String> shortestPath = Arrays.asList(routeHandler);
-        highlightPath(graph, shortestPath);
+        if (CargoStorage.getCurrentCargo().getCargoRoute() == null || CargoStorage.getCurrentCargo() == null) {
+            System.out.println("No cargo route found.");
+        }
+        else {
+            String[] routeHandler=CargoStorage.getCurrentCargo().getCargoRoute().split(" -> ");
+            List<String> shortestPath = Arrays.asList(routeHandler);
+            highlightPath(graph, shortestPath);
+        }
 
         // Create a JFrame and embed the graph
         JFrame frame = new JFrame("City Route Visualization");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
 
         SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         ViewPanel viewPanel = (ViewPanel) viewer.addDefaultView(false); // False means no new thread
-        viewer.enableAutoLayout(); // Automatically arrange nodes for better visualization
 
         frame.add(viewPanel);
         frame.setVisible(true);
     }
-
     private static void setupGraphStream(Graph graph, CityGraph cityGraph) {
         // Add cities (nodes) to the GraphStream graph with approximate coordinates
         Map<String, double[]> cityCoordinates = new HashMap<>();
@@ -116,49 +83,6 @@ public class ImprovedGraphStreamExample {
 
         // Apply graph styling
         graph.setAttribute("ui.stylesheet", styleSheet());
-    }
-
-    private static List<String> computeShortestPath(CityGraph cityGraph, String start, String target) {
-        Map<String, Integer> distances = new HashMap<>();
-        Map<String, String> previous = new HashMap<>();
-        PriorityQueue<Map.Entry<String, Integer>> queue = new PriorityQueue<>(Comparator.comparingInt(Map.Entry::getValue));
-
-        // Initialize distances
-        for (String city : cityGraph.getAdjacencyList().keySet()) {
-            distances.put(city, Integer.MAX_VALUE);
-        }
-        distances.put(start, 0);
-        queue.add(new AbstractMap.SimpleEntry<>(start, 0));
-
-        while (!queue.isEmpty()) {
-            Map.Entry<String, Integer> current = queue.poll();
-            String currentCity = current.getKey();
-            int currentDistance = current.getValue();
-
-            if (currentCity.equals(target)) break;
-
-            for (Map.Entry<String, Integer> neighbor : cityGraph.getAdjacencyList().get(currentCity).entrySet()) {
-                String neighborCity = neighbor.getKey();
-                int edgeWeight = neighbor.getValue();
-                int newDistance = currentDistance + edgeWeight;
-
-                if (newDistance < distances.get(neighborCity)) {
-                    distances.put(neighborCity, newDistance);
-                    previous.put(neighborCity, currentCity);
-                    queue.add(new AbstractMap.SimpleEntry<>(neighborCity, newDistance));
-                }
-            }
-        }
-
-        // Backtrack to find the path
-        List<String> path = new ArrayList<>();
-        String current = target;
-        while (current != null) {
-            path.add(current);
-            current = previous.get(current);
-        }
-        Collections.reverse(path);
-        return path;
     }
 
     private static void highlightPath(Graph graph, List<String> path) {
