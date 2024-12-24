@@ -325,7 +325,14 @@ public class ManagementMouseListener implements MouseListener {
         labelRemoveUser.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                Remover.customerAndCargosRemover(CustomerStorage.getCurrentCustomer());
+
                 dialogEditUser.dispose();
+
+                JOptionPane.showMessageDialog(editUserLayer,
+                        "User has been removed.",
+                        "User Removed",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
 
             @Override

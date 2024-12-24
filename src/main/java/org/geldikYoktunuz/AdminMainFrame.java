@@ -399,6 +399,11 @@ public class AdminMainFrame extends JFrame {
 
 //      MAIN FRAME
 
+        JLabel labelHome = new JLabel();
+        labelHome.setIcon(new ImageIcon(getClass().getResource("/menuButtons/logoMenu.png")));
+        labelHome.setBounds(21, 30, 60, 60);
+        labelHome.addMouseListener(new MenuMouseListener(labelHome, "logoMenu", layers, homeLayer, this));
+
         JLabel labelDelivery = new JLabel();
         labelDelivery.setIcon(new ImageIcon(getClass().getResource("/menuButtons/delivery.png")));
         labelDelivery.setBounds(25, 135, 50, 30);
@@ -408,11 +413,6 @@ public class AdminMainFrame extends JFrame {
         labelManagement.setIcon(new ImageIcon(getClass().getResource("/menuButtons/management.png")));
         labelManagement.setBounds(28, 218, 46, 46);
         labelManagement.addMouseListener(new MenuMouseListener(labelManagement, "management", layers, managementLayer, this));
-
-        JLabel labelHelp = new JLabel();
-        labelHelp.setIcon(new ImageIcon(getClass().getResource("/menuButtons/help.png")));
-        labelHelp.setBounds(25, 525, 50, 50);
-        labelHelp.addMouseListener(new MenuMouseListener(labelHelp, "help", layers, homeLayer, this));
 
         JLabel labelAccount = new JLabel();
         labelAccount.setIcon(new ImageIcon(getClass().getResource("/menuButtons/account.png")));
@@ -484,12 +484,13 @@ public class AdminMainFrame extends JFrame {
         frameLayer.add(managementLayer, JLayeredPane.DEFAULT_LAYER);
         frameLayer.add(accountLayer, JLayeredPane.DEFAULT_LAYER);
 
+
         frameLayer.add(labelDelivery, JLayeredPane.PALETTE_LAYER);
         frameLayer.add(labelManagement, JLayeredPane.PALETTE_LAYER);
-        frameLayer.add(labelHelp, JLayeredPane.PALETTE_LAYER);
         frameLayer.add(labelAccount, JLayeredPane.PALETTE_LAYER);
         frameLayer.add(labelSkipDay, JLayeredPane.PALETTE_LAYER);
         frameLayer.add(labelCurrentDate, JLayeredPane.PALETTE_LAYER);
+        frameLayer.add(labelHome, JLayeredPane.PALETTE_LAYER);
 
         homeLayer.add(bgHome, JLayeredPane.DEFAULT_LAYER);
 
