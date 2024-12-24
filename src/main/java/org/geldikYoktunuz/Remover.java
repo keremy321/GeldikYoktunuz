@@ -4,14 +4,6 @@ import java.util.Iterator;
 
 public class Remover {
     public static void customerAndCargosRemover(Customer customer){
-//        for (int i=0; i<CargoStorage.getAllCargos().size(); i++){
-//            for (int j=0; j<customer.getCargos().size(); j++){
-//                if (CargoStorage.getAllCargos().get(i).getPostId()==customer.getCargos().get(j).getPostId()){
-//                    customer.getCargos().remove(j);
-//                    CargoStorage.getAllCargos().remove(i);
-//                }
-//            }
-//        }
         Iterator<Cargo> allCargosIterator = CargoStorage.getAllCargos().iterator();
         while (allCargosIterator.hasNext()) {
             Cargo cargo = allCargosIterator.next();

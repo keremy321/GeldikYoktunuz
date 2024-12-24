@@ -28,6 +28,7 @@ public class AdminMainFrame extends JFrame {
     CustomTable customTable1;
 
     CustomTable customTableAccount;
+    JLayeredPane homeLayer;
 
     JLabel labelSort;
     RoundedSearchBar searchBarID;
@@ -62,7 +63,7 @@ public class AdminMainFrame extends JFrame {
         JLayeredPane frameLayer = new JLayeredPane();
         frameLayer.setBounds(0,0,1116,739);
 
-        JLayeredPane homeLayer = new JLayeredPane();
+        homeLayer = new JLayeredPane();
         homeLayer.setName("home");
         homeLayer.setBounds(0,0,1116,739);
 
@@ -190,7 +191,7 @@ public class AdminMainFrame extends JFrame {
                 latestFilter = selectedFilter; // Store the selected filter
                 List<Cargo> filteredCargos = getCargosByFilter(latestFilter);
                 updateCargoTable(filteredCargos);
-                refreshManagementLayer(managementLayer);
+                refreshManagementLayer(managementLayer,true);
             }
         });
 
@@ -280,7 +281,7 @@ public class AdminMainFrame extends JFrame {
         labelAddUser.setName("addUser");
         labelAddUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addUser.png")));
         labelAddUser.setBounds(193, 90, 150, 120);
-        labelAddUser.addMouseListener(new ManagementMouseListener(labelAddUser, labelEffectAddUser, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
+        labelAddUser.addMouseListener(new ManagementMouseListener(labelAddUser, labelEffectAddUser, "/managementButtons/pressed.png", this, () -> frameRefresher(managementLayer)));
 
         JLabel labelEffectEditUser = new JLabel();
         labelEffectEditUser.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
@@ -291,7 +292,7 @@ public class AdminMainFrame extends JFrame {
         labelEditUser.setName("editUser");
         labelEditUser.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editUser.png")));
         labelEditUser.setBounds(415, 90, 150, 120);
-        labelEditUser.addMouseListener(new ManagementMouseListener(labelEditUser, labelEffectEditUser, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
+        labelEditUser.addMouseListener(new ManagementMouseListener(labelEditUser, labelEffectEditUser, "/managementButtons/pressed.png", this, () -> frameRefresher(managementLayer)));
 
         JLabel labelEffectAddPackage = new JLabel();
         labelEffectAddPackage.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
@@ -302,7 +303,7 @@ public class AdminMainFrame extends JFrame {
         labelAddPackage.setName("addPackage");
         labelAddPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/addPackage.png")));
         labelAddPackage.setBounds(637, 90, 150, 120);
-        labelAddPackage.addMouseListener(new ManagementMouseListener(labelAddPackage, labelEffectAddPackage, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
+        labelAddPackage.addMouseListener(new ManagementMouseListener(labelAddPackage, labelEffectAddPackage, "/managementButtons/pressed.png", this, () -> frameRefresher(managementLayer)));
 
         JLabel labelEffectEditPackage = new JLabel();
         labelEffectEditPackage.setIcon(new ImageIcon(getClass().getResource("/dialogButtons/entered.png")));
@@ -313,7 +314,7 @@ public class AdminMainFrame extends JFrame {
         labelEditPackage.setName("editPackage");
         labelEditPackage.setIcon(new ImageIcon(getClass().getResource("/managementButtons/editPackage.png")));
         labelEditPackage.setBounds(859, 90, 150, 120);
-        labelEditPackage.addMouseListener(new ManagementMouseListener(labelEditPackage, labelEffectEditPackage, "/managementButtons/pressed.png", this, () -> refreshManagementLayer(managementLayer)));
+        labelEditPackage.addMouseListener(new ManagementMouseListener(labelEditPackage, labelEffectEditPackage, "/managementButtons/pressed.png", this, () -> frameRefresher(managementLayer)));
 
 //      ACCOUNT LAYER
 
@@ -448,7 +449,7 @@ public class AdminMainFrame extends JFrame {
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
 
-                refreshManagementLayer(managementLayer);
+                refreshManagementLayer(managementLayer,true);
             }
 
             @Override
@@ -543,10 +544,13 @@ public class AdminMainFrame extends JFrame {
         }
     }
 
-    private void refreshManagementLayer(JLayeredPane managementLayer) {
+    private void refreshManagementLayer(JLayeredPane managementLayer , boolean controller) {
         // Update the customer table
-        updateCustomerTable();
-
+        if (controller) {
+            updateCustomerTable();
+        }
+//        homeLayer.setVisible(false);
+//        managementLayer.setVisible(true);
         // Get cargos based on the latest filter
         List<Cargo> cargosToDisplay = getCargosByFilter(latestFilter);
         updateCargoTable(cargosToDisplay);
@@ -677,6 +681,11 @@ public class AdminMainFrame extends JFrame {
             default:
                 return getAllCargos();
         }
+    }
+    private void frameRefresher(JLayeredPane managementLayer) {
+        refreshManagementLayer(managementLayer,false);
+        this.dispose();
+        AdminMainFrame adminMainFrame = new AdminMainFrame();
     }
 
 }
