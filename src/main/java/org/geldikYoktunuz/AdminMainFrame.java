@@ -942,6 +942,15 @@ public class AdminMainFrame extends JFrame {
                 new Font("SansSerif", Font.PLAIN, 16)
         );
 
+        JLabel labelCourierName = createLabel(
+                currentCargo.getCourierName(),
+                new Rectangle(817, 575, 300, 40),
+                new Color(0x34495e),
+                SwingConstants.LEFT, // Assuming alignment should be left; adjust if needed
+                new Font("SansSerif", Font.PLAIN, 16)
+        );
+
+
         boolean dontRing = false;
 
         JLabel labelCancel = new JLabel();
@@ -1050,6 +1059,7 @@ public class AdminMainFrame extends JFrame {
         deliveryLayer.add(circularImagePanelCourier, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelCancel, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCourierName, JLayeredPane.PALETTE_LAYER);
 
         deliveryLayer.revalidate();
         deliveryLayer.repaint();

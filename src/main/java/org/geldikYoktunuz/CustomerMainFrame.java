@@ -504,10 +504,8 @@ public class CustomerMainFrame extends JFrame {
     }
 
     private void updateDeliveryLayer(JLayeredPane deliveryLayer, Cargo currentCargo) {
-        // Remove all existing components from the layer
         deliveryLayer.removeAll();
 
-        // Set the updated background based on cargo status
         BackgroundImage bgDelivery;
         switch (currentCargo.getCargoStatus()){
             case PENDING_APPROVAL:
@@ -528,7 +526,6 @@ public class CustomerMainFrame extends JFrame {
         bgDelivery.setBounds(0, 0, 1100, 700);
         deliveryLayer.add(bgDelivery, JLayeredPane.DEFAULT_LAYER);
 
-        // Update cargo information
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         JLabel labelNameAndID = createLabel(
@@ -536,7 +533,7 @@ public class CustomerMainFrame extends JFrame {
                 new Rectangle(100, 74, 1000, 60),
                 new Color(0xf7f7f7),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.BOLD, 20) // Placeholder font
+                new Font("SansSerif", Font.BOLD, 20)
         );
 
         JLabel labelCustomerName = createLabel(
@@ -544,7 +541,7 @@ public class CustomerMainFrame extends JFrame {
                 new Rectangle(325, 575, 300, 40),
                 new Color(0x34495e),
                 SwingConstants.LEFT,
-                new Font("SansSerif", Font.BOLD, 18) // Placeholder font
+                new Font("SansSerif", Font.BOLD, 18)
         );
 
         JLabel labelDeliveryStatus = createLabel(
@@ -552,7 +549,7 @@ public class CustomerMainFrame extends JFrame {
                 new Rectangle(144, 172, 181, 30),
                 new Color(0x95A5A6),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+                new Font("SansSerif", Font.PLAIN, 16)
         );
 
         JLabel labelDestinationCity = createLabel(
@@ -560,7 +557,7 @@ public class CustomerMainFrame extends JFrame {
                 new Rectangle(391, 172, 188, 30),
                 new Color(0x95A5A6),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+                new Font("SansSerif", Font.PLAIN, 16)
         );
 
         JLabel labelShipmentDate = createLabel(
@@ -568,7 +565,7 @@ public class CustomerMainFrame extends JFrame {
                 new Rectangle(645, 172, 167, 30),
                 new Color(0x95A5A6),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+                new Font("SansSerif", Font.PLAIN, 16)
         );
 
         JLabel labelDeliveryDate = createLabel(
@@ -576,8 +573,17 @@ public class CustomerMainFrame extends JFrame {
                 new Rectangle(896, 172, 158, 30),
                 new Color(0x95A5A6),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+                new Font("SansSerif", Font.PLAIN, 16)
         );
+
+        JLabel labelCourierName = createLabel(
+                currentCargo.getCourierName(),
+                new Rectangle(817, 575, 300, 40),
+                new Color(0x34495e),
+                SwingConstants.LEFT, // Assuming alignment should be left; adjust if needed
+                new Font("SansSerif", Font.PLAIN, 16)
+        );
+
 
         boolean dontRing = false;
 
@@ -677,7 +683,6 @@ public class CustomerMainFrame extends JFrame {
         CircularImagePanel circularImagePanelCourier = new CircularImagePanel(currentCargo.getCourierPhoto(), 150);
         circularImagePanelCourier.setBounds(641, 526, 150, 150);
 
-        // Add components to delivery layer
         deliveryLayer.add(labelNameAndID, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelCustomerName, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelDeliveryStatus, JLayeredPane.PALETTE_LAYER);
@@ -688,8 +693,8 @@ public class CustomerMainFrame extends JFrame {
         deliveryLayer.add(circularImagePanelCourier, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelCancel, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
+        deliveryLayer.add(labelCourierName, JLayeredPane.PALETTE_LAYER);
 
-        // Revalidate and repaint the delivery layer
         deliveryLayer.revalidate();
         deliveryLayer.repaint();
     }
