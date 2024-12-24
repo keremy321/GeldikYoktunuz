@@ -33,10 +33,10 @@ public class AdminMainFrame extends JFrame {
     JLabel labelSort;
     RoundedSearchBar searchBarID;
 
-    private String latestFilter = "All Packages"; // Default filter
+    private String latestFilter = "All Packages";
 
     private List<Cargo> getAllCargos() {
-        return new ArrayList<>(CargoStorage.getAllCargos()); // Return all cargos
+        return new ArrayList<>(CargoStorage.getAllCargos());
     }
 
     private List<Cargo> getDeliveredCargos() {
@@ -53,7 +53,6 @@ public class AdminMainFrame extends JFrame {
 
 
     public AdminMainFrame() {
-//        CargoStorage.setCurrentCargo(CargoStorage.getCargoById(1));
         Cargo currentCargo = CargoStorage.getCargoById(1);
 
         this.setName("adminFrame");
@@ -276,9 +275,6 @@ public class AdminMainFrame extends JFrame {
 
         BackgroundImage bgManagement = new BackgroundImage("/backgrounds/bgManagement.png");
         bgManagement.setBounds(0, 0, 1100, 700);
-
-        RoundedSearchBar searchBarAll = new RoundedSearchBar();
-        searchBarAll.setBounds(740, 8, 300, 50);
 
         List<Object[]> data1List = new ArrayList<>();
 
@@ -697,7 +693,6 @@ public class AdminMainFrame extends JFrame {
         managementLayer.add(labelEffectEditPackage, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(customTable1, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(customTable2, JLayeredPane.PALETTE_LAYER);
-        managementLayer.add(searchBarAll, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(comboBoxFilter, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(labelSort, JLayeredPane.PALETTE_LAYER);
         managementLayer.add(searchBarID, JLayeredPane.PALETTE_LAYER);
@@ -728,11 +723,9 @@ public class AdminMainFrame extends JFrame {
         table.setRowSorter(sorter);
 
         if (filterText == null || filterText.trim().isEmpty()) {
-            // If filter text is empty, show all rows
             sorter.setRowFilter(null);
         } else {
             try {
-                // Filter rows based on the text
                 sorter.setRowFilter(RowFilter.regexFilter("(?i)" + filterText));
             } catch (PatternSyntaxException e) {
                 JOptionPane.showMessageDialog(null, "Invalid search text.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -741,19 +734,16 @@ public class AdminMainFrame extends JFrame {
     }
 
     private void refreshManagementLayer(JLayeredPane managementLayer , boolean controller) {
-        // Update the customer table
         if (controller) {
             updateCustomerTable();
         }
 //        homeLayer.setVisible(false);
 //        managementLayer.setVisible(true);
-        // Get cargos based on the latest filter
         List<Cargo> cargosToDisplay = getCargosByFilter(latestFilter);
         updateCargoTable(cargosToDisplay);
 
         updateCargoTableAccount();
 
-        // Toggle visibility of searchBarID and labelSort
         switch (latestFilter) {
             case "All Packages":
                 searchBarID.setVisible(false);
@@ -772,14 +762,12 @@ public class AdminMainFrame extends JFrame {
                 break;
         }
 
-        // Refresh the management layer
         managementLayer.revalidate();
         managementLayer.repaint();
     }
 
 
     private void updateCustomerTable() {
-        // Prepare updated data for the customer table
         List<Object[]> data1List = new ArrayList<>();
         for (Customer customer : CustomerStorage.getAllCustomers()) {
             data1List.add(new Object[]{
@@ -792,9 +780,8 @@ public class AdminMainFrame extends JFrame {
         Object[][] data1 = data1List.toArray(new Object[0][]);
         String[] columnNames1 = {"ID", "Customer", "Photo Path"};
 
-        // Replace the data model of the customer table
         DefaultTableModel customerTableModel = new DefaultTableModel(data1, columnNames1);
-        JTable customerTable = customTable1.getTable(); // Use the correct reference for the customer table
+        JTable customerTable = customTable1.getTable();
         customerTable.setModel(customerTableModel);
 
         System.out.println("Customer Table updated.");
@@ -806,10 +793,9 @@ public class AdminMainFrame extends JFrame {
 
     private void updateCargoTable(List<Cargo> cargos) {
         if (cargos == null) {
-            cargos = getAllCargos(); // Fallback to all cargos if null
+            cargos = getAllCargos();
         }
 
-        // Prepare updated data for the cargo table
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         List<Object[]> data2List = new ArrayList<>();
         for (Cargo cargo : cargos) {
@@ -827,9 +813,8 @@ public class AdminMainFrame extends JFrame {
         Object[][] data2 = data2List.toArray(new Object[0][]);
         String[] columnNames2 = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
-        // Replace the data model of the cargo table
         DefaultTableModel cargoTableModel = new DefaultTableModel(data2, columnNames2);
-        JTable cargoTable = customTable2.getTable(); // Use the correct reference for the cargo table
+        JTable cargoTable = customTable2.getTable();
         cargoTable.setModel(cargoTableModel);
         cargoTable.repaint();
     }
@@ -861,7 +846,7 @@ public class AdminMainFrame extends JFrame {
         String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
         DefaultTableModel cargoTableModel = new DefaultTableModel(data, columnNames);
-        JTable cargoTable = customTableAccount.getTable(); // Use the correct reference for the cargo table
+        JTable cargoTable = customTableAccount.getTable();
         cargoTable.setModel(cargoTableModel);
         cargoTable.repaint();
     }
@@ -885,10 +870,8 @@ public class AdminMainFrame extends JFrame {
     }
 
     private void updateDeliveryLayer(JLayeredPane deliveryLayer, Cargo currentCargo) {
-        // Remove all existing components from the layer
         deliveryLayer.removeAll();
 
-        // Set the updated background based on cargo status
         BackgroundImage bgDelivery;
         switch (currentCargo.getCargoStatus()){
             case PENDING_APPROVAL:
@@ -909,7 +892,6 @@ public class AdminMainFrame extends JFrame {
         bgDelivery.setBounds(0, 0, 1100, 700);
         deliveryLayer.add(bgDelivery, JLayeredPane.DEFAULT_LAYER);
 
-        // Update cargo information
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         JLabel labelNameAndID = createLabel(
@@ -917,7 +899,7 @@ public class AdminMainFrame extends JFrame {
                 new Rectangle(100, 74, 1000, 60),
                 new Color(0xf7f7f7),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.BOLD, 20) // Placeholder font
+                new Font("SansSerif", Font.BOLD, 20)
         );
 
         JLabel labelCustomerName = createLabel(
@@ -925,7 +907,7 @@ public class AdminMainFrame extends JFrame {
                 new Rectangle(325, 575, 300, 40),
                 new Color(0x34495e),
                 SwingConstants.LEFT,
-                new Font("SansSerif", Font.BOLD, 18) // Placeholder font
+                new Font("SansSerif", Font.BOLD, 18)
         );
 
         JLabel labelDeliveryStatus = createLabel(
@@ -933,7 +915,7 @@ public class AdminMainFrame extends JFrame {
                 new Rectangle(144, 172, 181, 30),
                 new Color(0x95A5A6),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+                new Font("SansSerif", Font.PLAIN, 16)
         );
 
         JLabel labelDestinationCity = createLabel(
@@ -941,7 +923,7 @@ public class AdminMainFrame extends JFrame {
                 new Rectangle(391, 172, 188, 30),
                 new Color(0x95A5A6),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+                new Font("SansSerif", Font.PLAIN, 16)
         );
 
         JLabel labelShipmentDate = createLabel(
@@ -949,7 +931,7 @@ public class AdminMainFrame extends JFrame {
                 new Rectangle(645, 172, 167, 30),
                 new Color(0x95A5A6),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+                new Font("SansSerif", Font.PLAIN, 16)
         );
 
         JLabel labelDeliveryDate = createLabel(
@@ -957,7 +939,7 @@ public class AdminMainFrame extends JFrame {
                 new Rectangle(896, 172, 158, 30),
                 new Color(0x95A5A6),
                 SwingConstants.CENTER,
-                new Font("SansSerif", Font.PLAIN, 16) // Placeholder font
+                new Font("SansSerif", Font.PLAIN, 16)
         );
 
         boolean dontRing = false;
@@ -1058,7 +1040,6 @@ public class AdminMainFrame extends JFrame {
         CircularImagePanel circularImagePanelCourier = new CircularImagePanel(currentCargo.getCourierPhoto(), 150);
         circularImagePanelCourier.setBounds(641, 526, 150, 150);
 
-        // Add components to delivery layer
         deliveryLayer.add(labelNameAndID, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelCustomerName, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelDeliveryStatus, JLayeredPane.PALETTE_LAYER);
@@ -1070,7 +1051,6 @@ public class AdminMainFrame extends JFrame {
         deliveryLayer.add(labelCancel, JLayeredPane.PALETTE_LAYER);
         deliveryLayer.add(labelDontRing, JLayeredPane.PALETTE_LAYER);
 
-        // Revalidate and repaint the delivery layer
         deliveryLayer.revalidate();
         deliveryLayer.repaint();
     }
