@@ -622,9 +622,9 @@ public class AdminMainFrame extends JFrame {
                 }
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
-
-                updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
-
+                if (CargoStorage.getCurrentCargo()!=null) {
+                    updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
+                }
                 refreshManagementLayer(managementLayer,true);
 
             }

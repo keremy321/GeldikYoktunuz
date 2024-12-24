@@ -377,9 +377,9 @@ public class CustomerMainFrame extends JFrame {
                 for (Cargo c : allCargos){
                     System.out.println(c.getCargoName()+"--"+c.getCargoStatus().getDescription());
                 }
-
-                updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
-
+                if (CargoStorage.getCurrentCargo() != null) {
+                    updateDeliveryLayer(deliveryLayer, CargoStorage.getCurrentCargo());
+                }
                 labelCurrentDate.setText(CurrentDate.getCurrentDate());
                 System.out.println("Current date: " + CurrentDate.getCurrentDate());
             }
