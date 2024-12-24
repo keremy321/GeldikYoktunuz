@@ -280,7 +280,7 @@ public class CustomerMainFrame extends JFrame {
         String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
         // Create the custom table
-        CustomTable customTableAccount = new CustomTable(data, columnNames);
+        CustomTable customTableAccount = new CustomTable(data, columnNames, true);
         customTableAccount.setBounds(201, 274, 800, 380);
 
         JTable tableCargos = customTableAccount.getTable();

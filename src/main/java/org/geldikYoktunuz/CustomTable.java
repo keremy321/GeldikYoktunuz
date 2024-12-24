@@ -13,7 +13,7 @@ public class CustomTable extends JPanel {
 
     JTable table;
 
-    public CustomTable(Object[][] data, String[] columnNames) {
+    public CustomTable(Object[][] data, String[] columnNames, boolean enableDoubleClick) {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(800, 380)); // Set panel size
 
@@ -115,18 +115,19 @@ public class CustomTable extends JPanel {
             }
         });
 
-        // Add a MouseListener for row double-click events
-        table.addMouseListener(new MouseInputAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Detect double-click
-                    int row = table.rowAtPoint(e.getPoint());
-                    if (row != -1) {
-                        openNewFrameForRow(data[row]);
+        if (enableDoubleClick){
+            table.addMouseListener(new MouseInputAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2) { // Detect double-click
+                        int row = table.rowAtPoint(e.getPoint());
+                        if (row != -1) {
+                            openNewFrameForRow(data[row]);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         // Wrap the table in a rounded JPanel
         JPanel roundedPanel = new JPanel() {

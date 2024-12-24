@@ -293,7 +293,7 @@ public class AdminMainFrame extends JFrame {
         String[] columnNames1 = {"ID", "Customer", "Photo Path"};
 
         // Create the custom table
-        customTable1 = new CustomTable(data1, columnNames1);
+        customTable1 = new CustomTable(data1, columnNames1, false);
         customTable1.setBounds(201, 296, 800, 155);
 
         List<Object[]> data2List = new ArrayList<>();
@@ -314,7 +314,7 @@ public class AdminMainFrame extends JFrame {
 
         String[] columnNames2 = {"ID", "Cargo Name", "Customer", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
-        customTable2 = new CustomTable(data2, columnNames2);
+        customTable2 = new CustomTable(data2, columnNames2, true);
         customTable2.setBounds(201, 510, 800, 155);
 
         UIManager.put("ComboBox.selectionBackground", new Color(0x159a80));
@@ -557,7 +557,7 @@ public class AdminMainFrame extends JFrame {
 
         String[] columnNames = {"ID", "Cargo Name", "Shipment Date", "Delivery Date", "Destination City", "Cargo Status"};
 
-        customTableAccount = new CustomTable(data, columnNames);
+        customTableAccount = new CustomTable(data, columnNames, true);
         customTableAccount.setBounds(201, 274, 800, 380);
 
         JTable tableCargos = customTableAccount.getTable();
